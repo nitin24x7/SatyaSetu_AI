@@ -36,3 +36,4 @@ const clientConfig: S3ClientConfig = {
 };
 
 export const s3Client = new S3Client(clientConfig);
+

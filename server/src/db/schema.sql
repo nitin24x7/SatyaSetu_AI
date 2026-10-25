@@ -316,3 +316,4 @@ CREATE TABLE IF NOT EXISTS notifications (
 
 CREATE INDEX IF NOT EXISTS idx_notifications_recipient ON notifications (recipient_role, is_read);
 CREATE INDEX IF NOT EXISTS idx_notifications_institution ON notifications (institution_id);
+

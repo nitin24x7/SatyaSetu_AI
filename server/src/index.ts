@@ -33,3 +33,4 @@ function handleGracefulShutdown(signal: string) {
 
 process.on('SIGTERM', () => handleGracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => handleGracefulShutdown('SIGINT'));
+

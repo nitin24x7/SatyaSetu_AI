@@ -15,3 +15,4 @@ reportsRouter.get('/analytics', async (req: Request, res: Response, next: NextFu
     next(err);
   }
 });
+

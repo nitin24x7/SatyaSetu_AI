@@ -154,3 +154,4 @@ export const graphqlSchema = buildSchema(`
     recordDecision(id: ID!, decision: String!, reasonOrComment: String!): Application!
   }
 `);
+

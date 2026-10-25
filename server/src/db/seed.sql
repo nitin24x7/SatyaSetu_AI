@@ -29,3 +29,4 @@ VALUES
 ('c0000000-0000-0000-0000-000000000005', 'RULE-05', 'Duplicate Document Hash Verification', 'Integrity Check', 'Cross-checks document digital fingerprint across historical applications.', true, 'Medium'),
 ('c0000000-0000-0000-0000-000000000006', 'RULE-06', 'Digital Seal & Authorized Signature Check', 'Forensic Check', 'Scans for presence and tamper markers of issuing authority seal.', true, 'Medium')
 ON CONFLICT (code) DO NOTHING;
+
