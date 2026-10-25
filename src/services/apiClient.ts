@@ -133,6 +133,52 @@ class ApiClient {
     return this.request('/api/v1/reports/analytics');
   }
 
+  // --- IDP & Multilingual OCR Endpoints (Phase 4) ---
+
+  async processDocumentIdp(params: {
+    documentId: string;
+    applicationId: string;
+    fileName: string;
+    category: string;
+    fileSizeBytes?: number;
+    mimeType?: string;
+    institutionName?: string;
+    registrationNumber?: string;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/idp/process', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async extractSyncIdp(params: {
+    documentId: string;
+    applicationId: string;
+    fileName: string;
+    category: string;
+    fileSizeBytes?: number;
+    mimeType?: string;
+    institutionName?: string;
+    registrationNumber?: string;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/idp/extract-sync', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async getIdpJob(jobId: string): Promise<ApiResponse> {
+    return this.request(`/api/v1/idp/jobs/${jobId}`);
+  }
+
+  async getIdpJobs(limit = 20): Promise<ApiResponse> {
+    return this.request(`/api/v1/idp/jobs?limit=${limit}`);
+  }
+
+  async getIdpCategories(): Promise<ApiResponse> {
+    return this.request('/api/v1/idp/categories');
+  }
+
   async checkHealth(): Promise<any> {
     try {
       const res = await fetch(`${this.baseUrl}/health`);

@@ -114,6 +114,87 @@ export const graphqlSchema = buildSchema(`
     averageTurnaroundDays: Float!
   }
 
+  type IdpJobSummary {
+    jobId: ID!
+    documentId: String!
+    applicationId: String!
+    fileName: String!
+    status: String!
+    progressPercent: Int!
+    currentStage: String!
+    enqueuedAt: String!
+    updatedAt: String!
+  }
+
+  type BoundingBox {
+    x: Float!
+    y: Float!
+    width: Float!
+    height: Float!
+  }
+
+  type LayoutSegment {
+    id: ID!
+    type: String!
+    bbox: BoundingBox!
+    confidence: Float!
+    rawText: String!
+  }
+
+  type MathematicalValidation {
+    checked: Boolean!
+    valid: Boolean!
+    summary: String!
+  }
+
+  type ExtractedTable {
+    id: ID!
+    caption: String!
+    rowCount: Int!
+    colCount: Int!
+    headers: [String!]!
+    mathematicalValidation: MathematicalValidation
+  }
+
+  type PreprocessingMetrics {
+    originalDpi: Int!
+    targetDpi: Int!
+    deskewAngleDegrees: Float!
+    noiseReductionApplied: Boolean!
+    contrastRatio: Float!
+    grayscaleBinarized: Boolean!
+    pageCount: Int!
+  }
+
+  type TamperScan {
+    tamperLikelihoodScore: Float!
+    riskLevel: String!
+    anomaliesDetected: [String!]!
+  }
+
+  type IdpProcessingResult {
+    jobId: ID!
+    documentId: String!
+    applicationId: String!
+    fileName: String!
+    category: String!
+    status: String!
+    startedAt: String!
+    completedAt: String
+    durationMs: Int
+    preprocessing: PreprocessingMetrics!
+    layoutSegments: [LayoutSegment!]!
+    ocrWordCount: Int!
+    averageConfidence: Float!
+    extractedTables: [ExtractedTable!]!
+    tamperScan: TamperScan!
+  }
+
+  type IdpJobDetails {
+    summary: IdpJobSummary
+    result: IdpProcessingResult
+  }
+
   input ApplicationInput {
     institutionId: String
     institutionName: String!
@@ -144,6 +225,10 @@ export const graphqlSchema = buildSchema(`
 
     analytics: AnalyticsReport!
     auditLogs: [ActivityEvent!]!
+
+    idpJob(jobId: ID!): IdpJobDetails
+    idpJobs(limit: Int): [IdpJobSummary!]!
+    idpCategories: [String!]!
   }
 
   type Mutation {
@@ -152,6 +237,15 @@ export const graphqlSchema = buildSchema(`
     requestCorrections(id: ID!, findingIds: [String!]!, comment: String!, dueDate: String): Application!
     resubmitApplication(id: ID!, applicantResponse: String!): Application!
     recordDecision(id: ID!, decision: String!, reasonOrComment: String!): Application!
+
+    enqueueIdpProcessing(
+      documentId: String!
+      applicationId: String!
+      fileName: String!
+      category: String!
+      institutionName: String
+      registrationNumber: String
+    ): IdpJobSummary!
   }
 `);
 

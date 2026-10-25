@@ -28,6 +28,8 @@ tags:
     description: Immutable append-only audit trail and compliance event ledger
   - name: Analytics
     description: Institutional throughput, clearance rates, and failure statistics
+  - name: IDP
+    description: Intelligent Document Processing, layout segmentation, multilingual OCR, and tabular extraction
   - name: System
     description: Health and telemetry probes for database, cache, and object storage
 
@@ -322,6 +324,71 @@ paths:
         '200':
           description: Platform analytical metrics
 
+  /api/v1/idp/process:
+    post:
+      tags: [IDP]
+      summary: Enqueue document for background asynchronous OCR & IDP pipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessDocumentRequest'
+      responses:
+        '202':
+          description: Ingestion initiated; asynchronous processing enqueued
+        '400':
+          description: Invalid request parameters
+
+  /api/v1/idp/extract-sync:
+    post:
+      tags: [IDP]
+      summary: Synchronous document OCR tokenization, table matrix parsing, and entity extraction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessDocumentRequest'
+      responses:
+        '200':
+          description: Complete extraction result with bounding boxes and mathematical validation
+
+  /api/v1/idp/jobs/{jobId}:
+    get:
+      tags: [IDP]
+      summary: Query real-time status and extraction results of an IDP job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Job status and extraction payload
+        '404':
+          description: Job identifier not found
+
+  /api/v1/idp/jobs:
+    get:
+      tags: [IDP]
+      summary: List recent IDP processing jobs
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20 }
+      responses:
+        '200':
+          description: List of IDP processing summaries
+
+  /api/v1/idp/categories:
+    get:
+      tags: [IDP]
+      summary: Get supported regulatory document templates and formats
+      responses:
+        '200':
+          description: Supported document categories list
+
 components:
   schemas:
     ApplicationStatus:
@@ -405,4 +472,22 @@ components:
             limit: { type: integer }
             totalPages: { type: integer }
         timestamp: { type: string, format: date-time }
+
+    ProcessDocumentRequest:
+      type: object
+      required:
+        - documentId
+        - applicationId
+        - fileName
+        - category
+      properties:
+        documentId: { type: string }
+        applicationId: { type: string }
+        fileName: { type: string }
+        category: { type: string }
+        fileSizeBytes: { type: integer }
+        mimeType: { type: string }
+        institutionName: { type: string }
+        registrationNumber: { type: string }
+
 
