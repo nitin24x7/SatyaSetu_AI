@@ -144,3 +144,4 @@ export function getSeverityColor(sev: FindingSeverity): {
       return { bg: 'bg-slate-100 text-slate-700', text: 'text-slate-600' };
   }
 }
+

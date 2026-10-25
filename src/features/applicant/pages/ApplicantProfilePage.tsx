@@ -212,3 +212,4 @@ export const ApplicantProfilePage: React.FC = () => {
     </div>
   );
 };
+

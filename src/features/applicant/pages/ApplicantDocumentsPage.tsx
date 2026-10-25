@@ -188,3 +188,4 @@ export const ApplicantDocumentsPage: React.FC = () => {
     </div>
   );
 };
+

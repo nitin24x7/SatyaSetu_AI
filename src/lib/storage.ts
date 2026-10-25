@@ -1,4 +1,4 @@
-const STORAGE_KEY_PREFIX = 'pramaan_ai_v1';
+const STORAGE_KEY_PREFIX = 'satyasetu_ai_v1';
 
 export function loadFromStorage<T>(key: string, fallback: T): T {
   try {

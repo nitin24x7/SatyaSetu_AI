@@ -288,3 +288,4 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
     </header>
   );
 };
+

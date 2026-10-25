@@ -313,3 +313,4 @@ export const ApplicantApplicationsPage: React.FC = () => {
     </div>
   );
 };
+

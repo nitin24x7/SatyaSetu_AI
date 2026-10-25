@@ -892,3 +892,4 @@ export const NewApplicationPage: React.FC = () => {
     </div>
   );
 };
+

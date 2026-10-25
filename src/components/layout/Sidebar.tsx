@@ -104,7 +104,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
             {!collapsed && (
               <div className="flex flex-col">
                 <span className="font-bold text-base tracking-wider text-white flex items-center gap-1.5">
-                  PRAMAAN <span className="text-brand-blue font-black text-xs px-1 py-0.5 bg-brand-blue/20 rounded">AI</span>
+                  SatyaSetu <span className="text-brand-blue font-black text-xs px-1 py-0.5 bg-brand-blue/20 rounded">AI</span>
                 </span>
                 <span className="text-[10px] text-slate-400 font-medium tracking-tight">
                   Regulatory Verification

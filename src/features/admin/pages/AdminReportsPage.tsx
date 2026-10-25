@@ -101,7 +101,7 @@ export const AdminReportsPage: React.FC = () => {
 
     const link = document.createElement('a');
     link.setAttribute('href', encodeURI(csvContent));
-    link.setAttribute('download', `PRAMAAN_Regulatory_Analytics_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `SatyaSetu_Regulatory_Analytics_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -250,3 +250,4 @@ export const AdminReportsPage: React.FC = () => {
     </div>
   );
 };
+

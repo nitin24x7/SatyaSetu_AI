@@ -27,3 +27,4 @@ export const RiskBadge: React.FC<RiskBadgeProps> = ({ risk, size = 'md' }) => {
     </span>
   );
 };
+

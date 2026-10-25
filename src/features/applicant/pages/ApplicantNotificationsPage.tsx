@@ -129,3 +129,4 @@ export const ApplicantNotificationsPage: React.FC = () => {
     </div>
   );
 };
+

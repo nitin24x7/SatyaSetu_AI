@@ -44,7 +44,7 @@ export const WelcomePage: React.FC<WelcomePageProps> = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-lg text-navy-deep tracking-wider">PRAMAAN AI</span>
+              <span className="font-bold text-lg text-navy-deep tracking-wider">SatyaSetu AI</span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-blue-light text-brand-blue uppercase">
                 Prototype v1.0
               </span>
@@ -213,10 +213,11 @@ export const WelcomePage: React.FC<WelcomePageProps> = () => {
 
       {/* Footer */}
       <footer className="border-t border-slate-border bg-white py-4 px-6 text-center text-xs text-slate-muted">
-        PRAMAAN AI — Institutional Application Validation & Regulatory Verification Prototype • Strictly Frontend Development
+        SatyaSetu AI — Institutional Application Validation & Regulatory Verification Prototype • Strictly Frontend Development
       </footer>
     </div>
   );
 };
 
 interface WelcomePageProps {}
+

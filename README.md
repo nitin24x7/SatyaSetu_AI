@@ -1,4 +1,4 @@
-# PRAMAAN AI — Institutional Verification & Compliance Platform
+# SatyaSetu AI — Institutional Verification & Compliance Platform
 
 > **Regulatory Application Validation, Document Authentication & Compliance Verification Platform**  
 > *Frontend Prototype Implementation*
@@ -7,7 +7,7 @@
 
 ## 🏛️ Overview
 
-**PRAMAAN AI** is a modern, high-trust institutional SaaS frontend prototype built for institutional applicants (colleges, universities, polytechnics) and authorized regulatory administrators.
+**SatyaSetu AI** is a modern, high-trust institutional SaaS frontend prototype built for institutional applicants (colleges, universities, polytechnics) and authorized regulatory administrators.
 
 The application delivers an interactive end-to-end simulation of:
 1. **Applicant Submission**: Multi-step application wizard with file validation and simulated OCR extraction.
@@ -79,3 +79,4 @@ npm run preview
 - **Charts:** Recharts
 - **Routing:** React Router v6
 - **Persistence:** LocalStorage with versioned safe fallback
+

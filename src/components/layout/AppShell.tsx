@@ -50,3 +50,4 @@ export const AppShell: React.FC<AppShellProps> = ({ role }) => {
     </div>
   );
 };
+

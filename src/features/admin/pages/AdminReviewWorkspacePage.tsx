@@ -716,7 +716,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
           {/* Bottom Panel Notice */}
           <div className="p-3 bg-surface-subtle border-t border-slate-border text-[11px] text-slate-500 flex items-center justify-between">
             <span>Reviewer: <strong>{currentReviewer.name}</strong></span>
-            <span className="font-mono text-[10px]">PRAMAAN AI v1.0</span>
+            <span className="font-mono text-[10px]">SatyaSetu AI v1.0</span>
           </div>
         </div>
       </div>
@@ -942,3 +942,4 @@ export const AdminReviewWorkspacePage: React.FC = () => {
     </div>
   );
 };
+

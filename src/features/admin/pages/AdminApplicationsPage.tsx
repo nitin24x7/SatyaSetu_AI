@@ -167,7 +167,7 @@ export const AdminApplicationsPage: React.FC = () => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `PRAMAAN_Applications_Export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `SatyaSetu_Applications_Export_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -493,3 +493,4 @@ export const AdminApplicationsPage: React.FC = () => {
     </div>
   );
 };
+

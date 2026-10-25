@@ -32,3 +32,4 @@ export const CheckResultBadge: React.FC<CheckResultBadgeProps> = ({ result }) =>
     </span>
   );
 };
+
