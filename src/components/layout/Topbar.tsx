@@ -168,7 +168,7 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
         {/* Simulated Demo Notice */}
         <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-800 text-[11px] font-medium">
           <Info size={13} className="text-amber-600" />
-          <span>Simulated Prototype • Local Mock Data</span>
+          <span>Statutory Verification Environment • Enterprise Architecture</span>
         </div>
 
         {/* Notifications Icon with Dropdown */}

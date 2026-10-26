@@ -1,0 +1,408 @@
+openapi: 3.1.0
+info:
+  title: SatyaSetu AI Core Microservices API
+  version: 1.0.0
+  description: |
+    Production-grade REST API Gateway for SatyaSetu AI: AI-Powered Document Authentication, 
+    Entity Concordance Verification, and Regulatory Compliance Management Platform.
+  contact:
+    name: SatyaSetu Regulatory Architecture Team
+    email: api-directorate@satyasetu.gov.in
+  license:
+    name: Proprietary Enterprise License
+
+servers:
+  - url: http://localhost:4000
+    description: Local Microservices Gateway
+  - url: https://api.satyasetu.gov.in
+    description: Production Regulatory Gateway
+
+tags:
+  - name: Applications
+    description: Statutory application submission, triage, and lifecycle state transitions
+  - name: Documents
+    description: Encrypted S3/MinIO document upload tickets, presigned links, and validation
+  - name: Institutions
+    description: Regulatory master directory of accredited universities and technical institutes
+  - name: Audit
+    description: Immutable append-only audit trail and compliance event ledger
+  - name: Analytics
+    description: Institutional throughput, clearance rates, and failure statistics
+  - name: System
+    description: Health and telemetry probes for database, cache, and object storage
+
+paths:
+  /health:
+    get:
+      tags: [System]
+      summary: Microservice cluster readiness & liveness probe
+      description: Evaluates connectivity and latency to PostgreSQL, Redis cluster, and S3/MinIO.
+      responses:
+        '200':
+          description: All critical backend dependencies operational
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: One or more critical services are degraded
+
+  /api/v1/applications:
+    get:
+      tags: [Applications]
+      summary: Query application pipeline with pagination and multi-field filters
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 10 }
+        - name: status
+          in: query
+          schema: { $ref: '#/components/schemas/ApplicationStatus' }
+        - name: riskLevel
+          in: query
+          schema: { $ref: '#/components/schemas/RiskLevel' }
+        - name: institutionType
+          in: query
+          schema: { type: string }
+        - name: reviewerId
+          in: query
+          schema: { type: string }
+        - name: search
+          in: query
+          schema: { type: string }
+        - name: sortBy
+          in: query
+          schema: { type: string, default: 'submittedAt' }
+        - name: sortOrder
+          in: query
+          schema: { type: string, enum: [asc, desc], default: desc }
+      responses:
+        '200':
+          description: Paginated application list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationPaginationResponse'
+
+    post:
+      tags: [Applications]
+      summary: Create application draft or execute formal submission
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplicationRequest'
+      responses:
+        '201':
+          description: Application successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationEnvelope'
+
+  /api/v1/applications/{id}:
+    get:
+      tags: [Applications]
+      summary: Retrieve full application dossier with documents, findings, and timeline
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Full application detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationEnvelope'
+        '404':
+          description: Application not found
+
+  /api/v1/applications/{id}/verify:
+    post:
+      tags: [Applications]
+      summary: Transition submitted application into active verification
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Application marked Under Verification
+
+  /api/v1/applications/{id}/assign:
+    post:
+      tags: [Applications]
+      summary: Assign or reassign regulatory reviewer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reviewerId]
+              properties:
+                reviewerId: { type: string }
+      responses:
+        '200':
+          description: Reviewer assigned
+
+  /api/v1/applications/{id}/corrections:
+    post:
+      tags: [Applications]
+      summary: Dispatch correction notice to applicant with flagged findings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [comment]
+              properties:
+                findingIds:
+                  type: array
+                  items: { type: string }
+                comment: { type: string }
+                dueDate: { type: string, format: date }
+      responses:
+        '200':
+          description: Application status set to Action Required
+
+  /api/v1/applications/{id}/resubmit:
+    post:
+      tags: [Applications]
+      summary: Applicant resubmission addressing assessor corrections
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [applicantResponse]
+              properties:
+                applicantResponse: { type: string }
+                updatedDocs: { type: array, items: { type: object } }
+      responses:
+        '200':
+          description: Application status set to Resubmitted
+
+  /api/v1/applications/{id}/decision:
+    post:
+      tags: [Applications]
+      summary: Adjudicate application approval or recorded rejection
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision, reasonOrComment]
+              properties:
+                decision: { type: string, enum: [Verified, Rejected] }
+                reasonOrComment: { type: string }
+      responses:
+        '200':
+          description: Decision recorded in audit ledger
+
+  /api/v1/applications/{id}/override:
+    post:
+      tags: [Applications]
+      summary: Administrative override to reopen finalized case
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [justification]
+              properties:
+                justification: { type: string }
+      responses:
+        '200':
+          description: Case reverted to Under Verification
+
+  /api/v1/documents/presigned-url:
+    post:
+      tags: [Documents]
+      summary: Generate encrypted presigned S3/MinIO upload ticket
+      description: Returns pre-authorized upload URL with SSE-S3 AES-256 encryption headers and expiry.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [applicationId, category, fileName, mimeType]
+              properties:
+                applicationId: { type: string }
+                category: { type: string }
+                fileName: { type: string }
+                mimeType: { type: string, enum: [application/pdf, image/jpeg, image/png] }
+                expiresInSeconds: { type: integer, default: 900 }
+      responses:
+        '200':
+          description: Presigned upload URL generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresignedUploadTicket'
+
+  /api/v1/documents/{id}/download:
+    get:
+      tags: [Documents]
+      summary: Generate temporary presigned download link
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: s3Key
+          in: query
+          required: true
+          schema: { type: string }
+        - name: fileName
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Temporary download URL returned
+
+  /api/v1/institutions:
+    get:
+      tags: [Institutions]
+      summary: List registered universities and accredited institutions
+      responses:
+        '200':
+          description: Institution master records
+
+  /api/v1/audit-logs:
+    get:
+      tags: [Audit]
+      summary: Stream immutable append-only compliance audit trail
+      responses:
+        '200':
+          description: Chronological audit events with hash chaining
+
+  /api/v1/reports/analytics:
+    get:
+      tags: [Analytics]
+      summary: Aggregated regulatory throughput, turnaround times, and clearance ratios
+      responses:
+        '200':
+          description: Platform analytical metrics
+
+components:
+  schemas:
+    ApplicationStatus:
+      type: string
+      enum:
+        - Draft
+        - Submitted
+        - Under Verification
+        - Action Required
+        - Resubmitted
+        - Verified
+        - Rejected
+
+    RiskLevel:
+      type: string
+      enum:
+        - Low
+        - Medium
+        - High
+
+    HealthResponse:
+      type: object
+      properties:
+        status: { type: string, enum: [HEALTHY, DEGRADED] }
+        timestamp: { type: string, format: date-time }
+        services:
+          type: object
+          properties:
+            database: { type: object }
+            cache: { type: object }
+            storage: { type: object }
+        version: { type: string }
+
+    CreateApplicationRequest:
+      type: object
+      required:
+        - institutionName
+        - institutionType
+        - state
+        - applicationType
+        - purpose
+      properties:
+        institutionId: { type: string }
+        institutionName: { type: string }
+        institutionType: { type: string }
+        state: { type: string }
+        applicationType: { type: string }
+        academicYear: { type: string, default: '2026-2027' }
+        purpose: { type: string }
+        referenceNumber: { type: string }
+        remarks: { type: string }
+        documents: { type: array, items: { type: object } }
+        isSubmit: { type: boolean, default: false }
+
+    PresignedUploadTicket:
+      type: object
+      properties:
+        uploadUrl: { type: string, format: uri }
+        s3Key: { type: string }
+        bucket: { type: string }
+        expiresInSeconds: { type: integer }
+        requiredHeaders: { type: object }
+
+    ApplicationEnvelope:
+      type: object
+      properties:
+        success: { type: boolean }
+        data: { type: object }
+        timestamp: { type: string, format: date-time }
+
+    ApplicationPaginationResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data: { type: array, items: { type: object } }
+        pagination:
+          type: object
+          properties:
+            total: { type: integer }
+            page: { type: integer }
+            limit: { type: integer }
+            totalPages: { type: integer }
+        timestamp: { type: string, format: date-time }
+
