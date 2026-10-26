@@ -1,5 +1,6 @@
 import { applicationService } from '../services/applicationService';
 import { idpService } from '../idp/idpService';
+import { complianceService } from '../compliance/complianceService';
 
 export const graphqlResolvers = {
   applications: async (args: any) => {
@@ -115,6 +116,27 @@ export const graphqlResolvers = {
     registrationNumber?: string;
   }) => {
     return idpService.enqueueDocumentProcessing(args);
+  },
+
+  complianceRules: async () => {
+    return complianceService.getRegisteredRules();
+  },
+
+  evaluateApplicationCompliance: async ({ applicationId }: { applicationId: string }) => {
+    return complianceService.evaluateApplication(applicationId);
+  },
+
+  checkConcordance: async ({
+    declaredName,
+    extractedName,
+  }: {
+    declaredName: string;
+    extractedName: string;
+  }) => {
+    return complianceService.checkConcordance(
+      { institutionName: declaredName },
+      { institution_name: { extractedValue: extractedName } }
+    );
   },
 };
 

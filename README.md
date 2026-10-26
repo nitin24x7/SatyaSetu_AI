@@ -1,7 +1,7 @@
 # SatyaSetu AI — Institutional Verification & Compliance Platform
 
 > **AI-Powered Regulatory Application Validation, Document Authentication & Compliance Verification Platform**  
-> *Production Architecture: Frontend, Core Microservices Backend & IDP Pipeline (Phase 4 Completed)*
+> *Production Architecture: Frontend, Core Microservices Backend, IDP Pipeline & Compliance Engine (Phase 5 Completed)*
 
 ---
 
@@ -27,6 +27,12 @@ The platform delivers an integrated regulatory lifecycle:
    - **Key-Value Entity Extractor**: Targeted extraction of Indian regulatory attributes (AISHE code, charter ID, accreditation tier, sanctioned intake, issuing directorate).
    - **Forensic Tamper Detection**: Computes document risk scores, resolution deficiency flags, and tabular anomalies.
    - **Asynchronous IDP Queue**: Redis/in-memory stage progression (`QUEUED` -> `PREPROCESSING` -> `EXTRACTING_OCR` -> `PARSING_TABLES` -> `EXTRACTING_ENTITIES` -> `COMPLETED`).
+7. **Deterministic Compliance Verification & Concordance Engine (Phase 5 Completed)**:
+   - **String Similarity Engine**: Levenshtein distance, Jaro-Winkler with prefix scaling, and token sort ratio accommodating institutional name permutations and spelling variations.
+   - **Multi-Field Concordance Matcher**: Automated cross-validation comparing declared application attributes against extracted IDP entities (Legal Entity Title, AISHE Code syntax/registry, Charter Registration Number, Governance Classification).
+   - **Temporal Lifecycle Engine**: Evaluates university affiliation continuity and NAAC/NBA accreditation cycles against current academic filing periods.
+   - **Statutory Calculus**: Deterministic verification of Student-to-Faculty Ratios (AICTE SFR 1:20 ceiling or Diploma 1:25) and minimum instructional carpet area per enrolled student ($\ge 4.5$ sq.m/student).
+   - **Pluggable Rule Engine & Discrepancy Triage**: 9 declarative statutory rules across Concordance, Temporal, Cadre, Infrastructure, and Statutory Legal categories, computing a 0-100 compliance score, risk tier (`Low`, `Medium`, `High`), and automated remediation advice.
 
 ---
 
@@ -154,6 +160,9 @@ npm run server:start
 
 # Run Automated IDP Pipeline Test Suite
 npm run test:idp
+
+# Run Automated Compliance & Concordance Engine Test Suite
+npm run test:compliance
 ```
 
 ---
@@ -186,6 +195,12 @@ The microservices gateway exposes standardized REST and GraphQL endpoints:
 | `/api/v1/idp/jobs/:jobId` | `GET` | Query real-time status, progress, bounding boxes, and extraction payload |
 | `/api/v1/idp/jobs` | `GET` | List recent IDP processing jobs |
 | `/api/v1/idp/categories` | `GET` | Supported regulatory document templates and formats |
+| `/api/v1/compliance/evaluate` | `POST` | Evaluate application dossier against statutory compliance rules |
+| `/api/v1/compliance/applications/:id` | `GET` | Retrieve compliance score, risk level, and findings by application ID |
+| `/api/v1/compliance/concordance` | `POST` | Cross-reference declared vs extracted attributes with Jaro-Winkler |
+| `/api/v1/compliance/calculus/cadre` | `POST` | Calculate Student-to-Faculty Ratio (SFR) and cadre proportionality |
+| `/api/v1/compliance/calculus/infrastructure` | `POST` | Calculate built instructional carpet area norms and surplus/deficit |
+| `/api/v1/compliance/rules` | `GET` | List all registered statutory compliance rules |
 
 ---
 
@@ -246,7 +261,7 @@ psql -U postgres -d satyasetu -f server/src/db/seed.sql
 - **Routing:** React Router v6
 - **Persistence:** LocalStorage with versioned fallback + API Client Bridge
 
-### Backend Architecture (Phase 3 & Phase 4)
+### Backend Architecture (Phase 3, Phase 4 & Phase 5)
 - **Server Runtime:** Node.js + TypeScript (`tsx` / `tsc`)
 - **Web Framework:** Express 4 (Modular Routers & Controllers)
 - **Database:** PostgreSQL 14+ (`pg.Pool` connection pooling + Transactions)
@@ -259,3 +274,4 @@ psql -U postgres -d satyasetu -f server/src/db/seed.sql
 - **Multilingual OCR Engine:** Token-level OCR extraction with spatial bounding box geometry (`x, y, width, height`), confidence metrics, and language tagging
 - **Tabular Matrix Engine:** Structural parsing for faculty rosters and infrastructure carpet areas with mathematical consistency validation (AICTE SFR 1:20 ceiling verification)
 - **Forensic Tamper Detection:** Tamper likelihood scoring and resolution anomaly flagging
+- **Compliance & Concordance Engine:** Multi-metric string similarity (Levenshtein, Jaro-Winkler, TokenSort), field concordance cross-checking, temporal validity monitoring, statutory cadre & space calculus, and 9-rule pluggable triage engine

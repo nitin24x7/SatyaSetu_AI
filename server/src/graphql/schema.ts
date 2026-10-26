@@ -195,6 +195,101 @@ export const graphqlSchema = buildSchema(`
     result: IdpProcessingResult
   }
 
+  type SimilarityResult {
+    levenshteinDistance: Int!
+    jaroSimilarity: Float!
+    jaroWinklerSimilarity: Float!
+    tokenSortRatio: Float!
+    confidence: Float!
+    matchLevel: String!
+  }
+
+  type ConcordanceItem {
+    fieldKey: String!
+    fieldLabel: String!
+    declaredValue: String!
+    extractedValue: String!
+    sourceDocument: String!
+    similarity: SimilarityResult!
+    status: String!
+    remediationAdvice: String
+  }
+
+  type ConcordanceReport {
+    overallScore: Int!
+    concordanceStatus: String!
+    totalFieldsCompared: Int!
+    concordantCount: Int!
+    warningCount: Int!
+    mismatchCount: Int!
+    items: [ConcordanceItem!]!
+  }
+
+  type CadreCalculusResult {
+    totalStudents: Int!
+    totalFaculty: Int!
+    calculatedSfr: Float!
+    mandatedSfrCeiling: Float!
+    isSfrCompliant: Boolean!
+    summary: String!
+  }
+
+  type InfrastructureCalculusResult {
+    totalBuiltAreaSqM: Float!
+    mandatedMinimumSqM: Float!
+    deficitSurplusPercent: Float!
+    isCompliant: Boolean!
+    summary: String!
+  }
+
+  type TemporalCheckResult {
+    certificateType: String!
+    issuanceDate: String
+    expiryDate: String
+    academicYear: String!
+    isValid: Boolean!
+    isExpired: Boolean!
+    daysRemaining: Int
+    status: String!
+    details: String!
+  }
+
+  type ComplianceRuleInfo {
+    id: ID!
+    code: String!
+    title: String!
+    category: String!
+    regulatoryStandard: String!
+    description: String!
+    weight: Int!
+  }
+
+  type RuleEvaluationFinding {
+    ruleId: String!
+    title: String!
+    category: String!
+    severity: String!
+    status: String!
+    scoreContribution: Int!
+    maxScore: Int!
+    evidence: String!
+    recommendedAction: String
+  }
+
+  type ComplianceEvaluationSummary {
+    applicationId: String!
+    institutionName: String!
+    evaluationTimestamp: String!
+    overallScore: Int!
+    riskLevel: String!
+    findings: [RuleEvaluationFinding!]!
+    concordanceReport: ConcordanceReport!
+    cadreCheck: CadreCalculusResult
+    infrastructureCheck: InfrastructureCalculusResult
+    temporalChecks: [TemporalCheckResult!]!
+    recommendedDecision: String!
+  }
+
   input ApplicationInput {
     institutionId: String
     institutionName: String!
@@ -229,6 +324,10 @@ export const graphqlSchema = buildSchema(`
     idpJob(jobId: ID!): IdpJobDetails
     idpJobs(limit: Int): [IdpJobSummary!]!
     idpCategories: [String!]!
+
+    complianceRules: [ComplianceRuleInfo!]!
+    evaluateApplicationCompliance(applicationId: ID!): ComplianceEvaluationSummary
+    checkConcordance(declaredName: String!, extractedName: String!): ConcordanceReport
   }
 
   type Mutation {

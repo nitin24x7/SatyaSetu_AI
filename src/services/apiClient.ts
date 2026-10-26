@@ -179,6 +179,49 @@ class ApiClient {
     return this.request('/api/v1/idp/categories');
   }
 
+  // --- Compliance Verification & Concordance Engine (Phase 5) ---
+
+  async evaluateCompliance(payload: {
+    applicationId?: string;
+    application?: any;
+    documents?: any[];
+    idpResult?: any;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/compliance/evaluate', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async getApplicationCompliance(applicationId: string): Promise<ApiResponse> {
+    return this.request(`/api/v1/compliance/applications/${applicationId}`);
+  }
+
+  async checkConcordance(declared: any, extractedEntities?: any): Promise<ApiResponse> {
+    return this.request('/api/v1/compliance/concordance', {
+      method: 'POST',
+      body: JSON.stringify({ declared, extractedEntities }),
+    });
+  }
+
+  async calculateCadre(params: any = {}): Promise<ApiResponse> {
+    return this.request('/api/v1/compliance/calculus/cadre', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async calculateInfrastructure(params: any = {}): Promise<ApiResponse> {
+    return this.request('/api/v1/compliance/calculus/infrastructure', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async getComplianceRules(): Promise<ApiResponse> {
+    return this.request('/api/v1/compliance/rules');
+  }
+
   async checkHealth(): Promise<any> {
     try {
       const res = await fetch(`${this.baseUrl}/health`);

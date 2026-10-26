@@ -30,6 +30,8 @@ tags:
     description: Institutional throughput, clearance rates, and failure statistics
   - name: IDP
     description: Intelligent Document Processing, layout segmentation, multilingual OCR, and tabular extraction
+  - name: Compliance
+    description: Deterministic Compliance Verification, Concordance Matching, Cadre Norms, and Rule Engine
   - name: System
     description: Health and telemetry probes for database, cache, and object storage
 
@@ -388,6 +390,100 @@ paths:
       responses:
         '200':
           description: Supported document categories list
+
+  /api/v1/compliance/evaluate:
+    post:
+      tags: [Compliance]
+      summary: Evaluate application dossier against statutory compliance rules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                applicationId: { type: string }
+                application: { type: object }
+                documents: { type: array, items: { type: object } }
+      responses:
+        '200':
+          description: Comprehensive compliance evaluation summary with score and findings
+
+  /api/v1/compliance/applications/{id}:
+    get:
+      tags: [Compliance]
+      summary: Evaluate existing application by identifier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Compliance score and findings report
+
+  /api/v1/compliance/concordance:
+    post:
+      tags: [Compliance]
+      summary: Cross-reference declared vs extracted attributes using Jaro-Winkler and Levenshtein metrics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [declared]
+              properties:
+                declared: { type: object }
+                extractedEntities: { type: object }
+      responses:
+        '200':
+          description: Concordance report with field-level similarity confidence and match status
+
+  /api/v1/compliance/calculus/cadre:
+    post:
+      tags: [Compliance]
+      summary: Calculate Student-to-Faculty Ratio (SFR) and cadre distribution norms
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                totalStudents: { type: integer }
+                professors: { type: integer }
+                assocProfessors: { type: integer }
+                asstProfessors: { type: integer }
+                institutionType: { type: string }
+      responses:
+        '200':
+          description: Cadre calculus verification result
+
+  /api/v1/compliance/calculus/infrastructure:
+    post:
+      tags: [Compliance]
+      summary: Calculate built instructional carpet area norms and surplus/deficit
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                totalStudents: { type: integer }
+                actualBuiltCarpetArea: { type: number }
+      responses:
+        '200':
+          description: Infrastructure carpet area calculus result
+
+  /api/v1/compliance/rules:
+    get:
+      tags: [Compliance]
+      summary: List all registered statutory compliance rules with standards and weights
+      responses:
+        '200':
+          description: List of statutory compliance rules
 
 components:
   schemas:
