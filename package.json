@@ -10,6 +10,7 @@
     "server:dev": "tsx watch server/src/index.ts",
     "server:build": "tsc -p server/tsconfig.json",
     "server:start": "node server/dist/index.js",
+    "test:idp": "tsx server/src/test/idpVerification.ts",
     "dev:all": "concurrently -k \"npm run dev\" \"npm run server:dev\""
   },
   "dependencies": {
