@@ -114,3 +114,4 @@ export interface ComplianceEvaluationSummary {
   temporalChecks: TemporalCheckResult[];
   recommendedDecision: 'Approve' | 'Request Corrections' | 'Reject' | 'Priority Triage';
 }
+
