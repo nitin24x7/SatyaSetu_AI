@@ -157,3 +157,4 @@ export class MultilingualOcrEngine {
 }
 
 export const ocrEngine = new MultilingualOcrEngine();
+
