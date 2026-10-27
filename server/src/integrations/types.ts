@@ -81,3 +81,4 @@ export interface IntegrationStatus {
   lastHeartbeat: string;
   securityStandard: string;
 }
+
