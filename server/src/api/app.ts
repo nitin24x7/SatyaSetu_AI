@@ -13,6 +13,10 @@ import { institutionsRouter } from './routes/institutions.router';
 import { auditRouter } from './routes/audit.router';
 import { reportsRouter } from './routes/reports.router';
 import { healthRouter } from './routes/health.router';
+import { idpRouter } from './routes/idp.router';
+import { complianceRouter } from './routes/compliance.router';
+import { authRouter } from './routes/auth.router';
+import { integrationsRouter } from './routes/integrations.router';
 import { graphqlSchema } from '../graphql/schema';
 import { graphqlResolvers } from '../graphql/resolvers';
 
@@ -63,20 +67,28 @@ app.use('/api/v1/documents', documentsRouter);
 app.use('/api/v1/institutions', institutionsRouter);
 app.use('/api/v1/audit-logs', auditRouter);
 app.use('/api/v1/reports', reportsRouter);
+app.use('/api/v1/idp', idpRouter);
+app.use('/api/v1/compliance', complianceRouter);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/integrations', integrationsRouter);
 
 // Root Gateway Info
 app.get('/', (_req: Request, res: Response) => {
   res.json({
     name: 'SatyaSetu AI Core Microservices Gateway',
-    version: '1.0.0-phase3',
+    version: '1.0.0-phase6',
     status: 'ACTIVE',
     endpoints: {
       health: '/health',
       swaggerUi: '/api-docs',
       graphql: '/graphql',
+      auth: '/api/v1/auth',
+      integrations: '/api/v1/integrations',
       applications: '/api/v1/applications',
       documents: '/api/v1/documents',
       institutions: '/api/v1/institutions',
+      idp: '/api/v1/idp',
+      compliance: '/api/v1/compliance',
       audit: '/api/v1/audit-logs',
       reports: '/api/v1/reports/analytics',
     },

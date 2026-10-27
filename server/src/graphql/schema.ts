@@ -114,6 +114,257 @@ export const graphqlSchema = buildSchema(`
     averageTurnaroundDays: Float!
   }
 
+  type IdpJobSummary {
+    jobId: ID!
+    documentId: String!
+    applicationId: String!
+    fileName: String!
+    status: String!
+    progressPercent: Int!
+    currentStage: String!
+    enqueuedAt: String!
+    updatedAt: String!
+  }
+
+  type BoundingBox {
+    x: Float!
+    y: Float!
+    width: Float!
+    height: Float!
+  }
+
+  type LayoutSegment {
+    id: ID!
+    type: String!
+    bbox: BoundingBox!
+    confidence: Float!
+    rawText: String!
+  }
+
+  type MathematicalValidation {
+    checked: Boolean!
+    valid: Boolean!
+    summary: String!
+  }
+
+  type ExtractedTable {
+    id: ID!
+    caption: String!
+    rowCount: Int!
+    colCount: Int!
+    headers: [String!]!
+    mathematicalValidation: MathematicalValidation
+  }
+
+  type PreprocessingMetrics {
+    originalDpi: Int!
+    targetDpi: Int!
+    deskewAngleDegrees: Float!
+    noiseReductionApplied: Boolean!
+    contrastRatio: Float!
+    grayscaleBinarized: Boolean!
+    pageCount: Int!
+  }
+
+  type TamperScan {
+    tamperLikelihoodScore: Float!
+    riskLevel: String!
+    anomaliesDetected: [String!]!
+  }
+
+  type IdpProcessingResult {
+    jobId: ID!
+    documentId: String!
+    applicationId: String!
+    fileName: String!
+    category: String!
+    status: String!
+    startedAt: String!
+    completedAt: String
+    durationMs: Int
+    preprocessing: PreprocessingMetrics!
+    layoutSegments: [LayoutSegment!]!
+    ocrWordCount: Int!
+    averageConfidence: Float!
+    extractedTables: [ExtractedTable!]!
+    tamperScan: TamperScan!
+  }
+
+  type IdpJobDetails {
+    summary: IdpJobSummary
+    result: IdpProcessingResult
+  }
+
+  type SimilarityResult {
+    levenshteinDistance: Int!
+    jaroSimilarity: Float!
+    jaroWinklerSimilarity: Float!
+    tokenSortRatio: Float!
+    confidence: Float!
+    matchLevel: String!
+  }
+
+  type ConcordanceItem {
+    fieldKey: String!
+    fieldLabel: String!
+    declaredValue: String!
+    extractedValue: String!
+    sourceDocument: String!
+    similarity: SimilarityResult!
+    status: String!
+    remediationAdvice: String
+  }
+
+  type ConcordanceReport {
+    overallScore: Int!
+    concordanceStatus: String!
+    totalFieldsCompared: Int!
+    concordantCount: Int!
+    warningCount: Int!
+    mismatchCount: Int!
+    items: [ConcordanceItem!]!
+  }
+
+  type CadreCalculusResult {
+    totalStudents: Int!
+    totalFaculty: Int!
+    calculatedSfr: Float!
+    mandatedSfrCeiling: Float!
+    isSfrCompliant: Boolean!
+    summary: String!
+  }
+
+  type InfrastructureCalculusResult {
+    totalBuiltAreaSqM: Float!
+    mandatedMinimumSqM: Float!
+    deficitSurplusPercent: Float!
+    isCompliant: Boolean!
+    summary: String!
+  }
+
+  type TemporalCheckResult {
+    certificateType: String!
+    issuanceDate: String
+    expiryDate: String
+    academicYear: String!
+    isValid: Boolean!
+    isExpired: Boolean!
+    daysRemaining: Int
+    status: String!
+    details: String!
+  }
+
+  type ComplianceRuleInfo {
+    id: ID!
+    code: String!
+    title: String!
+    category: String!
+    regulatoryStandard: String!
+    description: String!
+    weight: Int!
+  }
+
+  type RuleEvaluationFinding {
+    ruleId: String!
+    title: String!
+    category: String!
+    severity: String!
+    status: String!
+    scoreContribution: Int!
+    maxScore: Int!
+    evidence: String!
+    recommendedAction: String
+  }
+
+  type ComplianceEvaluationSummary {
+    applicationId: String!
+    institutionName: String!
+    evaluationTimestamp: String!
+    overallScore: Int!
+    riskLevel: String!
+    findings: [RuleEvaluationFinding!]!
+    concordanceReport: ConcordanceReport!
+    cadreCheck: CadreCalculusResult
+    infrastructureCheck: InfrastructureCalculusResult
+    temporalChecks: [TemporalCheckResult!]!
+    recommendedDecision: String!
+  }
+
+  type UserAuthProfile {
+    id: ID!
+    email: String!
+    name: String!
+    role: String!
+    institutionId: String
+    scopes: [String!]!
+  }
+
+  type AuthTokens {
+    accessToken: String!
+    refreshToken: String!
+    tokenType: String!
+    expiresIn: Int!
+    user: UserAuthProfile!
+  }
+
+  type DigiLockerSignature {
+    signerName: String!
+    certifyingAuthority: String!
+    verified: Boolean!
+    timestamp: String!
+    algorithm: String!
+  }
+
+  type DigiLockerDocument {
+    docUri: String!
+    docType: String!
+    documentTitle: String!
+    issuerName: String!
+    issuedTo: String!
+    issueDate: String!
+    expiryDate: String
+    digitalSignature: DigiLockerSignature!
+    verificationStatus: String!
+  }
+
+  type ESignVerificationResult {
+    documentId: String!
+    fileName: String!
+    isSignatureValid: Boolean!
+    signerName: String!
+    signerDesignation: String!
+    signingTime: String!
+    certifyingAuthority: String!
+    certValidityStatus: String!
+    isAadhaarVerified: Boolean!
+    nonRepudiationGuaranteed: Boolean!
+    auditTrailReference: String!
+    summary: String!
+  }
+
+  type AisheSyncResult {
+    aisheCode: String!
+    legalName: String!
+    institutionType: String!
+    state: String!
+    district: String!
+    establishedYear: Int!
+    accreditedProgramsCount: Int!
+    totalSanctionedIntake: Int!
+    statutoryStanding: String!
+    lastSynchronizedAt: String!
+    registrySource: String!
+  }
+
+  type IntegrationStatus {
+    service: String!
+    endpoint: String!
+    status: String!
+    responseTimeMs: Int!
+    lastHeartbeat: String!
+    securityStandard: String!
+  }
+
   input ApplicationInput {
     institutionId: String
     institutionName: String!
@@ -144,6 +395,17 @@ export const graphqlSchema = buildSchema(`
 
     analytics: AnalyticsReport!
     auditLogs: [ActivityEvent!]!
+
+    idpJob(jobId: ID!): IdpJobDetails
+    idpJobs(limit: Int): [IdpJobSummary!]!
+    idpCategories: [String!]!
+
+    complianceRules: [ComplianceRuleInfo!]!
+    evaluateApplicationCompliance(applicationId: ID!): ComplianceEvaluationSummary
+    checkConcordance(declaredName: String!, extractedName: String!): ConcordanceReport
+
+    integrationStatuses: [IntegrationStatus!]!
+    syncAisheRegistry(aisheCode: String!): AisheSyncResult
   }
 
   type Mutation {
@@ -152,6 +414,21 @@ export const graphqlSchema = buildSchema(`
     requestCorrections(id: ID!, findingIds: [String!]!, comment: String!, dueDate: String): Application!
     resubmitApplication(id: ID!, applicantResponse: String!): Application!
     recordDecision(id: ID!, decision: String!, reasonOrComment: String!): Application!
+
+    enqueueIdpProcessing(
+      documentId: String!
+      applicationId: String!
+      fileName: String!
+      category: String!
+      institutionName: String
+      registrationNumber: String
+    ): IdpJobSummary!
+
+    loginUser(email: String!, password: String): AuthTokens!
+    verifyMfaSession(mfaSessionId: String!, code: String!): AuthTokens!
+    refreshUserToken(refreshToken: String!): AuthTokens!
+    pullDigiLockerDocument(docUri: String!, docType: String!, consent: Boolean!, institutionAisheCode: String!): DigiLockerDocument!
+    verifyAadhaarESign(documentId: String!, fileName: String!, signatureHex: String): ESignVerificationResult!
   }
 `);
 

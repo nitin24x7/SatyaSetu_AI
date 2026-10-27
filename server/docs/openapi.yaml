@@ -28,6 +28,14 @@ tags:
     description: Immutable append-only audit trail and compliance event ledger
   - name: Analytics
     description: Institutional throughput, clearance rates, and failure statistics
+  - name: IDP
+    description: Intelligent Document Processing, layout segmentation, multilingual OCR, and tabular extraction
+  - name: Compliance
+    description: Deterministic Compliance Verification, Concordance Matching, Cadre Norms, and Rule Engine
+  - name: Authentication
+    description: Institutional identity, OAuth 2.0 PKCE, TOTP MFA, and token lifecycle
+  - name: Integrations
+    description: Statutory government bridges (DigiLocker, Aadhaar eSign, AISHE / NAD)
   - name: System
     description: Health and telemetry probes for database, cache, and object storage
 
@@ -322,6 +330,290 @@ paths:
         '200':
           description: Platform analytical metrics
 
+  /api/v1/idp/process:
+    post:
+      tags: [IDP]
+      summary: Enqueue document for background asynchronous OCR & IDP pipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessDocumentRequest'
+      responses:
+        '202':
+          description: Ingestion initiated; asynchronous processing enqueued
+        '400':
+          description: Invalid request parameters
+
+  /api/v1/idp/extract-sync:
+    post:
+      tags: [IDP]
+      summary: Synchronous document OCR tokenization, table matrix parsing, and entity extraction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessDocumentRequest'
+      responses:
+        '200':
+          description: Complete extraction result with bounding boxes and mathematical validation
+
+  /api/v1/idp/jobs/{jobId}:
+    get:
+      tags: [IDP]
+      summary: Query real-time status and extraction results of an IDP job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Job status and extraction payload
+        '404':
+          description: Job identifier not found
+
+  /api/v1/idp/jobs:
+    get:
+      tags: [IDP]
+      summary: List recent IDP processing jobs
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20 }
+      responses:
+        '200':
+          description: List of IDP processing summaries
+
+  /api/v1/idp/categories:
+    get:
+      tags: [IDP]
+      summary: Get supported regulatory document templates and formats
+      responses:
+        '200':
+          description: Supported document categories list
+
+  /api/v1/compliance/evaluate:
+    post:
+      tags: [Compliance]
+      summary: Evaluate application dossier against statutory compliance rules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                applicationId: { type: string }
+                application: { type: object }
+                documents: { type: array, items: { type: object } }
+      responses:
+        '200':
+          description: Comprehensive compliance evaluation summary with score and findings
+
+  /api/v1/compliance/applications/{id}:
+    get:
+      tags: [Compliance]
+      summary: Evaluate existing application by identifier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Compliance score and findings report
+
+  /api/v1/compliance/concordance:
+    post:
+      tags: [Compliance]
+      summary: Cross-reference declared vs extracted attributes using Jaro-Winkler and Levenshtein metrics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [declared]
+              properties:
+                declared: { type: object }
+                extractedEntities: { type: object }
+      responses:
+        '200':
+          description: Concordance report with field-level similarity confidence and match status
+
+  /api/v1/compliance/calculus/cadre:
+    post:
+      tags: [Compliance]
+      summary: Calculate Student-to-Faculty Ratio (SFR) and cadre distribution norms
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                totalStudents: { type: integer }
+                professors: { type: integer }
+                assocProfessors: { type: integer }
+                asstProfessors: { type: integer }
+                institutionType: { type: string }
+      responses:
+        '200':
+          description: Cadre calculus verification result
+
+  /api/v1/compliance/calculus/infrastructure:
+    post:
+      tags: [Compliance]
+      summary: Calculate built instructional carpet area norms and surplus/deficit
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                totalStudents: { type: integer }
+                actualBuiltCarpetArea: { type: number }
+      responses:
+        '200':
+          description: Infrastructure carpet area calculus result
+
+  /api/v1/compliance/rules:
+    get:
+      tags: [Compliance]
+      summary: List all registered statutory compliance rules with standards and weights
+      responses:
+        '200':
+          description: List of statutory compliance rules
+
+  /api/v1/auth/login:
+    post:
+      tags: [Authentication]
+      summary: Authenticate user credentials and return tokens or MFA challenge
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        '200':
+          description: Authentication successful or MFA challenge returned
+
+  /api/v1/auth/mfa/verify:
+    post:
+      tags: [Authentication]
+      summary: Verify 6-digit TOTP code and issue tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mfaSessionId, code]
+              properties:
+                mfaSessionId: { type: string }
+                code: { type: string }
+      responses:
+        '200':
+          description: MFA successfully verified
+
+  /api/v1/auth/refresh:
+    post:
+      tags: [Authentication]
+      summary: Rotate refresh token and issue new access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken: { type: string }
+      responses:
+        '200':
+          description: Token rotated
+
+  /api/v1/auth/me:
+    get:
+      tags: [Authentication]
+      summary: Retrieve current authenticated user profile and scopes
+      responses:
+        '200':
+          description: User profile payload
+
+  /api/v1/integrations/digilocker/pull:
+    post:
+      tags: [Integrations]
+      summary: Pull certified statutory document directly from National DigiLocker
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [docUri, docType, consent, institutionAisheCode]
+              properties:
+                docUri: { type: string }
+                docType: { type: string, enum: [CHARTER, AFFILIATION_ORDER, ACCREDITATION_CERT, DEGREE, LAND_TITLE] }
+                consent: { type: boolean }
+                institutionAisheCode: { type: string }
+      responses:
+        '200':
+          description: Certified DigiLocker document with PKI signature
+
+  /api/v1/integrations/esign/verify:
+    post:
+      tags: [Integrations]
+      summary: Verify Aadhaar eSign or DSC cryptographic signature
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [documentId, fileName]
+              properties:
+                documentId: { type: string }
+                fileName: { type: string }
+                signatureHex: { type: string }
+      responses:
+        '200':
+          description: Digital signature verification result
+
+  /api/v1/integrations/aishe/sync:
+    post:
+      tags: [Integrations]
+      summary: Synchronize institutional master record with AISHE National Portal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [aisheCode]
+              properties:
+                aisheCode: { type: string }
+      responses:
+        '200':
+          description: Synchronized AISHE institutional profile
+
+  /api/v1/integrations/status:
+    get:
+      tags: [Integrations]
+      summary: Telemetry and SLA health monitor for statutory government adapters
+      responses:
+        '200':
+          description: Status of all statutory adapters
+
 components:
   schemas:
     ApplicationStatus:
@@ -405,4 +697,22 @@ components:
             limit: { type: integer }
             totalPages: { type: integer }
         timestamp: { type: string, format: date-time }
+
+    ProcessDocumentRequest:
+      type: object
+      required:
+        - documentId
+        - applicationId
+        - fileName
+        - category
+      properties:
+        documentId: { type: string }
+        applicationId: { type: string }
+        fileName: { type: string }
+        category: { type: string }
+        fileSizeBytes: { type: integer }
+        mimeType: { type: string }
+        institutionName: { type: string }
+        registrationNumber: { type: string }
+
 

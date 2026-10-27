@@ -1,7 +1,7 @@
 # SatyaSetu AI — Institutional Verification & Compliance Platform
 
 > **AI-Powered Regulatory Application Validation, Document Authentication & Compliance Verification Platform**  
-> *Production Architecture: Frontend & Core Microservices Backend (Phase 3 Completed)*
+> *Production Architecture: Frontend, Core Microservices Backend, IDP Pipeline, Compliance Engine & Statutory Integrations (Phase 6 Completed)*
 
 ---
 
@@ -20,6 +20,27 @@ The platform delivers an integrated regulatory lifecycle:
    - **Redis Caching & Distributed Locks**: Cache-aside caching layer, distributed review locks preventing simultaneous assessor state collisions, and sliding-window rate limiters.
    - **Dual Gateways (REST & GraphQL)**: Production Express REST API with RFC 7807 error envelopes and high-throughput GraphQL Gateway.
    - **OpenAPI 3.1 Specification**: Comprehensive contract documentation served interactively via Swagger UI at `/api-docs`.
+6. **Intelligent Document Processing & Multilingual OCR (Phase 4 Completed)**:
+   - **Document Preprocessor**: Automatic DPI upsampling/calibration to 300 DPI, geometric deskew angle compensation, contrast enhancement, and layout decomposition into Gazette titles, seal/stamp zones, signature blocks, and tabular matrices.
+   - **Multilingual OCR Engine**: Token-level optical character extraction with spatial bounding boxes (`x, y, width, height`), confidence scores, and raw text synthesis.
+   - **Tabular Matrix Parser**: Structured extraction for faculty cadre rosters and infrastructure floor areas with mathematical consistency checks (AICTE SFR 1:20 ceiling, cadre sum reconciliation).
+   - **Key-Value Entity Extractor**: Targeted extraction of Indian regulatory attributes (AISHE code, charter ID, accreditation tier, sanctioned intake, issuing directorate).
+   - **Forensic Tamper Detection**: Computes document risk scores, resolution deficiency flags, and tabular anomalies.
+   - **Asynchronous IDP Queue**: Redis/in-memory stage progression (`QUEUED` -> `PREPROCESSING` -> `EXTRACTING_OCR` -> `PARSING_TABLES` -> `EXTRACTING_ENTITIES` -> `COMPLETED`).
+7. **Deterministic Compliance Verification & Concordance Engine (Phase 5 Completed)**:
+   - **String Similarity Engine**: Levenshtein distance, Jaro-Winkler with prefix scaling, and token sort ratio accommodating institutional name permutations and spelling variations.
+   - **Multi-Field Concordance Matcher**: Automated cross-validation comparing declared application attributes against extracted IDP entities (Legal Entity Title, AISHE Code syntax/registry, Charter Registration Number, Governance Classification).
+   - **Temporal Lifecycle Engine**: Evaluates university affiliation continuity and NAAC/NBA accreditation cycles against current academic filing periods.
+   - **Statutory Calculus**: Deterministic verification of Student-to-Faculty Ratios (AICTE SFR 1:20 ceiling or Diploma 1:25) and minimum instructional carpet area per enrolled student ($\ge 4.5$ sq.m/student).
+   - **Pluggable Rule Engine & Discrepancy Triage**: 9 declarative statutory rules across Concordance, Temporal, Cadre, Infrastructure, and Statutory Legal categories, computing a 0-100 compliance score, risk tier (`Low`, `Medium`, `High`), and automated remediation advice.
+8. **Institutional Identity, Statutory Integrations & Security Hardening (Phase 6 Completed)**:
+   - **Cryptographic JWT & Token Lifecycle**: HS256 access tokens, 7-day rotated refresh tokens, and Redis-backed active token revocation/blacklisting.
+   - **RFC 6238 TOTP Multi-Factor Authentication**: 160-bit Base32 secret generation, 6-digit dynamic truncation with drift tolerance, and one-time emergency recovery codes.
+   - **OAuth 2.0 / OIDC with PKCE**: Proof Key for Code Exchange (`S256` SHA-256 challenge) preventing authorization code interception during institutional SSO logins.
+   - **Role-Based Access Control (RBAC)**: Fine-grained scoping across Institutional Applicants, Scrutiny Officers, Technical Assessors, and Compliance Directors.
+   - **National DigiLocker API Integration**: DPDP-compliant consent-driven document retrieval verifying XML metadata signatures, issuing authorities, and digital seal authenticity.
+   - **Aadhaar eSign & DSC Verification Engine**: PKI electronic signature verification under IT Act 2000 Section 3A, establishing non-repudiation and X.509 certificate validity from CCA India.
+   - **Ministry of Education AISHE & NAD Sync**: Live registry synchronization verifying sanctioned student intake limits, accredited program rosters, and active institutional governance standing.
 
 ---
 
@@ -44,11 +65,12 @@ flowchart TD
         H["Application Lifecycle Service"]
         I["Storage Service (S3 / MinIO)"]
         J["Cache & Distributed Lock Service"]
+        IDP["IDP & Multilingual OCR Pipeline\n(Preprocessor, OCR, Tables, KVP)"]
     end
 
     subgraph Persistence["Enterprise Persistence Layer"]
         K[("PostgreSQL 15+\nNormalized Schema & Triggers")]
-        L[("Redis Cluster\nCache & Review Locks")]
+        L[("Redis Cluster\nCache, Queues & Locks")]
         M[("Encrypted S3 / MinIO\nStatutory Dossiers")]
     end
 
@@ -58,11 +80,15 @@ flowchart TD
     C --> E
     D --> H
     D --> I
+    D --> IDP
     E --> H
+    E --> IDP
     H --> J
     H --> K
     I --> M
     J --> L
+    IDP --> L
+    IDP --> I
 ```
 
 ---
@@ -139,6 +165,15 @@ npm run server:build
 
 # Start Production Backend
 npm run server:start
+
+# Run Automated IDP Pipeline Test Suite
+npm run test:idp
+
+# Run Automated Compliance & Concordance Engine Test Suite
+npm run test:compliance
+
+# Run Automated Identity, Auth & Statutory Integrations Test Suite
+npm run test:auth
 ```
 
 ---
@@ -152,6 +187,15 @@ The microservices gateway exposes standardized REST and GraphQL endpoints:
 | `GET /health` | `GET` | Cluster readiness & liveness probe (PostgreSQL, Redis, S3/MinIO) |
 | `GET /api-docs` | `GET` | **Interactive Swagger UI (OpenAPI 3.1 Explorer)** |
 | `ALL /graphql` | `POST` | **GraphQL Gateway** for applications, dossiers, and audit queries |
+| `/api/v1/auth/login` | `POST` | Institutional & assessor authentication (returns tokens or MFA challenge) |
+| `/api/v1/auth/mfa/verify` | `POST` | Verify 6-digit TOTP code and issue JWT access/refresh tokens |
+| `/api/v1/auth/refresh` | `POST` | Rotate refresh token and issue new 15-minute access token |
+| `/api/v1/auth/logout` | `POST` | Revoke session and blacklist active access token |
+| `/api/v1/auth/me` | `GET` | Current authenticated user profile, roles, and permission scopes |
+| `/api/v1/integrations/digilocker/pull` | `POST` | Pull certified statutory document directly from National DigiLocker |
+| `/api/v1/integrations/esign/verify` | `POST` | Verify Aadhaar eSign or DSC cryptographic signature under IT Act 2000 |
+| `/api/v1/integrations/aishe/sync` | `POST` | Synchronize institutional master record with AISHE National Portal |
+| `/api/v1/integrations/status` | `GET` | Telemetry and SLA health monitor for statutory government adapters |
 | `/api/v1/applications` | `GET` | List applications with pagination, multi-field filters, and search |
 | `/api/v1/applications` | `POST` | Create draft or execute formal application submission |
 | `/api/v1/applications/:id` | `GET` | Retrieve complete application dossier with documents & findings |
@@ -166,6 +210,17 @@ The microservices gateway exposes standardized REST and GraphQL endpoints:
 | `/api/v1/institutions` | `GET` | Regulatory master directory of accredited institutions |
 | `/api/v1/audit-logs` | `GET` | Immutable chronological compliance audit ledger |
 | `/api/v1/reports/analytics` | `GET` | Aggregated throughput, clearance ratios, and failure statistics |
+| `/api/v1/idp/process` | `POST` | Enqueue document for background asynchronous OCR & IDP pipeline |
+| `/api/v1/idp/extract-sync` | `POST` | Synchronous OCR tokenization, table matrix parsing, and entity extraction |
+| `/api/v1/idp/jobs/:jobId` | `GET` | Query real-time status, progress, bounding boxes, and extraction payload |
+| `/api/v1/idp/jobs` | `GET` | List recent IDP processing jobs |
+| `/api/v1/idp/categories` | `GET` | Supported regulatory document templates and formats |
+| `/api/v1/compliance/evaluate` | `POST` | Evaluate application dossier against statutory compliance rules |
+| `/api/v1/compliance/applications/:id` | `GET` | Retrieve compliance score, risk level, and findings by application ID |
+| `/api/v1/compliance/concordance` | `POST` | Cross-reference declared vs extracted attributes with Jaro-Winkler |
+| `/api/v1/compliance/calculus/cadre` | `POST` | Calculate Student-to-Faculty Ratio (SFR) and cadre proportionality |
+| `/api/v1/compliance/calculus/infrastructure` | `POST` | Calculate built instructional carpet area norms and surplus/deficit |
+| `/api/v1/compliance/rules` | `GET` | List all registered statutory compliance rules |
 
 ---
 
@@ -226,12 +281,20 @@ psql -U postgres -d satyasetu -f server/src/db/seed.sql
 - **Routing:** React Router v6
 - **Persistence:** LocalStorage with versioned fallback + API Client Bridge
 
-### Backend Architecture (Phase 3)
+### Backend Architecture (Phases 3 - 6)
 - **Server Runtime:** Node.js + TypeScript (`tsx` / `tsc`)
 - **Web Framework:** Express 4 (Modular Routers & Controllers)
 - **Database:** PostgreSQL 14+ (`pg.Pool` connection pooling + Transactions)
 - **Object Storage:** AWS SDK v3 S3 Client (`@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`) supporting AWS S3 and MinIO
-- **Distributed Cache:** Redis / IORedis (`ioredis`) with resilient in-memory fallback
+- **Distributed Cache & Queue:** Redis / IORedis (`ioredis`) with resilient in-memory fallback
 - **GraphQL:** GraphQL 16 (`graphql`, `graphql-http`)
 - **API Documentation:** OpenAPI 3.1 + Swagger UI (`swagger-ui-express`, `yaml`)
 - **Validation:** Zod schemas for all inbound DTOs
+- **IDP & Document Preprocessing:** Automated 300 DPI calibration, deskew detection, contrast optimization, and geometric layout decomposition
+- **Multilingual OCR Engine:** Token-level OCR extraction with spatial bounding box geometry (`x, y, width, height`), confidence metrics, and language tagging
+- **Tabular Matrix Engine:** Structural parsing for faculty rosters and infrastructure carpet areas with mathematical consistency validation (AICTE SFR 1:20 ceiling verification)
+- **Forensic Tamper Detection:** Tamper likelihood scoring and resolution anomaly flagging
+- **Compliance & Concordance Engine:** Multi-metric string similarity (Levenshtein, Jaro-Winkler, TokenSort), field concordance cross-checking, temporal validity monitoring, statutory cadre & space calculus, and 9-rule pluggable triage engine
+- **Authentication & Trust Infrastructure:** Cryptographic HS256 JWT signing, token rotation, active blacklist revocation, RFC 6238 TOTP Multi-Factor Authentication, and OAuth 2.0 PKCE workflows
+- **Role-Based Access Control (RBAC):** Scope-based access management across applicant, scrutiny, assessor, director, and admin tiers
+- **Statutory Integrations:** DigiLocker National Gateway adapter (consent-driven DPDP compliance), Aadhaar eSign PKI verification under IT Act 2000, and Ministry of Education AISHE/NAD registry synchronization

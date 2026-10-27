@@ -1,4 +1,10 @@
 import { applicationService } from '../services/applicationService';
+import { idpService } from '../idp/idpService';
+import { complianceService } from '../compliance/complianceService';
+import { authService } from '../auth/authService';
+import { digiLockerService } from '../integrations/digiLockerService';
+import { aadhaarESignService } from '../integrations/aadhaarESignService';
+import { nadAisheSyncService } from '../integrations/nadAisheSyncService';
 
 export const graphqlResolvers = {
   applications: async (args: any) => {
@@ -91,6 +97,89 @@ export const graphqlResolvers = {
       reasonOrComment,
       reviewer: { id: 'REV-01', name: 'Compliance Director' },
     });
+  },
+
+  idpJob: async ({ jobId }: { jobId: string }) => {
+    return idpService.getJob(jobId);
+  },
+
+  idpJobs: async ({ limit }: { limit?: number }) => {
+    return idpService.listJobs(limit);
+  },
+
+  idpCategories: async () => {
+    return idpService.getSupportedCategories();
+  },
+
+  enqueueIdpProcessing: async (args: {
+    documentId: string;
+    applicationId: string;
+    fileName: string;
+    category: string;
+    institutionName?: string;
+    registrationNumber?: string;
+  }) => {
+    return idpService.enqueueDocumentProcessing(args);
+  },
+
+  complianceRules: async () => {
+    return complianceService.getRegisteredRules();
+  },
+
+  evaluateApplicationCompliance: async ({ applicationId }: { applicationId: string }) => {
+    return complianceService.evaluateApplication(applicationId);
+  },
+
+  checkConcordance: async ({
+    declaredName,
+    extractedName,
+  }: {
+    declaredName: string;
+    extractedName: string;
+  }) => {
+    return complianceService.checkConcordance(
+      { institutionName: declaredName },
+      { institution_name: { extractedValue: extractedName } }
+    );
+  },
+
+  integrationStatuses: async () => {
+    return nadAisheSyncService.getGatewayStatus();
+  },
+
+  syncAisheRegistry: async ({ aisheCode }: { aisheCode: string }) => {
+    return nadAisheSyncService.syncAishe({ aisheCode });
+  },
+
+  loginUser: async ({ email, password }: { email: string; password?: string }) => {
+    const res = await authService.login(email, password);
+    if (res.tokens) return res.tokens;
+    throw new Error('MFA required. Use verifyMfaSession with mfaSessionId.');
+  },
+
+  verifyMfaSession: async ({ mfaSessionId, code }: { mfaSessionId: string; code: string }) => {
+    return authService.verifyMfa(mfaSessionId, code);
+  },
+
+  refreshUserToken: async ({ refreshToken }: { refreshToken: string }) => {
+    return authService.refreshToken(refreshToken);
+  },
+
+  pullDigiLockerDocument: async (args: {
+    docUri: string;
+    docType: 'CHARTER' | 'AFFILIATION_ORDER' | 'ACCREDITATION_CERT' | 'DEGREE' | 'LAND_TITLE';
+    consent: boolean;
+    institutionAisheCode: string;
+  }) => {
+    return digiLockerService.pullDocument(args);
+  },
+
+  verifyAadhaarESign: async (args: {
+    documentId: string;
+    fileName: string;
+    signatureHex?: string;
+  }) => {
+    return aadhaarESignService.verifyDigitalSignature(args);
   },
 };
 
