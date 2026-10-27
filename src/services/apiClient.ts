@@ -20,12 +20,28 @@ export interface ApiResponse<T = any> {
 
 class ApiClient {
   private baseUrl: string;
+  private token: string | null = null;
 
   constructor() {
     this.baseUrl = API_BASE_URL;
+    if (typeof window !== 'undefined') {
+      this.token = localStorage.getItem('satyasetu_auth_token');
+    }
   }
 
-  private async request<T>(
+  setToken(token: string | null) {
+    this.token = token;
+    if (typeof window !== 'undefined') {
+      if (token) localStorage.setItem('satyasetu_auth_token', token);
+      else localStorage.removeItem('satyasetu_auth_token');
+    }
+  }
+
+  getToken(): string | null {
+    return this.token;
+  }
+
+  private async request<T = any>(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
@@ -33,6 +49,7 @@ class ApiClient {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
+      ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
       ...((options.headers as Record<string, string>) || {}),
     };
 
@@ -220,6 +237,102 @@ class ApiClient {
 
   async getComplianceRules(): Promise<ApiResponse> {
     return this.request('/api/v1/compliance/rules');
+  }
+
+  // --- Institutional Identity & Security (Phase 6) ---
+
+  async login(email: string, password?: string): Promise<ApiResponse> {
+    const res = await this.request('/api/v1/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+    if (res.success && res.data?.accessToken) {
+      this.setToken(res.data.accessToken);
+    }
+    return res;
+  }
+
+  async verifyMfa(mfaSessionId: string, code: string): Promise<ApiResponse> {
+    const res = await this.request('/api/v1/auth/mfa/verify', {
+      method: 'POST',
+      body: JSON.stringify({ mfaSessionId, code }),
+    });
+    if (res.success && res.data?.accessToken) {
+      this.setToken(res.data.accessToken);
+    }
+    return res;
+  }
+
+  async setupMfa(): Promise<ApiResponse> {
+    return this.request('/api/v1/auth/mfa/setup', { method: 'POST' });
+  }
+
+  async confirmMfa(code: string): Promise<ApiResponse> {
+    return this.request('/api/v1/auth/mfa/confirm', {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+    });
+  }
+
+  async refreshToken(refreshToken: string): Promise<ApiResponse> {
+    const res = await this.request('/api/v1/auth/refresh', {
+      method: 'POST',
+      body: JSON.stringify({ refreshToken }),
+    });
+    if (res.success && res.data?.accessToken) {
+      this.setToken(res.data.accessToken);
+    }
+    return res;
+  }
+
+  async logout(refreshToken?: string): Promise<ApiResponse> {
+    const res = await this.request('/api/v1/auth/logout', {
+      method: 'POST',
+      body: JSON.stringify({ refreshToken }),
+    });
+    this.setToken(null);
+    return res;
+  }
+
+  async getAuthProfile(): Promise<ApiResponse> {
+    return this.request('/api/v1/auth/me');
+  }
+
+  // --- Statutory Government Integrations (Phase 6) ---
+
+  async pullDigiLockerDocument(params: {
+    docUri: string;
+    docType: 'CHARTER' | 'AFFILIATION_ORDER' | 'ACCREDITATION_CERT' | 'DEGREE' | 'LAND_TITLE';
+    consent: boolean;
+    institutionAisheCode: string;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/integrations/digilocker/pull', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async verifyAadhaarESign(params: {
+    documentId: string;
+    fileName: string;
+    signatureHex?: string;
+    signerAadhaarRef?: string;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/integrations/esign/verify', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async syncAisheRegistry(aisheCode: string): Promise<ApiResponse> {
+    return this.request('/api/v1/integrations/aishe/sync', {
+      method: 'POST',
+      body: JSON.stringify({ aisheCode }),
+    });
+  }
+
+  async getIntegrationStatuses(): Promise<ApiResponse> {
+    return this.request('/api/v1/integrations/status');
   }
 
   async checkHealth(): Promise<any> {

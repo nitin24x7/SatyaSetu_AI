@@ -290,6 +290,81 @@ export const graphqlSchema = buildSchema(`
     recommendedDecision: String!
   }
 
+  type UserAuthProfile {
+    id: ID!
+    email: String!
+    name: String!
+    role: String!
+    institutionId: String
+    scopes: [String!]!
+  }
+
+  type AuthTokens {
+    accessToken: String!
+    refreshToken: String!
+    tokenType: String!
+    expiresIn: Int!
+    user: UserAuthProfile!
+  }
+
+  type DigiLockerSignature {
+    signerName: String!
+    certifyingAuthority: String!
+    verified: Boolean!
+    timestamp: String!
+    algorithm: String!
+  }
+
+  type DigiLockerDocument {
+    docUri: String!
+    docType: String!
+    documentTitle: String!
+    issuerName: String!
+    issuedTo: String!
+    issueDate: String!
+    expiryDate: String
+    digitalSignature: DigiLockerSignature!
+    verificationStatus: String!
+  }
+
+  type ESignVerificationResult {
+    documentId: String!
+    fileName: String!
+    isSignatureValid: Boolean!
+    signerName: String!
+    signerDesignation: String!
+    signingTime: String!
+    certifyingAuthority: String!
+    certValidityStatus: String!
+    isAadhaarVerified: Boolean!
+    nonRepudiationGuaranteed: Boolean!
+    auditTrailReference: String!
+    summary: String!
+  }
+
+  type AisheSyncResult {
+    aisheCode: String!
+    legalName: String!
+    institutionType: String!
+    state: String!
+    district: String!
+    establishedYear: Int!
+    accreditedProgramsCount: Int!
+    totalSanctionedIntake: Int!
+    statutoryStanding: String!
+    lastSynchronizedAt: String!
+    registrySource: String!
+  }
+
+  type IntegrationStatus {
+    service: String!
+    endpoint: String!
+    status: String!
+    responseTimeMs: Int!
+    lastHeartbeat: String!
+    securityStandard: String!
+  }
+
   input ApplicationInput {
     institutionId: String
     institutionName: String!
@@ -328,6 +403,9 @@ export const graphqlSchema = buildSchema(`
     complianceRules: [ComplianceRuleInfo!]!
     evaluateApplicationCompliance(applicationId: ID!): ComplianceEvaluationSummary
     checkConcordance(declaredName: String!, extractedName: String!): ConcordanceReport
+
+    integrationStatuses: [IntegrationStatus!]!
+    syncAisheRegistry(aisheCode: String!): AisheSyncResult
   }
 
   type Mutation {
@@ -345,6 +423,12 @@ export const graphqlSchema = buildSchema(`
       institutionName: String
       registrationNumber: String
     ): IdpJobSummary!
+
+    loginUser(email: String!, password: String): AuthTokens!
+    verifyMfaSession(mfaSessionId: String!, code: String!): AuthTokens!
+    refreshUserToken(refreshToken: String!): AuthTokens!
+    pullDigiLockerDocument(docUri: String!, docType: String!, consent: Boolean!, institutionAisheCode: String!): DigiLockerDocument!
+    verifyAadhaarESign(documentId: String!, fileName: String!, signatureHex: String): ESignVerificationResult!
   }
 `);
 

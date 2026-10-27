@@ -265,13 +265,16 @@ flowchart LR
   - **Pluggable Rule Engine & Discrepancy Triage**: 9 declarative statutory rules across Concordance, Temporal, Cadre, Infrastructure, and Statutory Legal categories, computing a 0-100 compliance score, risk tier (`Low`, `Medium`, `High`), and automated remediation advice.
 
 ### Phase 6: Institutional Identity, Statutory Integrations & Security Hardening
-* **Status**: Upcoming
-* **Core Focus**: Trust infrastructure, Single Sign-On (SSO), and government repository bridges.
+* **Status**: Completed
+* **Core Focus**: Trust infrastructure, Single Sign-On (SSO), Multi-Factor Authentication (MFA), and statutory government repository bridges.
 * **Key Deliverables**:
-  - OAuth 2.0 / OpenID Connect with PKCE for institutional identity federation.
-  - Multi-Factor Authentication (MFA) via TOTP / SMS OTP for authorized institutional officers.
-  - Government API integrations: DigiLocker API adapter for institutional charter pull and Aadhaar eSign verification for affidavits.
-  - Role-Based Access Control (RBAC) with fine-grained scoping.
+  - Cryptographic JWT access token signing (HS256), refresh token rotation, and active blacklist revocation (`JwtService`).
+  - RFC 6238 TOTP Multi-Factor Authentication with 160-bit Base32 secret generation, dynamic truncation, and emergency backup codes (`TotpService`).
+  - OAuth 2.0 / OpenID Connect with PKCE (`S256` SHA-256 challenge) for secure institutional login federation.
+  - Role-Based Access Control (RBAC) with fine-grained scoping across Applicant, Scrutiny, Assessor, Director, and Admin tiers (`RbacService`).
+  - National DigiLocker API Adapter (`DigiLockerService`) providing DPDP consent-driven retrieval of charters, affiliation orders, and NAAC accreditations with PKI verification.
+  - Aadhaar eSign & DSC Verification Engine (`AadhaarESignService`) under IT Act 2000 Section 3A, establishing non-repudiation and X.509 certificate chains from CCA India.
+  - Ministry of Education AISHE & NAD registry synchronization (`NadAisheSyncService`) validating sanctioned intake limits, accredited program counts, and institutional standing.
 
 ### Phase 7: Document Forensics, Anti-Fraud & Visual Integrity Analysis
 * **Status**: Upcoming
@@ -407,3 +410,4 @@ npm run server:build
 *Document Version:* `2.0.0-enterprise`  
 *Platform:* **SatyaSetu AI (AI-Powered Document Authentication & Regulatory Compliance Platform)**  
 *Authority Directorate:* **Ministry of Higher Education & Statutory Regulatory Councils**
+

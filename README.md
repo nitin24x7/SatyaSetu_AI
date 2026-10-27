@@ -1,7 +1,7 @@
 # SatyaSetu AI — Institutional Verification & Compliance Platform
 
 > **AI-Powered Regulatory Application Validation, Document Authentication & Compliance Verification Platform**  
-> *Production Architecture: Frontend, Core Microservices Backend, IDP Pipeline & Compliance Engine (Phase 5 Completed)*
+> *Production Architecture: Frontend, Core Microservices Backend, IDP Pipeline, Compliance Engine & Statutory Integrations (Phase 6 Completed)*
 
 ---
 
@@ -33,6 +33,14 @@ The platform delivers an integrated regulatory lifecycle:
    - **Temporal Lifecycle Engine**: Evaluates university affiliation continuity and NAAC/NBA accreditation cycles against current academic filing periods.
    - **Statutory Calculus**: Deterministic verification of Student-to-Faculty Ratios (AICTE SFR 1:20 ceiling or Diploma 1:25) and minimum instructional carpet area per enrolled student ($\ge 4.5$ sq.m/student).
    - **Pluggable Rule Engine & Discrepancy Triage**: 9 declarative statutory rules across Concordance, Temporal, Cadre, Infrastructure, and Statutory Legal categories, computing a 0-100 compliance score, risk tier (`Low`, `Medium`, `High`), and automated remediation advice.
+8. **Institutional Identity, Statutory Integrations & Security Hardening (Phase 6 Completed)**:
+   - **Cryptographic JWT & Token Lifecycle**: HS256 access tokens, 7-day rotated refresh tokens, and Redis-backed active token revocation/blacklisting.
+   - **RFC 6238 TOTP Multi-Factor Authentication**: 160-bit Base32 secret generation, 6-digit dynamic truncation with drift tolerance, and one-time emergency recovery codes.
+   - **OAuth 2.0 / OIDC with PKCE**: Proof Key for Code Exchange (`S256` SHA-256 challenge) preventing authorization code interception during institutional SSO logins.
+   - **Role-Based Access Control (RBAC)**: Fine-grained scoping across Institutional Applicants, Scrutiny Officers, Technical Assessors, and Compliance Directors.
+   - **National DigiLocker API Integration**: DPDP-compliant consent-driven document retrieval verifying XML metadata signatures, issuing authorities, and digital seal authenticity.
+   - **Aadhaar eSign & DSC Verification Engine**: PKI electronic signature verification under IT Act 2000 Section 3A, establishing non-repudiation and X.509 certificate validity from CCA India.
+   - **Ministry of Education AISHE & NAD Sync**: Live registry synchronization verifying sanctioned student intake limits, accredited program rosters, and active institutional governance standing.
 
 ---
 
@@ -163,6 +171,9 @@ npm run test:idp
 
 # Run Automated Compliance & Concordance Engine Test Suite
 npm run test:compliance
+
+# Run Automated Identity, Auth & Statutory Integrations Test Suite
+npm run test:auth
 ```
 
 ---
@@ -176,6 +187,15 @@ The microservices gateway exposes standardized REST and GraphQL endpoints:
 | `GET /health` | `GET` | Cluster readiness & liveness probe (PostgreSQL, Redis, S3/MinIO) |
 | `GET /api-docs` | `GET` | **Interactive Swagger UI (OpenAPI 3.1 Explorer)** |
 | `ALL /graphql` | `POST` | **GraphQL Gateway** for applications, dossiers, and audit queries |
+| `/api/v1/auth/login` | `POST` | Institutional & assessor authentication (returns tokens or MFA challenge) |
+| `/api/v1/auth/mfa/verify` | `POST` | Verify 6-digit TOTP code and issue JWT access/refresh tokens |
+| `/api/v1/auth/refresh` | `POST` | Rotate refresh token and issue new 15-minute access token |
+| `/api/v1/auth/logout` | `POST` | Revoke session and blacklist active access token |
+| `/api/v1/auth/me` | `GET` | Current authenticated user profile, roles, and permission scopes |
+| `/api/v1/integrations/digilocker/pull` | `POST` | Pull certified statutory document directly from National DigiLocker |
+| `/api/v1/integrations/esign/verify` | `POST` | Verify Aadhaar eSign or DSC cryptographic signature under IT Act 2000 |
+| `/api/v1/integrations/aishe/sync` | `POST` | Synchronize institutional master record with AISHE National Portal |
+| `/api/v1/integrations/status` | `GET` | Telemetry and SLA health monitor for statutory government adapters |
 | `/api/v1/applications` | `GET` | List applications with pagination, multi-field filters, and search |
 | `/api/v1/applications` | `POST` | Create draft or execute formal application submission |
 | `/api/v1/applications/:id` | `GET` | Retrieve complete application dossier with documents & findings |
@@ -261,7 +281,7 @@ psql -U postgres -d satyasetu -f server/src/db/seed.sql
 - **Routing:** React Router v6
 - **Persistence:** LocalStorage with versioned fallback + API Client Bridge
 
-### Backend Architecture (Phase 3, Phase 4 & Phase 5)
+### Backend Architecture (Phases 3 - 6)
 - **Server Runtime:** Node.js + TypeScript (`tsx` / `tsc`)
 - **Web Framework:** Express 4 (Modular Routers & Controllers)
 - **Database:** PostgreSQL 14+ (`pg.Pool` connection pooling + Transactions)
@@ -275,3 +295,6 @@ psql -U postgres -d satyasetu -f server/src/db/seed.sql
 - **Tabular Matrix Engine:** Structural parsing for faculty rosters and infrastructure carpet areas with mathematical consistency validation (AICTE SFR 1:20 ceiling verification)
 - **Forensic Tamper Detection:** Tamper likelihood scoring and resolution anomaly flagging
 - **Compliance & Concordance Engine:** Multi-metric string similarity (Levenshtein, Jaro-Winkler, TokenSort), field concordance cross-checking, temporal validity monitoring, statutory cadre & space calculus, and 9-rule pluggable triage engine
+- **Authentication & Trust Infrastructure:** Cryptographic HS256 JWT signing, token rotation, active blacklist revocation, RFC 6238 TOTP Multi-Factor Authentication, and OAuth 2.0 PKCE workflows
+- **Role-Based Access Control (RBAC):** Scope-based access management across applicant, scrutiny, assessor, director, and admin tiers
+- **Statutory Integrations:** DigiLocker National Gateway adapter (consent-driven DPDP compliance), Aadhaar eSign PKI verification under IT Act 2000, and Ministry of Education AISHE/NAD registry synchronization

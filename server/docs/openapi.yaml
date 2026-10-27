@@ -32,6 +32,10 @@ tags:
     description: Intelligent Document Processing, layout segmentation, multilingual OCR, and tabular extraction
   - name: Compliance
     description: Deterministic Compliance Verification, Concordance Matching, Cadre Norms, and Rule Engine
+  - name: Authentication
+    description: Institutional identity, OAuth 2.0 PKCE, TOTP MFA, and token lifecycle
+  - name: Integrations
+    description: Statutory government bridges (DigiLocker, Aadhaar eSign, AISHE / NAD)
   - name: System
     description: Health and telemetry probes for database, cache, and object storage
 
@@ -484,6 +488,131 @@ paths:
       responses:
         '200':
           description: List of statutory compliance rules
+
+  /api/v1/auth/login:
+    post:
+      tags: [Authentication]
+      summary: Authenticate user credentials and return tokens or MFA challenge
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        '200':
+          description: Authentication successful or MFA challenge returned
+
+  /api/v1/auth/mfa/verify:
+    post:
+      tags: [Authentication]
+      summary: Verify 6-digit TOTP code and issue tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mfaSessionId, code]
+              properties:
+                mfaSessionId: { type: string }
+                code: { type: string }
+      responses:
+        '200':
+          description: MFA successfully verified
+
+  /api/v1/auth/refresh:
+    post:
+      tags: [Authentication]
+      summary: Rotate refresh token and issue new access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken: { type: string }
+      responses:
+        '200':
+          description: Token rotated
+
+  /api/v1/auth/me:
+    get:
+      tags: [Authentication]
+      summary: Retrieve current authenticated user profile and scopes
+      responses:
+        '200':
+          description: User profile payload
+
+  /api/v1/integrations/digilocker/pull:
+    post:
+      tags: [Integrations]
+      summary: Pull certified statutory document directly from National DigiLocker
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [docUri, docType, consent, institutionAisheCode]
+              properties:
+                docUri: { type: string }
+                docType: { type: string, enum: [CHARTER, AFFILIATION_ORDER, ACCREDITATION_CERT, DEGREE, LAND_TITLE] }
+                consent: { type: boolean }
+                institutionAisheCode: { type: string }
+      responses:
+        '200':
+          description: Certified DigiLocker document with PKI signature
+
+  /api/v1/integrations/esign/verify:
+    post:
+      tags: [Integrations]
+      summary: Verify Aadhaar eSign or DSC cryptographic signature
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [documentId, fileName]
+              properties:
+                documentId: { type: string }
+                fileName: { type: string }
+                signatureHex: { type: string }
+      responses:
+        '200':
+          description: Digital signature verification result
+
+  /api/v1/integrations/aishe/sync:
+    post:
+      tags: [Integrations]
+      summary: Synchronize institutional master record with AISHE National Portal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [aisheCode]
+              properties:
+                aisheCode: { type: string }
+      responses:
+        '200':
+          description: Synchronized AISHE institutional profile
+
+  /api/v1/integrations/status:
+    get:
+      tags: [Integrations]
+      summary: Telemetry and SLA health monitor for statutory government adapters
+      responses:
+        '200':
+          description: Status of all statutory adapters
 
 components:
   schemas:
