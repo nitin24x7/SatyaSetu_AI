@@ -121,3 +121,4 @@ export class LoadTestSimulator {
 }
 
 export const loadTestSimulator = LoadTestSimulator.getInstance();
+

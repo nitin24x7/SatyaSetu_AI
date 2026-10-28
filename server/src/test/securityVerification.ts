@@ -220,3 +220,4 @@ runSecurityVerificationTests().catch(err => {
   console.error('\n[TEST SUITE FAILURE]', err);
   process.exit(1);
 });
+
