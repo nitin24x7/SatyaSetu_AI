@@ -23,11 +23,15 @@ export type InstitutionType =
   | 'Management Institute';
 
 export type ApplicationType =
+  | 'Extension of Approval (EoA)'
+  | 'Increase in Intake / Additional Course'
+  | 'Introduction of Supernumerary Quota (OCI/FN/NRI/TFW)'
   | 'Institutional Recognition'
   | 'Compliance Review'
   | 'Document Verification'
   | 'Renewal / Extension'
-  | 'Capacity Expansion Approval';
+  | 'Capacity Expansion Approval'
+  | 'Closure of Course or Institution';
 
 export type DocumentCategory =
   | 'Institutional Registration Certificate'
@@ -35,10 +39,19 @@ export type DocumentCategory =
   | 'Accreditation Certificate'
   | 'Faculty Information'
   | 'Infrastructure Information'
+  | 'Previous Year EoA & TER Payment Receipt'
   | 'Supporting Declaration'
   | 'Other Supporting Documents';
 
 export type DocumentReviewStatus = 'Pending' | 'Verified' | 'Flagged' | 'Rejected' | 'Missing';
+
+export type IssuingAuthorityStatus =
+  | 'Verified'
+  | 'Mismatch Detected'
+  | 'Expired'
+  | 'Verification Pending'
+  | 'Source Unavailable'
+  | 'Manual Review Required';
 
 export interface Institution {
   id: string;
@@ -81,6 +94,11 @@ export interface DocumentItem {
   };
   fileDataUrl?: string;
   findings?: VerificationFinding[];
+  issuingAuthorityStatus?: IssuingAuthorityStatus;
+  issuingAuthoritySource?: string;
+  verificationTimestamp?: string;
+  sourceEvidenceHash?: string;
+  verificationMethod?: 'API' | 'QR_CODE' | 'DIGITAL_SIGNATURE' | 'DIGILOCKER' | 'PORTAL';
 }
 
 export interface VerificationFinding {
@@ -151,6 +169,34 @@ export interface Application {
   applicantResponse?: string;
   decisionDate?: string;
   activityLog: ActivityEvent[];
+  // AICTE EoA & Regulatory Specifics
+  terPaymentStatus?: 'CONFIRMED' | 'PENDING' | 'EXEMPTED' | 'FAILED';
+  terTransactionRef?: string;
+  terAmountPaid?: number;
+  terPaymentDate?: string;
+  previousEoaRecord?: {
+    previousAcademicYear: string;
+    previousEoaRef: string;
+    approvedProgramsCount: number;
+    approvedIntake: number;
+    deficiencyCountPriorYear: number;
+    status: 'APPROVED' | 'CONDITIONAL' | 'DEFERRED';
+  };
+  proposedIntake?: number;
+  physicalInspectionRequired?: boolean;
+  inspectionRecommendationReason?: string;
+  infrastructureAudit?: {
+    totalAreaDeclared: number;
+    totalAreaVerified: number;
+    classroomsCount: number;
+    labsCount: number;
+    computingUnits: number;
+    internetBandwidthMbps: number;
+    barrierFreeAccess: boolean;
+    geoTaggedPhotosVerified: boolean;
+    evcRecommended: boolean;
+    evcReason?: string;
+  };
 }
 
 export interface NotificationItem {

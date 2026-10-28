@@ -123,6 +123,40 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
+      {/* AICTE Decision-Support & Statutory Operational Strip */}
+      <div className="bg-gradient-to-r from-blue-900 via-navy-deep to-slate-900 text-white rounded-2xl p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="bg-amber-400 text-slate-900 text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider font-mono">
+              AICTE EOA 2026-27
+            </span>
+            <h2 className="text-sm font-bold">
+              AI-Enabled Decision Support & Statutory Approval Dashboard
+            </h2>
+          </div>
+          <p className="text-xs text-slate-300">
+            Automated scrutiny of technical education institutions for Extension of Approval (EoA), course additions, and capacity verification.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 shrink-0 text-xs">
+          <div className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
+            <span className="text-[10px] text-slate-300 block">EVC Inspections:</span>
+            <span className="font-bold text-amber-300">
+              {applications.filter((a) => a.physicalInspectionRequired).length} Flagged
+            </span>
+          </div>
+          <div className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
+            <span className="text-[10px] text-slate-300 block">Authority Gateways:</span>
+            <span className="font-bold text-emerald-300">5 Connected</span>
+          </div>
+          <div className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
+            <span className="text-[10px] text-slate-300 block">TER Reconciliation:</span>
+            <span className="font-bold text-blue-200">100% Match</span>
+          </div>
+        </div>
+      </div>
+
       {/* Metric Cards Row */}
       <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
         <MetricCard

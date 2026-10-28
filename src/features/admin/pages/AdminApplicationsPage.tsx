@@ -422,7 +422,17 @@ export const AdminApplicationsPage: React.FC = () => {
                       {formatDateShort(app.submittedAt || app.createdAt)}
                     </td>
                     <td className="py-3.5 px-3">
-                      <StatusBadge status={app.status} size="sm" />
+                      <div className="flex items-center gap-1">
+                        <StatusBadge status={app.status} size="sm" />
+                        {app.physicalInspectionRequired && (
+                          <span
+                            className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200 shrink-0"
+                            title="Expert Visit Committee (EVC) Physical Inspection Flagged"
+                          >
+                            EVC
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-3.5 px-3 text-slate-700 max-w-[130px] truncate">
                       {app.assignedReviewerName || (

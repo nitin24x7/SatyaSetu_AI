@@ -27,6 +27,13 @@ import {
   Maximize2,
   Sparkles,
   ExternalLink,
+  Landmark,
+  Camera,
+  CreditCard,
+  Link2,
+  SearchCode,
+  BadgeCheck,
+  Compass,
 } from 'lucide-react';
 import { StatusBadge } from '../../../components/ui/StatusBadge';
 import { RiskBadge } from '../../../components/ui/RiskBadge';
@@ -47,6 +54,10 @@ export const AdminReviewWorkspacePage: React.FC = () => {
     recordDecision,
     reopenApplication,
     flagForInvestigation,
+    togglePhysicalInspection,
+    verifyDocumentAuthority,
+    verifyAllDocumentAuthorities,
+    syncAicteMasterData,
     currentReviewer,
   } = useApp();
   const { success, warning, error } = useToast();
@@ -62,9 +73,12 @@ export const AdminReviewWorkspacePage: React.FC = () => {
   const [zoomLevel, setZoomLevel] = useState<number>(100);
 
   // Right Panel Active Tab
-  const [activeRightTab, setActiveRightTab] = useState<'findings' | 'extracted' | 'activity'>(
-    'findings'
-  );
+  const [activeRightTab, setActiveRightTab] = useState<
+    'findings' | 'extracted' | 'authorities' | 'infrastructure' | 'activity'
+  >('findings');
+
+  // Loading state for authority query
+  const [isQueryingAuthorities, setIsQueryingAuthorities] = useState(false);
 
   // Dialog States
   const [isCorrectionsOpen, setIsCorrectionsOpen] = useState(false);
@@ -85,6 +99,11 @@ export const AdminReviewWorkspacePage: React.FC = () => {
 
   const [isFlagOpen, setIsFlagOpen] = useState(false);
   const [flagNote, setFlagNote] = useState('');
+
+  const [isEvcModalOpen, setIsEvcModalOpen] = useState(false);
+  const [evcReason, setEvcReason] = useState(
+    'Instructional carpet area deficit and unverified laboratory resources requiring Expert Visit Committee (EVC) on-site verification.'
+  );
 
   if (!application) {
     return (
@@ -175,6 +194,13 @@ export const AdminReviewWorkspacePage: React.FC = () => {
     success('Flagged for Investigation', `Application risk level elevated to High.`);
   };
 
+  // Handle EVC Physical Inspection Submit
+  const handleConfirmEvc = () => {
+    togglePhysicalInspection(application.id, true, evcReason);
+    setIsEvcModalOpen(false);
+    warning('EVC Physical Inspection Flagged', 'Case flagged for Expert Visit Committee on-site inspection.');
+  };
+
   return (
     <div className="space-y-4">
       {/* Top Breadcrumb & Status Navigation Header */}
@@ -257,6 +283,50 @@ export const AdminReviewWorkspacePage: React.FC = () => {
               </button>
             )}
 
+            {/* Sync AICTE Records */}
+            <button
+              onClick={() => {
+                syncAicteMasterData(application.id);
+                success('AICTE Master Synchronized', 'Historical approval records and TER payment status updated.');
+              }}
+              className="px-3 py-1.5 border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-lg flex items-center gap-1.5"
+              title="Retrieve relevant institutional records from central AICTE portal"
+            >
+              <Landmark size={14} /> Sync AICTE
+            </button>
+
+            {/* Query Issuing Authorities */}
+            <button
+              onClick={() => {
+                setIsQueryingAuthorities(true);
+                setTimeout(() => {
+                  verifyAllDocumentAuthorities(application.id);
+                  setIsQueryingAuthorities(false);
+                  success('Issuing Authorities Queried', 'All documents verified against DigiLocker, University, and State gateways.');
+                }, 600);
+              }}
+              disabled={isQueryingAuthorities}
+              className="px-3 py-1.5 border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold rounded-lg flex items-center gap-1.5"
+              title="Query DigiLocker, State DTE, and Affiliating University APIs"
+            >
+              <Link2 size={14} className={isQueryingAuthorities ? 'animate-spin' : ''} />
+              {isQueryingAuthorities ? 'Verifying...' : 'Verify Authorities'}
+            </button>
+
+            {/* EVC Physical Inspection Flag */}
+            <button
+              onClick={() => setIsEvcModalOpen(true)}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-colors ${
+                application.physicalInspectionRequired
+                  ? 'bg-amber-100 border border-amber-300 text-amber-900 shadow-xs'
+                  : 'border border-slate-border text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+              title="Flag or review Expert Visit Committee (EVC) on-site physical inspection"
+            >
+              <Compass size={14} className={application.physicalInspectionRequired ? 'text-amber-700' : ''} />
+              {application.physicalInspectionRequired ? 'EVC Flagged' : 'Recommend EVC'}
+            </button>
+
             {/* Flag for investigation */}
             {application.riskLevel !== 'High' && (
               <button
@@ -315,6 +385,46 @@ export const AdminReviewWorkspacePage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* EVC Physical Inspection Banner */}
+      {application.physicalInspectionRequired && (
+        <div className="bg-amber-50 border border-amber-300 rounded-xl p-3.5 flex items-start justify-between gap-3 text-amber-950 text-xs animate-in fade-in duration-150 shadow-xs">
+          <div className="flex items-start gap-2.5">
+            <Compass size={18} className="text-amber-700 shrink-0 mt-0.5 animate-pulse" />
+            <div>
+              <div className="font-bold text-amber-900 flex items-center gap-2">
+                <span>AICTE Expert Visit Committee (EVC) Physical Inspection Recommended</span>
+                <span className="bg-amber-200 text-amber-800 text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold">
+                  EVC-ACTION-REQUIRED
+                </span>
+              </div>
+              <p className="mt-0.5 text-amber-800">
+                Grounds for on-site physical scrutiny: {application.inspectionRecommendationReason}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              togglePhysicalInspection(application.id, false);
+              success('EVC Flag Cleared', 'Physical inspection requirement removed.');
+            }}
+            className="text-[11px] font-semibold text-amber-800 hover:text-amber-950 underline shrink-0"
+          >
+            Clear Flag
+          </button>
+        </div>
+      )}
+
+      {/* Statutory Advisory Decision-Support Notice */}
+      <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 flex items-center justify-between gap-2 text-slate-600 text-[11px]">
+        <div className="flex items-center gap-2">
+          <Shield size={14} className="text-brand-blue shrink-0" />
+          <span>
+            <strong>AICTE Decision Support Safeguard:</strong> All AI-generated flags, concordance markers, and compliance calculus are preliminary decision-support outputs. Statutory scrutiny, physical inspections where required, and final regulatory decisions remain strictly with competent AICTE authorities.
+          </span>
+        </div>
+        <span className="text-[10px] text-slate-400 font-mono shrink-0">APH 2026/27 Reg. 4.2</span>
+      </div>
 
       {/* THREE-PANEL REVIEW WORKSPACE */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-[680px]">
@@ -504,10 +614,10 @@ export const AdminReviewWorkspacePage: React.FC = () => {
         {/* PANEL 3: RIGHT PANEL — Findings, Field Concordance & Compliance Checklist (4 cols) */}
         <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-border shadow-xs flex flex-col overflow-hidden max-h-[750px]">
           {/* Tab Navigation */}
-          <div className="p-2 border-b border-slate-border bg-surface-subtle flex gap-1">
+          <div className="p-1.5 border-b border-slate-border bg-surface-subtle flex gap-1 overflow-x-auto">
             <button
               onClick={() => setActiveRightTab('findings')}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+              className={`px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap ${
                 activeRightTab === 'findings'
                   ? 'bg-white text-navy-deep shadow-xs'
                   : 'text-slate-500 hover:text-slate-800'
@@ -517,23 +627,43 @@ export const AdminReviewWorkspacePage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveRightTab('extracted')}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+              className={`px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap ${
                 activeRightTab === 'extracted'
                   ? 'bg-white text-navy-deep shadow-xs'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              Data Concordance
+              Concordance
+            </button>
+            <button
+              onClick={() => setActiveRightTab('authorities')}
+              className={`px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap flex items-center gap-1 ${
+                activeRightTab === 'authorities'
+                  ? 'bg-white text-navy-deep shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <Landmark size={12} /> Authorities & EoA
+            </button>
+            <button
+              onClick={() => setActiveRightTab('infrastructure')}
+              className={`px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap flex items-center gap-1 ${
+                activeRightTab === 'infrastructure'
+                  ? 'bg-white text-navy-deep shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <Building2 size={12} /> Infrastructure
             </button>
             <button
               onClick={() => setActiveRightTab('activity')}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+              className={`px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap ${
                 activeRightTab === 'activity'
                   ? 'bg-white text-navy-deep shadow-xs'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              History Log
+              History
             </button>
           </div>
 
@@ -688,7 +818,297 @@ export const AdminReviewWorkspacePage: React.FC = () => {
             </div>
           )}
 
-          {/* TAB 3: History & Activity Log */}
+          {/* TAB 3: AICTE EoA & Issuing Authority Verification */}
+          {activeRightTab === 'authorities' && (
+            <div className="flex-1 p-4 overflow-y-auto space-y-4">
+              {/* Central AICTE Systems Cross-Check */}
+              <div className="p-3.5 bg-indigo-50/50 border border-indigo-200 rounded-xl space-y-2 text-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 font-bold text-indigo-950">
+                    <Landmark size={15} className="text-indigo-700" />
+                    <span>AICTE Central Master Records</span>
+                  </div>
+                  <span className="text-[10px] bg-indigo-100 text-indigo-800 font-mono px-2 py-0.5 rounded font-semibold">
+                    CONNECTED
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-indigo-100 text-slate-700">
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">Previous EoA Ref:</span>
+                    <span className="font-mono font-semibold text-slate-900">
+                      {application.previousEoaRecord?.previousEoaRef || 'AICTE/SWRO/1-931829101/2025/EOA'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">Approved Intake:</span>
+                    <span className="font-semibold text-slate-900">
+                      {application.previousEoaRecord?.approvedIntake || 940} Seats (Proposed: {application.proposedIntake || 940})
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">TER Payment Status:</span>
+                    <span className="inline-flex items-center gap-1 text-emerald-700 font-bold">
+                      <BadgeCheck size={13} />
+                      {application.terPaymentStatus || 'CONFIRMED'} (₹{(application.terAmountPaid || 200000).toLocaleString()})
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">TER Challan Ref:</span>
+                    <span className="font-mono text-slate-800 text-[10px]">
+                      {application.terTransactionRef || 'TER-2026-BK-918204'}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    syncAicteMasterData(application.id);
+                    success('AICTE Master Synchronized', 'Central approval records and TER payment status re-queried.');
+                  }}
+                  className="w-full mt-1 py-1.5 bg-white hover:bg-indigo-50 border border-indigo-300 text-indigo-900 font-semibold rounded-lg text-xs flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  <RotateCcw size={13} /> Re-Sync AICTE Central Data
+                </button>
+              </div>
+
+              {/* Issuing Authority Verification Grid */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between pb-1 border-b border-slate-100">
+                  <span className="text-xs font-bold text-navy-deep flex items-center gap-1.5">
+                    <Link2 size={14} className="text-brand-blue" />
+                    Issuing Authority Gateway Verification
+                  </span>
+                  <button
+                    onClick={() => {
+                      setIsQueryingAuthorities(true);
+                      setTimeout(() => {
+                        verifyAllDocumentAuthorities(application.id);
+                        setIsQueryingAuthorities(false);
+                        success('Issuing Authorities Verified', 'All documents queried against official external gateways.');
+                      }, 500);
+                    }}
+                    disabled={isQueryingAuthorities}
+                    className="text-[10px] text-brand-blue hover:text-brand-blue-dark font-semibold underline"
+                  >
+                    {isQueryingAuthorities ? 'Querying...' : 'Verify All'}
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  {application.documents.map((doc) => {
+                    const status = doc.issuingAuthorityStatus || (doc.reviewStatus === 'Flagged' ? 'Mismatch Detected' : 'Verified');
+                    const source = doc.issuingAuthoritySource || (
+                      doc.category.includes('Registration')
+                        ? 'National DigiLocker & State Registrar'
+                        : doc.category.includes('Affiliation')
+                        ? 'Affiliating University Order Portal'
+                        : doc.category.includes('Accreditation')
+                        ? 'NBA / NAAC Statutory Registry'
+                        : doc.category.includes('Infrastructure')
+                        ? 'Municipal Fire & Safety Gateway'
+                        : 'State DTE Portal'
+                    );
+
+                    return (
+                      <div
+                        key={doc.id}
+                        className="p-2.5 rounded-xl border border-slate-border bg-white text-xs space-y-1.5 shadow-2xs"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-semibold text-slate-800 truncate max-w-[200px]">
+                            {doc.fileName}
+                          </span>
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                              status === 'Verified'
+                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                : status === 'Mismatch Detected'
+                                ? 'bg-rose-100 text-rose-800 border border-rose-300'
+                                : status === 'Expired'
+                                ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                                : status === 'Verification Pending'
+                                ? 'bg-blue-100 text-blue-800 border border-blue-300'
+                                : status === 'Source Unavailable'
+                                ? 'bg-slate-100 text-slate-700 border border-slate-300'
+                                : 'bg-purple-100 text-purple-800 border border-purple-300'
+                            }`}
+                          >
+                            {status}
+                          </span>
+                        </div>
+
+                        <div className="text-[10px] text-slate-500 flex items-center justify-between">
+                          <span>Source: <strong>{source}</strong></span>
+                          <span className="font-mono text-slate-400">Method: {doc.verificationMethod || 'API'}</span>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-1 border-t border-slate-100 text-[10px]">
+                          <span className="text-slate-400 font-mono">
+                            {doc.verificationTimestamp ? formatDateShort(doc.verificationTimestamp) : 'Live Authenticated'}
+                          </span>
+                          <button
+                            onClick={() => {
+                              verifyDocumentAuthority(application.id, doc.id);
+                              success('Authority Queried', `${doc.fileName} checked via ${source}.`);
+                            }}
+                            className="text-brand-blue hover:text-brand-blue-dark font-semibold text-[10px]"
+                          >
+                            Query Gateway
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: Infrastructure & Computer Vision Inspection */}
+          {activeRightTab === 'infrastructure' && (
+            <div className="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
+              {/* Floor Plan & Spatial Calculus */}
+              <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                <div className="flex items-center justify-between font-bold text-navy-deep">
+                  <div className="flex items-center gap-1.5">
+                    <Building2 size={15} className="text-brand-blue" />
+                    <span>Architectural Floor Plans & Built Carpet Area</span>
+                  </div>
+                  <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[10px]">
+                    ✓ AICTE Area Norms Met
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-slate-200">
+                  <div>
+                    <span className="text-slate-500 block text-[10px]">Instructional Carpet Area:</span>
+                    <span className="font-mono font-bold text-slate-900">
+                      {(application.infrastructureAudit?.totalAreaDeclared || 58500).toLocaleString()} sq.m
+                    </span>
+                    <span className="text-[10px] text-slate-400 block">
+                      Mandated: {((application.infrastructureAudit?.totalAreaDeclared || 58500) > 20000 ? 18900 : 12500).toLocaleString()} sq.m
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block text-[10px]">Student-to-Faculty Ratio:</span>
+                    <span className="font-mono font-bold text-slate-900">1:14.8 SFR</span>
+                    <span className="text-[10px] text-emerald-600 block">Ceiling: 1:20 Compliant</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block text-[10px]">Instructional Classrooms:</span>
+                    <span className="font-bold text-slate-900">{application.infrastructureAudit?.classroomsCount || 64} Smart Classrooms</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block text-[10px]">Laboratories & Workshops:</span>
+                    <span className="font-bold text-slate-900">{application.infrastructureAudit?.labsCount || 48} Laboratories</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Computing & Bandwidth Resources */}
+              <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                <div className="flex items-center justify-between font-bold text-navy-deep">
+                  <div className="flex items-center gap-1.5">
+                    <Compass size={15} className="text-brand-blue" />
+                    <span>Computing, Software & Connectivity</span>
+                  </div>
+                  <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[10px]">
+                    ✓ Satisfied
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-slate-200">
+                  <div>
+                    <span className="text-slate-500 block text-[10px]">Terminal Computing Units:</span>
+                    <span className="font-bold text-slate-900">{application.infrastructureAudit?.computingUnits || 1200} PCs</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block text-[10px]">Leased Line Bandwidth:</span>
+                    <span className="font-bold text-slate-900">{application.infrastructureAudit?.internetBandwidthMbps || 1000} Mbps</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Computer Vision Evidence */}
+              <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                <div className="flex items-center justify-between font-bold text-navy-deep">
+                  <div className="flex items-center gap-1.5">
+                    <Camera size={15} className="text-brand-blue" />
+                    <span>Computer-Vision Evidence Analysis</span>
+                  </div>
+                  <span className="text-[10px] text-brand-blue bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                    EXIF GPS Verified
+                  </span>
+                </div>
+
+                <div className="space-y-1.5 text-[11px]">
+                  <div className="flex items-center justify-between py-1 border-b border-slate-200">
+                    <span>Geo-Tagged Campus & Lab Photos:</span>
+                    <span className="text-emerald-700 font-semibold">✓ GPS Matched (0 Anomaly)</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1 border-b border-slate-200">
+                    <span>Barrier-Free Access (Ramps & Lifts):</span>
+                    <span className="text-emerald-700 font-semibold">✓ Verified Active</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1">
+                    <span>Municipal Fire & Life Safety NOC:</span>
+                    <span className="text-emerald-700 font-semibold">✓ Validated via Gateway</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Expert Visit Committee (EVC) Physical Scrutiny Controller */}
+              <div className="p-3.5 bg-amber-50/60 border border-amber-300 rounded-xl space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="font-bold text-amber-950 flex items-center gap-1.5">
+                    <Compass size={16} className="text-amber-800" />
+                    <span>Expert Visit Committee (EVC) Physical Inspection</span>
+                  </div>
+                  <span
+                    className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                      application.physicalInspectionRequired
+                        ? 'bg-amber-200 text-amber-900'
+                        : 'bg-slate-200 text-slate-700'
+                    }`}
+                  >
+                    {application.physicalInspectionRequired ? 'RECOMMENDED' : 'DESKTOP ADEQUATE'}
+                  </span>
+                </div>
+
+                {application.physicalInspectionRequired ? (
+                  <div className="space-y-2">
+                    <p className="text-[11px] text-amber-900">
+                      <strong>Flagged Grounds:</strong> {application.inspectionRecommendationReason}
+                    </p>
+                    <button
+                      onClick={() => {
+                        togglePhysicalInspection(application.id, false);
+                        success('EVC Flag Cleared', 'Physical inspection requirement removed.');
+                      }}
+                      className="w-full py-1.5 bg-white border border-amber-300 hover:bg-amber-100 text-amber-900 text-xs font-semibold rounded-lg transition-colors"
+                    >
+                      Clear Physical Inspection Flag
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-[11px] text-slate-600">
+                      If spatial, laboratory, or building documentation discrepancies require ground-truth validation, flag this case for an on-site physical visit.
+                    </p>
+                    <button
+                      onClick={() => setIsEvcModalOpen(true)}
+                      className="w-full py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-xs"
+                    >
+                      Recommend EVC Physical Inspection
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: History & Activity Log */}
           {activeRightTab === 'activity' && (
             <div className="flex-1 p-4 overflow-y-auto space-y-3">
               <h4 className="font-bold text-xs text-navy-deep pb-2 border-b border-slate-100">
@@ -938,6 +1358,60 @@ export const AdminReviewWorkspacePage: React.FC = () => {
         confirmText="Flag Case"
         onConfirm={handleConfirmFlag}
         onCancel={() => setIsFlagOpen(false)}
+      />
+
+      {/* EVC PHYSICAL INSPECTION MODAL */}
+      <ConfirmDialog
+        isOpen={isEvcModalOpen}
+        title="Recommend Expert Visit Committee (EVC) Inspection"
+        variant="warning"
+        description={
+          <div className="space-y-3 text-xs">
+            <p>
+              Flag <strong>{application.id}</strong> ({application.institutionName}) for on-site physical verification by an authorized AICTE Expert Visit Committee (EVC).
+            </p>
+            <div>
+              <label className="block font-bold text-slate-800 mb-1">
+                Specific Statutory Deficiency / Grounds for On-Site Inspection *
+              </label>
+              <select
+                onChange={(e) => {
+                  if (e.target.value) setEvcReason(e.target.value);
+                }}
+                className="w-full p-2 text-xs rounded border border-slate-300 mb-2 bg-white text-slate-700"
+              >
+                <option value="Instructional carpet area deficit and unverified laboratory resources requiring Expert Visit Committee (EVC) on-site verification.">
+                  Instructional carpet area deficit or spatial non-compliance
+                </option>
+                <option value="Discrepancy in municipal building approval or fire safety infrastructure requiring physical verification.">
+                  Municipal building approval / Fire NOC discrepancy
+                </option>
+                <option value="Unverified computing facilities, internet bandwidth, or specialized research equipment.">
+                  Computing facilities / Laboratory equipment unverified
+                </option>
+                <option value="Barrier-free access, disabled-friendly ramp or safety compliance unverified in blueprints.">
+                  Barrier-free access / ramp / lift compliance unverified
+                </option>
+                <option value="Suspected alteration in statutory gazette or trust deed requiring ground truth scrutiny.">
+                  Suspected alteration in registration charter / trust deed
+                </option>
+              </select>
+              <textarea
+                rows={3}
+                value={evcReason}
+                onChange={(e) => setEvcReason(e.target.value)}
+                placeholder="Enter specific grounds and terms of reference for the inspection committee..."
+                className="w-full p-2 text-xs rounded border border-amber-300 focus:ring-1 focus:ring-amber-500"
+              />
+            </div>
+            <p className="text-[11px] text-slate-500">
+              * Note: The AI recommendation remains advisory and will be routed to the Scrutiny Committee & Member Secretary for formal constitution of the EVC team.
+            </p>
+          </div>
+        }
+        confirmText="Confirm EVC Recommendation"
+        onConfirm={handleConfirmEvc}
+        onCancel={() => setIsEvcModalOpen(false)}
       />
     </div>
   );

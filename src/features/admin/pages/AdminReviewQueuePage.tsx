@@ -10,6 +10,7 @@ import {
   Filter,
   CheckCircle2,
   ShieldAlert,
+  Compass,
 } from 'lucide-react';
 import { StatusBadge } from '../../../components/ui/StatusBadge';
 import { RiskBadge } from '../../../components/ui/RiskBadge';
@@ -19,7 +20,7 @@ export const AdminReviewQueuePage: React.FC = () => {
   const navigate = useNavigate();
   const { applications, config } = useApp();
 
-  const [activeQueueTab, setActiveQueueTab] = useState<'all' | 'new' | 'resubmitted' | 'high_risk'>(
+  const [activeQueueTab, setActiveQueueTab] = useState<'all' | 'new' | 'resubmitted' | 'high_risk' | 'evc'>(
     'all'
   );
 
@@ -28,6 +29,7 @@ export const AdminReviewQueuePage: React.FC = () => {
   const highRiskApps = applications.filter(
     (a) => a.riskLevel === 'High' && a.status !== 'Verified' && a.status !== 'Rejected'
   );
+  const evcApps = applications.filter((a) => a.physicalInspectionRequired);
 
   const displayedApps =
     activeQueueTab === 'new'
@@ -36,6 +38,8 @@ export const AdminReviewQueuePage: React.FC = () => {
       ? resubmittedApps
       : activeQueueTab === 'high_risk'
       ? highRiskApps
+      : activeQueueTab === 'evc'
+      ? evcApps
       : applications.filter(
           (a) =>
             a.status === 'Submitted' ||
@@ -110,6 +114,19 @@ export const AdminReviewQueuePage: React.FC = () => {
           <ShieldAlert size={13} />
           <span>High Risk Discrepancies</span>
           <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20">{highRiskApps.length}</span>
+        </button>
+
+        <button
+          onClick={() => setActiveQueueTab('evc')}
+          className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 ${
+            activeQueueTab === 'evc'
+              ? 'bg-amber-600 text-white'
+              : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <Compass size={13} />
+          <span>EVC Physical Inspection Flagged</span>
+          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20">{evcApps.length}</span>
         </button>
       </div>
 

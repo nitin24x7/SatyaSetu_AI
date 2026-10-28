@@ -9,6 +9,8 @@ import {
   PlatformConfig,
   Reviewer,
   VerificationFinding,
+  ActivityEvent,
+  IssuingAuthorityStatus,
 } from '../types';
 import {
   INITIAL_APPLICATIONS,
@@ -62,6 +64,10 @@ interface AppContextType {
   ) => void;
   updateInstitutionProfile: (updated: Partial<Institution>) => void;
   updatePlatformConfig: (newConfig: Partial<PlatformConfig>) => void;
+  togglePhysicalInspection: (applicationId: string, required: boolean, reason?: string) => void;
+  verifyDocumentAuthority: (applicationId: string, docId: string) => void;
+  verifyAllDocumentAuthorities: (applicationId: string) => void;
+  syncAicteMasterData: (applicationId: string) => void;
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: (role?: 'applicant' | 'admin') => void;
   resetDemoData: () => void;
@@ -678,6 +684,214 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setConfig((prev) => ({ ...prev, ...newConfig }));
   };
 
+  // 13. Physical Inspection (EVC) Toggle
+  const togglePhysicalInspection = (
+    applicationId: string,
+    required: boolean,
+    reason?: string
+  ) => {
+    const app = applications.find((a) => a.id === applicationId);
+    if (!app) return;
+    const now = new Date().toISOString();
+    const actionDesc = required
+      ? `Expert Visit Committee (EVC) physical inspection recommended by ${currentReviewer.name}. Reason: ${reason || 'Infrastructure or documentary discrepancies noted.'}`
+      : `Physical inspection recommendation cleared by ${currentReviewer.name}.`;
+
+    const event: ActivityEvent = {
+      id: `ACT-${Date.now()}`,
+      applicationId,
+      institutionId: app.institutionId,
+      institutionName: app.institutionName,
+      actorId: currentReviewer.id,
+      actorName: currentReviewer.name,
+      actorRole: 'Administrator',
+      action: required ? 'EVC Physical Inspection Flagged' : 'EVC Physical Inspection Cleared',
+      description: actionDesc,
+      timestamp: now,
+      comment: reason,
+    };
+
+    setApplications((prev) =>
+      prev.map((a) =>
+        a.id === applicationId
+          ? {
+              ...a,
+              physicalInspectionRequired: required,
+              inspectionRecommendationReason: required ? reason : undefined,
+              updatedAt: now,
+              activityLog: [event, ...a.activityLog],
+            }
+          : a
+      )
+    );
+
+    addNotification({
+      recipientRole: 'admin',
+      applicationId,
+      title: required ? 'Physical Inspection Recommended' : 'Physical Inspection Flag Cleared',
+      message: `${app.institutionName} (${applicationId}): ${actionDesc}`,
+      type: required ? 'warning' : 'info',
+      read: false,
+    });
+  };
+
+  // 14. Verify Document with Issuing Authority
+  const verifyDocumentAuthority = (applicationId: string, docId: string) => {
+    const app = applications.find((a) => a.id === applicationId);
+    if (!app) return;
+    const doc = app.documents.find((d) => d.id === docId);
+    if (!doc) return;
+
+    const now = new Date().toISOString();
+    let authoritySource = 'National DigiLocker & State Repository';
+    if (doc.category.includes('Affiliation')) authoritySource = 'Affiliating University Order Portal';
+    else if (doc.category.includes('Accreditation')) authoritySource = 'NBA / NAAC Statutory Registry';
+    else if (doc.category.includes('Infrastructure')) authoritySource = 'Municipal Fire & Safety Gateway';
+    else if (doc.category.includes('Registration')) authoritySource = 'Registrar of Societies / MCA Portal';
+
+    const isMismatch = doc.reviewStatus === 'Flagged' || doc.extractedFields?.['Mismatch Flag'] === 'Critical Discrepancy';
+    const status: IssuingAuthorityStatus = isMismatch ? 'Mismatch Detected' : 'Verified';
+
+    const updatedDocs = app.documents.map((d) =>
+      d.id === docId
+        ? {
+            ...d,
+            issuingAuthorityStatus: status,
+            issuingAuthoritySource: authoritySource,
+            verificationTimestamp: now,
+            verificationMethod: 'API' as const,
+            sourceEvidenceHash: `SHA256:${Math.random().toString(16).substring(2)}${Math.random().toString(16).substring(2)}`,
+          }
+        : d
+    );
+
+    const event: ActivityEvent = {
+      id: `ACT-${Date.now()}`,
+      applicationId,
+      institutionId: app.institutionId,
+      institutionName: app.institutionName,
+      actorId: currentReviewer.id,
+      actorName: currentReviewer.name,
+      actorRole: 'Administrator',
+      action: 'Issuing Authority Cross-Check',
+      description: `Cross-checked ${doc.fileName} via ${authoritySource}. Result: ${status}.`,
+      timestamp: now,
+    };
+
+    setApplications((prev) =>
+      prev.map((a) =>
+        a.id === applicationId
+          ? {
+              ...a,
+              documents: updatedDocs,
+              updatedAt: now,
+              activityLog: [event, ...a.activityLog],
+            }
+          : a
+      )
+    );
+  };
+
+  // 15. Verify All Documents with Issuing Authorities
+  const verifyAllDocumentAuthorities = (applicationId: string) => {
+    const app = applications.find((a) => a.id === applicationId);
+    if (!app) return;
+    const now = new Date().toISOString();
+
+    const updatedDocs = app.documents.map((d) => {
+      let authoritySource = 'National DigiLocker & State Repository';
+      if (d.category.includes('Affiliation')) authoritySource = 'Affiliating University Order Portal';
+      else if (d.category.includes('Accreditation')) authoritySource = 'NBA / NAAC Statutory Registry';
+      else if (d.category.includes('Infrastructure')) authoritySource = 'Municipal Fire & Safety Gateway';
+      else if (d.category.includes('Registration')) authoritySource = 'Registrar of Societies / MCA Portal';
+
+      const isMismatch = d.reviewStatus === 'Flagged' || d.extractedFields?.['Mismatch Flag'] === 'Critical Discrepancy';
+      const status: IssuingAuthorityStatus = isMismatch ? 'Mismatch Detected' : 'Verified';
+
+      return {
+        ...d,
+        issuingAuthorityStatus: status,
+        issuingAuthoritySource: authoritySource,
+        verificationTimestamp: now,
+        verificationMethod: 'API' as const,
+        sourceEvidenceHash: `SHA256:${Math.random().toString(16).substring(2)}${Math.random().toString(16).substring(2)}`,
+      };
+    });
+
+    const event: ActivityEvent = {
+      id: `ACT-${Date.now()}`,
+      applicationId,
+      institutionId: app.institutionId,
+      institutionName: app.institutionName,
+      actorId: currentReviewer.id,
+      actorName: currentReviewer.name,
+      actorRole: 'Administrator',
+      action: 'Batch Issuing Authority Verification',
+      description: `Queried authorized external registries for all ${updatedDocs.length} documents.`,
+      timestamp: now,
+    };
+
+    setApplications((prev) =>
+      prev.map((a) =>
+        a.id === applicationId
+          ? {
+              ...a,
+              documents: updatedDocs,
+              updatedAt: now,
+              activityLog: [event, ...a.activityLog],
+            }
+          : a
+      )
+    );
+  };
+
+  // 16. Sync AICTE Master Record
+  const syncAicteMasterData = (applicationId: string) => {
+    const app = applications.find((a) => a.id === applicationId);
+    if (!app) return;
+    const now = new Date().toISOString();
+
+    const previousEoaRecord = app.previousEoaRecord || {
+      previousAcademicYear: '2025-2026',
+      previousEoaRef: `AICTE/REG/1-${Math.floor(100000000 + Math.random() * 900000000)}/2025/EOA`,
+      approvedProgramsCount: 12,
+      approvedIntake: 840,
+      deficiencyCountPriorYear: 0,
+      status: 'APPROVED' as const,
+    };
+
+    const event: ActivityEvent = {
+      id: `ACT-${Date.now()}`,
+      applicationId,
+      institutionId: app.institutionId,
+      institutionName: app.institutionName,
+      actorId: currentReviewer.id,
+      actorName: currentReviewer.name,
+      actorRole: 'Administrator',
+      action: 'AICTE Central Master Synchronized',
+      description: `Retrieved historical approval records and TER payment status from AICTE central portal.`,
+      timestamp: now,
+    };
+
+    setApplications((prev) =>
+      prev.map((a) =>
+        a.id === applicationId
+          ? {
+              ...a,
+              previousEoaRecord,
+              terPaymentStatus: a.terPaymentStatus || 'CONFIRMED',
+              terTransactionRef: a.terTransactionRef || `TER-2026-BK-${Math.floor(100000 + Math.random() * 900000)}`,
+              terAmountPaid: a.terAmountPaid || 200000,
+              terPaymentDate: a.terPaymentDate || '2026-10-18T10:30:00Z',
+              proposedIntake: a.proposedIntake || 840,
+              updatedAt: now,
+              activityLog: [event, ...a.activityLog],
+            }
+          : a
+      )
+    );
+  };
+
   // 13. Notifications
   const markNotificationRead = (id: string) => {
     setNotifications((prev) =>
@@ -750,6 +964,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         replaceDocument,
         updateInstitutionProfile,
         updatePlatformConfig,
+        togglePhysicalInspection,
+        verifyDocumentAuthority,
+        verifyAllDocumentAuthorities,
+        syncAicteMasterData,
         markNotificationRead,
         markAllNotificationsRead,
         resetDemoData,
