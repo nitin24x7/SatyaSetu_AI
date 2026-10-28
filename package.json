@@ -16,6 +16,7 @@
     "test:forensics": "tsx server/src/test/forensicVerification.ts",
     "test:workflow": "tsx server/src/test/workflowVerification.ts",
     "test:ledger": "tsx server/src/test/ledgerVerification.ts",
+    "test:security": "tsx server/src/test/securityVerification.ts",
     "dev:all": "concurrently -k \"npm run dev\" \"npm run server:dev\""
   },
   "dependencies": {
