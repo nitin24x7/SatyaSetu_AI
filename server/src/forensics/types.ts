@@ -105,3 +105,4 @@ export interface ForensicReport {
   metadataForensics: MetadataForensicsResult;
   summary: string;
 }
+

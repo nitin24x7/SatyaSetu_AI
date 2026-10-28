@@ -58,3 +58,4 @@ export class CopyMoveForgeryDetector {
 }
 
 export const copyMoveForgeryDetector = new CopyMoveForgeryDetector();
+
