@@ -335,6 +335,79 @@ class ApiClient {
     return this.request('/api/v1/integrations/status');
   }
 
+  // --- Document Forensics & Anti-Fraud (Phase 7) ---
+
+  async analyzeDocumentForensics(params: {
+    documentId: string;
+    applicationId: string;
+    institutionId?: string;
+    fileName: string;
+    category?: string;
+    fileSizeBytes?: number;
+    mimeType?: string;
+    isSimulatedTampered?: boolean;
+    isSimulatedCloned?: boolean;
+    isSimulatedRecycled?: boolean;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/forensics/analyze', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async runElaAnalysis(params: {
+    fileName: string;
+    fileSizeBytes?: number;
+    category?: string;
+    isSimulatedTampered?: boolean;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/forensics/ela', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async runCmfdAnalysis(params: {
+    fileName: string;
+    isSimulatedCloned?: boolean;
+    category?: string;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/forensics/cmfd', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async inspectPdfStructure(params: {
+    fileName: string;
+    isSimulatedTampered?: boolean;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/forensics/pdf-inspect', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async checkDocumentFingerprint(params: {
+    fileName: string;
+    applicationId?: string;
+    institutionId?: string;
+    isSimulatedRecycled?: boolean;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/forensics/fingerprint', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async getForensicReport(documentId: string): Promise<ApiResponse> {
+    return this.request(`/api/v1/forensics/reports/${documentId}`);
+  }
+
+  async getRecentForensicReports(): Promise<ApiResponse> {
+    return this.request('/api/v1/forensics/reports');
+  }
+
   async checkHealth(): Promise<any> {
     try {
       const res = await fetch(`${this.baseUrl}/health`);

@@ -36,6 +36,8 @@ tags:
     description: Institutional identity, OAuth 2.0 PKCE, TOTP MFA, and token lifecycle
   - name: Integrations
     description: Statutory government bridges (DigiLocker, Aadhaar eSign, AISHE / NAD)
+  - name: Forensics
+    description: Document forensics, Error Level Analysis (ELA), Copy-Move Forgery Detection (CMFD), and pHash deduplication
   - name: System
     description: Health and telemetry probes for database, cache, and object storage
 
@@ -613,6 +615,126 @@ paths:
       responses:
         '200':
           description: Status of all statutory adapters
+
+  /api/v1/forensics/analyze:
+    post:
+      tags: [Forensics]
+      summary: Multi-layer document forensic inspection (ELA, CMFD, PDF inspection, pHash)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [documentId, applicationId, fileName]
+              properties:
+                documentId: { type: string }
+                applicationId: { type: string }
+                fileName: { type: string }
+                category: { type: string }
+                isSimulatedTampered: { type: boolean }
+                isSimulatedCloned: { type: boolean }
+                isSimulatedRecycled: { type: boolean }
+      responses:
+        '200':
+          description: Comprehensive forensic report with spatial anomaly polygons and tamper score
+
+  /api/v1/forensics/ela:
+    post:
+      tags: [Forensics]
+      summary: Standalone Error Level Analysis (ELA) for compression artifact detection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fileName]
+              properties:
+                fileName: { type: string }
+                isSimulatedTampered: { type: boolean }
+      responses:
+        '200':
+          description: ELA error rate distribution and residual anomaly regions
+
+  /api/v1/forensics/cmfd:
+    post:
+      tags: [Forensics]
+      summary: Standalone Copy-Move Forgery Detection (CMFD) for cloned seals or signatures
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fileName]
+              properties:
+                fileName: { type: string }
+                isSimulatedCloned: { type: boolean }
+      responses:
+        '200':
+          description: Matched spatial keypoint pairs and cloned region coordinates
+
+  /api/v1/forensics/pdf-inspect:
+    post:
+      tags: [Forensics]
+      summary: Inspect PDF revision trees, overlaid vector objects, and font embeddings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fileName]
+              properties:
+                fileName: { type: string }
+                isSimulatedTampered: { type: boolean }
+      responses:
+        '200':
+          description: PDF structural revision analysis and authoring software metadata
+
+  /api/v1/forensics/fingerprint:
+    post:
+      tags: [Forensics]
+      summary: Compute perceptual dHash fingerprint & check cross-institutional document recycling
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fileName]
+              properties:
+                fileName: { type: string }
+                applicationId: { type: string }
+                institutionId: { type: string }
+                isSimulatedRecycled: { type: boolean }
+      responses:
+        '200':
+          description: Perceptual hash and deduplication check result
+
+  /api/v1/forensics/reports/{documentId}:
+    get:
+      tags: [Forensics]
+      summary: Retrieve cached forensic report for a document
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Document forensic inspection report
+        '404':
+          description: Report not found
+
+  /api/v1/forensics/reports:
+    get:
+      tags: [Forensics]
+      summary: List recent document forensic inspection reports
+      responses:
+        '200':
+          description: List of forensic reports
 
 components:
   schemas:

@@ -13,6 +13,7 @@
     "test:idp": "tsx server/src/test/idpVerification.ts",
     "test:compliance": "tsx server/src/test/complianceVerification.ts",
     "test:auth": "tsx server/src/test/authVerification.ts",
+    "test:forensics": "tsx server/src/test/forensicVerification.ts",
     "dev:all": "concurrently -k \"npm run dev\" \"npm run server:dev\""
   },
   "dependencies": {

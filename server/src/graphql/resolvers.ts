@@ -5,6 +5,7 @@ import { authService } from '../auth/authService';
 import { digiLockerService } from '../integrations/digiLockerService';
 import { aadhaarESignService } from '../integrations/aadhaarESignService';
 import { nadAisheSyncService } from '../integrations/nadAisheSyncService';
+import { forensicService } from '../forensics/forensicService';
 
 export const graphqlResolvers = {
   applications: async (args: any) => {
@@ -180,6 +181,26 @@ export const graphqlResolvers = {
     signatureHex?: string;
   }) => {
     return aadhaarESignService.verifyDigitalSignature(args);
+  },
+
+  forensicReport: async ({ documentId }: { documentId: string }) => {
+    return forensicService.getForensicReport(documentId);
+  },
+
+  recentForensicReports: async () => {
+    return forensicService.listReports();
+  },
+
+  analyzeDocumentForensics: async (args: {
+    documentId: string;
+    applicationId: string;
+    fileName: string;
+    category?: string;
+    isSimulatedTampered?: boolean;
+    isSimulatedCloned?: boolean;
+    isSimulatedRecycled?: boolean;
+  }) => {
+    return forensicService.analyzeDocument(args);
   },
 };
 

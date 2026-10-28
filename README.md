@@ -1,7 +1,7 @@
 # SatyaSetu AI — Institutional Verification & Compliance Platform
 
 > **AI-Powered Regulatory Application Validation, Document Authentication & Compliance Verification Platform**  
-> *Production Architecture: Frontend, Core Microservices Backend, IDP Pipeline, Compliance Engine & Statutory Integrations (Phase 6 Completed)*
+> *Production Architecture: Frontend, Core Microservices Backend, IDP Pipeline, Compliance Engine, Statutory Integrations & Document Forensics (Phase 7 Completed)*
 
 ---
 
@@ -41,6 +41,12 @@ The platform delivers an integrated regulatory lifecycle:
    - **National DigiLocker API Integration**: DPDP-compliant consent-driven document retrieval verifying XML metadata signatures, issuing authorities, and digital seal authenticity.
    - **Aadhaar eSign & DSC Verification Engine**: PKI electronic signature verification under IT Act 2000 Section 3A, establishing non-repudiation and X.509 certificate validity from CCA India.
    - **Ministry of Education AISHE & NAD Sync**: Live registry synchronization verifying sanctioned student intake limits, accredited program rosters, and active institutional governance standing.
+9. **Document Forensics, Anti-Fraud & Visual Integrity Analysis (Phase 7 Completed)**:
+   - **Error Level Analysis (ELA)**: Localized compression variance and quantization error residual analysis detecting digitally spliced text, pasted signatures, and manipulated sanction dates.
+   - **Copy-Move Forgery Detection (CMFD)**: Dense keypoint descriptor matching identifying duplicated institutional stamps, cloned registrar signatures, and repeated seal impressions across document pages.
+   - **PDF Structural Inspector**: In-depth parsing of incremental revision trees (`%%EOF` marker chaining), concealed white vector overlays masking original figures, and editing software footprint tracking (Photoshop, Canva, Illustrator on statutory gazettes).
+   - **Perceptual Document Hashing (dHash & aHash)**: 64-bit gradient difference fingerprinting with Hamming distance thresholds ($\le 4$ bits) detecting recycled blueprints, duplicate land records, and cross-application document fraud.
+   - **Forensic Tamper Scoring**: Unified tamper likelihood index ($0.00 - 1.00$) with spatial anomaly bounding box coordinates, severity classification, and automated audit flagging.
 
 ---
 
@@ -66,6 +72,9 @@ flowchart TD
         I["Storage Service (S3 / MinIO)"]
         J["Cache & Distributed Lock Service"]
         IDP["IDP & Multilingual OCR Pipeline\n(Preprocessor, OCR, Tables, KVP)"]
+        COMP["Compliance & Concordance Engine\n(String Match, Calculus, Rules)"]
+        AUTH["Identity, RBAC & Gov Integrations\n(JWT, TOTP, DigiLocker, eSign)"]
+        FOR["Document Forensics & Anti-Fraud\n(ELA, CMFD, PDF Tree, pHash)"]
     end
 
     subgraph Persistence["Enterprise Persistence Layer"]
@@ -81,14 +90,22 @@ flowchart TD
     D --> H
     D --> I
     D --> IDP
+    D --> COMP
+    D --> AUTH
+    D --> FOR
     E --> H
     E --> IDP
+    E --> COMP
+    E --> AUTH
+    E --> FOR
     H --> J
     H --> K
     I --> M
     J --> L
     IDP --> L
     IDP --> I
+    FOR --> L
+    FOR --> I
 ```
 
 ---
@@ -174,6 +191,9 @@ npm run test:compliance
 
 # Run Automated Identity, Auth & Statutory Integrations Test Suite
 npm run test:auth
+
+# Run Automated Document Forensics & Tamper Test Suite
+npm run test:forensics
 ```
 
 ---
@@ -196,6 +216,13 @@ The microservices gateway exposes standardized REST and GraphQL endpoints:
 | `/api/v1/integrations/esign/verify` | `POST` | Verify Aadhaar eSign or DSC cryptographic signature under IT Act 2000 |
 | `/api/v1/integrations/aishe/sync` | `POST` | Synchronize institutional master record with AISHE National Portal |
 | `/api/v1/integrations/status` | `GET` | Telemetry and SLA health monitor for statutory government adapters |
+| `/api/v1/forensics/analyze` | `POST` | Multi-vector forensic inspection (ELA, CMFD, PDF structure, perceptual dHash) |
+| `/api/v1/forensics/ela` | `POST` | Error Level Analysis detecting compression variance and spliced elements |
+| `/api/v1/forensics/cmfd` | `POST` | Copy-Move Forgery Detection identifying cloned stamps and duplicate signatures |
+| `/api/v1/forensics/pdf-inspect` | `POST` | PDF revision tree and vector overlay inspection |
+| `/api/v1/forensics/fingerprint` | `POST` | Compute 64-bit perceptual dHash and check cross-application duplication |
+| `/api/v1/forensics/reports/:documentId` | `GET` | Retrieve cached forensic analysis report for a document |
+| `/api/v1/forensics/reports` | `GET` | List recent document forensic analysis reports |
 | `/api/v1/applications` | `GET` | List applications with pagination, multi-field filters, and search |
 | `/api/v1/applications` | `POST` | Create draft or execute formal application submission |
 | `/api/v1/applications/:id` | `GET` | Retrieve complete application dossier with documents & findings |
@@ -281,7 +308,7 @@ psql -U postgres -d satyasetu -f server/src/db/seed.sql
 - **Routing:** React Router v6
 - **Persistence:** LocalStorage with versioned fallback + API Client Bridge
 
-### Backend Architecture (Phases 3 - 6)
+### Backend Architecture (Phases 3 - 7)
 - **Server Runtime:** Node.js + TypeScript (`tsx` / `tsc`)
 - **Web Framework:** Express 4 (Modular Routers & Controllers)
 - **Database:** PostgreSQL 14+ (`pg.Pool` connection pooling + Transactions)
@@ -298,3 +325,4 @@ psql -U postgres -d satyasetu -f server/src/db/seed.sql
 - **Authentication & Trust Infrastructure:** Cryptographic HS256 JWT signing, token rotation, active blacklist revocation, RFC 6238 TOTP Multi-Factor Authentication, and OAuth 2.0 PKCE workflows
 - **Role-Based Access Control (RBAC):** Scope-based access management across applicant, scrutiny, assessor, director, and admin tiers
 - **Statutory Integrations:** DigiLocker National Gateway adapter (consent-driven DPDP compliance), Aadhaar eSign PKI verification under IT Act 2000, and Ministry of Education AISHE/NAD registry synchronization
+- **Document Forensics & Anti-Fraud Engine:** Error Level Analysis (ELA) for quantization error residual discrepancies, Copy-Move Forgery Detection (CMFD) for cloned seals and duplicated signatures, PDF structural revision tree inspection for hidden white vector overlays, and 64-bit perceptual hashing (dHash/aHash) for cross-institutional document deduplication

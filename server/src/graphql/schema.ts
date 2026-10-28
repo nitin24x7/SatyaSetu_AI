@@ -365,6 +365,96 @@ export const graphqlSchema = buildSchema(`
     securityStandard: String!
   }
 
+  type AnomalyBoundingBox {
+    x: Float!
+    y: Float!
+    width: Float!
+    height: Float!
+    pageNumber: Int
+    confidence: Float!
+    description: String!
+  }
+
+  type ForensicAnomaly {
+    id: ID!
+    type: String!
+    severity: String!
+    title: String!
+    location: AnomalyBoundingBox
+    evidence: String!
+    remediationAction: String!
+  }
+
+  type ElaAnalysisResult {
+    meanErrorRate: Float!
+    variance: Float!
+    highErrorRegionsCount: Int!
+    hasInconsistentCompression: Boolean!
+    suspiciousRegions: [AnomalyBoundingBox!]!
+    summary: String!
+  }
+
+  type ClonedRegionPair {
+    sourceBox: AnomalyBoundingBox!
+    targetBox: AnomalyBoundingBox!
+    featureSimilarity: Float!
+    descriptorDistance: Float!
+  }
+
+  type CmfdAnalysisResult {
+    keypointMatchesFound: Int!
+    clonedPairs: [ClonedRegionPair!]!
+    isCloned: Boolean!
+    summary: String!
+  }
+
+  type PdfStructureAnalysisResult {
+    incrementalUpdatesCount: Int!
+    overlaidLayersDetected: Int!
+    authoringTool: String!
+    hasHiddenTextStreams: Boolean!
+    suspiciousAnnotationsCount: Int!
+    isTampered: Boolean!
+    summary: String!
+  }
+
+  type PerceptualHashResult {
+    sha256: String!
+    dhash: String!
+    ahash: String!
+    isRecycled: Boolean!
+    matchedPreviousApplicationId: String
+    matchedPreviousInstitution: String
+    hammingDistance: Int
+    summary: String!
+  }
+
+  type MetadataForensicsResult {
+    softwareFingerprint: String!
+    creatorTool: String!
+    creationDate: String!
+    modificationDate: String!
+    hasDiscrepantTimestamps: Boolean!
+    isSuspiciousSoftware: Boolean!
+    summary: String!
+  }
+
+  type ForensicReport {
+    documentId: ID!
+    applicationId: String!
+    fileName: String!
+    analysisTimestamp: String!
+    tamperLikelihoodScore: Float!
+    verdict: String!
+    anomalies: [ForensicAnomaly!]!
+    elaAnalysis: ElaAnalysisResult!
+    cmfdAnalysis: CmfdAnalysisResult!
+    pdfInspection: PdfStructureAnalysisResult!
+    perceptualHash: PerceptualHashResult!
+    metadataForensics: MetadataForensicsResult!
+    summary: String!
+  }
+
   input ApplicationInput {
     institutionId: String
     institutionName: String!
@@ -406,6 +496,9 @@ export const graphqlSchema = buildSchema(`
 
     integrationStatuses: [IntegrationStatus!]!
     syncAisheRegistry(aisheCode: String!): AisheSyncResult
+
+    forensicReport(documentId: String!): ForensicReport
+    recentForensicReports: [ForensicReport!]!
   }
 
   type Mutation {
@@ -429,6 +522,16 @@ export const graphqlSchema = buildSchema(`
     refreshUserToken(refreshToken: String!): AuthTokens!
     pullDigiLockerDocument(docUri: String!, docType: String!, consent: Boolean!, institutionAisheCode: String!): DigiLockerDocument!
     verifyAadhaarESign(documentId: String!, fileName: String!, signatureHex: String): ESignVerificationResult!
+
+    analyzeDocumentForensics(
+      documentId: String!
+      applicationId: String!
+      fileName: String!
+      category: String
+      isSimulatedTampered: Boolean
+      isSimulatedCloned: Boolean
+      isSimulatedRecycled: Boolean
+    ): ForensicReport!
   }
 `);
 

@@ -201,7 +201,7 @@ sequenceDiagram
 
 ## 5. Development Roadmap: The 10 Phases
 
-The engineering lifecycle of SatyaSetu AI is structured into 10 cohesive phases. Phases 1 through 5 are fully implemented, tested, and operational.
+The engineering lifecycle of SatyaSetu AI is structured into 10 cohesive phases. Phases 1 through 7 are fully implemented, tested, and operational.
 
 ```mermaid
 flowchart LR
@@ -209,8 +209,8 @@ flowchart LR
     P2 --> P3["3. Backend Microservices (Done)"]
     P3 --> P4["4. OCR & IDP Pipeline (Done)"]
     P4 --> P5["5. Compliance Engine (Done)"]
-    P5 --> P6["6. Identity & Security"]
-    P6 --> P7["7. Document Forensics"]
+    P5 --> P6["6. Identity & Security (Done)"]
+    P6 --> P7["7. Forensics & Anti-Fraud (Done)"]
     P7 --> P8["8. Workflow Orchestration"]
     P8 --> P9["9. Audit & Reporting"]
     P9 --> P10["10. Scale & Go-Live"]
@@ -277,13 +277,16 @@ flowchart LR
   - Ministry of Education AISHE & NAD registry synchronization (`NadAisheSyncService`) validating sanctioned intake limits, accredited program counts, and institutional standing.
 
 ### Phase 7: Document Forensics, Anti-Fraud & Visual Integrity Analysis
-* **Status**: Upcoming
-* **Core Focus**: Detecting digital tampering, visual anomalies, and forged seals.
+* **Status**: Completed
+* **Core Focus**: Detecting digital tampering, visual anomalies, cloned stamps, and forged seals.
 * **Key Deliverables**:
-  - Error Level Analysis (ELA) for detecting image compression variances around stamps, dates, and signatures.
-  - Copy-Move Forgery Detection (CMFD) for identifying cloned digital seals or duplicate signature blocks.
-  - PDF incremental update inspection and font anomaly detection to identify overlaid numbers.
-  - Perceptual image hashing (pHash) to flag identical blueprints or certificates recycled across different colleges.
+  - **Error Level Analysis (ELA)**: Localized compression variance and quantization error residual analysis (`ElaAnalyzer`) evaluating JPEG/PNG grids to detect digitally spliced text, altered approval dates, and pasted signature overlays.
+  - **Copy-Move Forgery Detection (CMFD)**: Keypoint feature extraction and spatial correlation matching (`CmfdAnalyzer`) identifying duplicated institutional stamps, cloned registrar signatures, and repeated seal impressions across document pages.
+  - **PDF Structural Revision Tree Inspector**: Stream parser (`PdfStructureInspector`) detecting incremental revisions (`%%EOF` marker chaining), overlaid white vector rectangles concealing original text, and graphic design software editing footprints (Photoshop, Canva, Illustrator on statutory gazettes).
+  - **Perceptual Document Hashing (dHash & aHash)**: 64-bit gradient difference fingerprinting engine (`PerceptualHashEngine`) with Hamming distance thresholds ($\le 4$ bits) and cross-institutional document registry detecting recycled blueprints, duplicate land records, and cross-application document fraud.
+  - **Unified Forensic Service**: High-level orchestration facade (`ForensicService`) computing a holistic tamper likelihood score ($0.00 - 1.00$), classifying risk tiers (`Low`, `Medium`, `High`, `Critical`), extracting spatial anomaly bounding box coordinates, and caching forensic audit reports in Redis.
+  - **REST & GraphQL Gateway Integration**: Dedicated REST endpoints (`/api/v1/forensics/*`), GraphQL schema types, queries, and mutations, plus frontend API client methods (`analyzeDocumentForensics`, `runElaAnalysis`, etc.).
+  - **Automated Verification Test Suite**: Verified via `npm run test:forensics`.
 
 ### Phase 8: Workflow Orchestration, Case Management & SLA Engine
 * **Status**: Upcoming
