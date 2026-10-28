@@ -408,6 +408,91 @@ class ApiClient {
     return this.request('/api/v1/forensics/reports');
   }
 
+  // --- Phase 8: Workflow Orchestration & Statutory SLA Engine ---
+
+  async transitionWorkflowState(params: {
+    applicationId: string;
+    action: string;
+    targetState: string;
+    actorId: string;
+    actorName: string;
+    actorRole: string;
+    comment?: string;
+    justification?: string;
+    complianceScore?: number;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/workflow/transition', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async adminWorkflowOverride(params: {
+    applicationId: string;
+    justification: string;
+    actorId: string;
+    actorName: string;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/workflow/override', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async getAllowedWorkflowTransitions(applicationId: string): Promise<ApiResponse> {
+    return this.request(`/api/v1/workflow/allowed-transitions/${applicationId}`);
+  }
+
+  async getWorkflowHistory(applicationId: string): Promise<ApiResponse> {
+    return this.request(`/api/v1/workflow/history/${applicationId}`);
+  }
+
+  async getApplicationSla(applicationId: string): Promise<ApiResponse> {
+    return this.request(`/api/v1/workflow/sla/${applicationId}`);
+  }
+
+  async evaluateAllSlas(): Promise<ApiResponse> {
+    return this.request('/api/v1/workflow/sla/evaluate-all', {
+      method: 'POST',
+    });
+  }
+
+  async autoAssignReviewer(applicationId: string): Promise<ApiResponse> {
+    return this.request('/api/v1/workflow/assign/auto', {
+      method: 'POST',
+      body: JSON.stringify({ applicationId }),
+    });
+  }
+
+  async getReviewerWorkloads(): Promise<ApiResponse> {
+    return this.request('/api/v1/workflow/reviewers/workload');
+  }
+
+  async dispatchNotification(params: {
+    recipientId: string;
+    recipientRole: string;
+    eventType: string;
+    applicationId?: string;
+    channels?: string[];
+    customTitle?: string;
+    customMessage?: string;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/workflow/notifications/dispatch', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async getUserNotifications(recipientId: string, unreadOnly: boolean = false): Promise<ApiResponse> {
+    return this.request(`/api/v1/workflow/notifications/${recipientId}?unreadOnly=${unreadOnly}`);
+  }
+
+  async markNotificationRead(id: string): Promise<ApiResponse> {
+    return this.request(`/api/v1/workflow/notifications/${id}/read`, {
+      method: 'PATCH',
+    });
+  }
+
   async checkHealth(): Promise<any> {
     try {
       const res = await fetch(`${this.baseUrl}/health`);
