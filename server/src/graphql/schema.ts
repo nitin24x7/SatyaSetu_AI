@@ -739,6 +739,175 @@ export const graphqlSchema = buildSchema(`
     verifyComplianceCertificate(certificateNumber: String!): CertificateVerificationResultGQL!
     regulatoryIntelligence: RegulatoryIntelligenceGQL!
     gazetteDossier(applicationId: String!): GazetteDossierGQL!
+
+    certInAuditReport: CertInAuditReportGQL!
+    latestLoadBenchmark: LoadTestBenchmarkReportGQL!
+    disasterRecoveryStatus: DisasterRecoveryStatusGQL!
+    stagingRolloutStatus: StagingRolloutStatusGQL!
+    productionRunbooks: [ProductionRunbookEntryGQL!]!
+  }
+
+  type SecurityFindingGQL {
+    id: String!
+    category: String!
+    ruleCode: String!
+    title: String!
+    description: String!
+    severity: String!
+    status: String!
+    affectedComponent: String!
+    remediationGuideline: String!
+    verificationEvidence: String
+    timestamp: String!
+  }
+
+  type CertInAuditReportGQL {
+    reportId: String!
+    auditScope: String!
+    empanelledAuditor: String!
+    standard: String!
+    status: String!
+    overallScore: Int!
+    totalChecksEvaluated: Int!
+    passedChecks: Int!
+    criticalVulnerabilitiesCount: Int!
+    highVulnerabilitiesCount: Int!
+    mediumVulnerabilitiesCount: Int!
+    lowVulnerabilitiesCount: Int!
+    findings: [SecurityFindingGQL!]!
+    cryptographicSignature: String!
+    generatedAt: String!
+    validUntil: String!
+  }
+
+  type DetectedPiiEntityGQL {
+    type: String!
+    originalMasked: String!
+    startIndex: Int!
+    endIndex: Int!
+    lawfulBasis: String!
+  }
+
+  type DpdpAttestationGQL {
+    act: String!
+    section: String!
+    tamperProofHash: String!
+    timestamp: String!
+  }
+
+  type DpdpRedactionResultGQL {
+    originalLength: Int!
+    redactedLength: Int!
+    redactedText: String!
+    detectedPiiEntities: [DetectedPiiEntityGQL!]!
+    complianceAttestation: DpdpAttestationGQL!
+  }
+
+  type LatencyDistributionGQL {
+    minMs: Int!
+    p50Ms: Int!
+    p90Ms: Int!
+    p95Ms: Int!
+    p99Ms: Int!
+    maxMs: Int!
+    standardDeviationMs: Int!
+  }
+
+  type SystemResourceTelemetryGQL {
+    peakCpuUtilizationPercentage: Int!
+    peakMemoryUtilizationMb: Int!
+    databaseConnectionPoolUsage: Int!
+    redisCacheHitRatio: Float!
+  }
+
+  type LoadTestBenchmarkReportGQL {
+    testId: String!
+    scenarioName: String!
+    startedAt: String!
+    completedAt: String!
+    durationSeconds: Int!
+    totalSubmissionsExecuted: Int!
+    successfulSubmissions: Int!
+    failedSubmissions: Int!
+    errorRatePercentage: Float!
+    achievedThroughputRps: Int!
+    targetThroughputRps: Int!
+    concurrencyLevel: Int!
+    latency: LatencyDistributionGQL!
+    systemResourceTelemetry: SystemResourceTelemetryGQL!
+    bottleneckAnalysis: [String!]!
+    verdict: String!
+  }
+
+  type ReplicationHealthGQL {
+    postgresReplicationLagBytes: Int!
+    postgresSyncState: String!
+    minioObjectReplicationSync: String!
+    redisSentinelQuorum: Boolean!
+  }
+
+  type LastDrillExecutionGQL {
+    drillId: String!
+    timestamp: String!
+    durationSeconds: Float!
+    simulatedFailureType: String!
+    failoverStatus: String!
+    dataLossBytes: Int!
+  }
+
+  type DisasterRecoveryStatusGQL {
+    serviceName: String!
+    deploymentMode: String!
+    primaryRegion: String!
+    standbyRegion: String!
+    targetRpoSeconds: Float!
+    achievedRpoSeconds: Float!
+    targetRtoSeconds: Float!
+    achievedRtoSeconds: Float!
+    replicationHealth: ReplicationHealthGQL!
+    lastDrillExecution: LastDrillExecutionGQL!
+    operationalReadiness: String!
+  }
+
+  type StageReadinessGateGQL {
+    gateCode: String!
+    title: String!
+    mandatory: Boolean!
+    satisfied: Boolean!
+    evaluationDetails: String!
+  }
+
+  type PilotInstitutionEnrollmentGQL {
+    institutionId: String!
+    institutionName: String!
+    state: String!
+    category: String!
+    onboardedAt: String!
+    applicationsProcessed: Int!
+    errorIncidentCount: Int!
+    activeStatus: String!
+  }
+
+  type StagingRolloutStatusGQL {
+    currentStage: String!
+    stageDisplayName: String!
+    progressPercentage: Int!
+    targetGoLiveDate: String!
+    enrolledInstitutions: [PilotInstitutionEnrollmentGQL!]!
+    readinessGates: [StageReadinessGateGQL!]!
+    allGatesSatisfied: Boolean!
+    allowedNextStage: String
+    lastPromotedAt: String!
+  }
+
+  type ProductionRunbookEntryGQL {
+    sopId: String!
+    title: String!
+    category: String!
+    triggerCondition: String!
+    escalationMatrix: [String!]!
+    executionSteps: [String!]!
+    automatedActionAvailable: Boolean!
   }
 
   type Mutation {
@@ -803,6 +972,18 @@ export const graphqlSchema = buildSchema(`
       authorizerName: String
       authorizerDesignation: String
     ): ComplianceCertificateGQL!
+
+    runCertInAudit: CertInAuditReportGQL!
+    redactPersonalData(text: String!): DpdpRedactionResultGQL!
+    simulateLoadTest(
+      concurrentSubmissions: Int
+      durationSeconds: Int
+      scenarioName: String
+      targetEndpoint: String
+      peakRpsThreshold: Int
+    ): LoadTestBenchmarkReportGQL!
+    executeDisasterRecoveryDrill(simulatedFailureType: String): DisasterRecoveryStatusGQL!
+    promoteStagingRolloutStage: StagingRolloutStatusGQL!
   }
 `);
 

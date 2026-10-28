@@ -9,6 +9,7 @@ import { forensicService } from '../forensics/forensicService';
 import { workflowService } from '../workflow/workflowService';
 import { notificationDispatcher } from '../workflow/notificationDispatcher';
 import { ledgerService } from '../ledger/ledgerService';
+import { securityService } from '../security/securityService';
 
 export const graphqlResolvers = {
   applications: async (args: any) => {
@@ -270,6 +271,46 @@ export const graphqlResolvers = {
 
   generateComplianceCertificate: async (args: any) => {
     return ledgerService.generateClearanceCertificate(args);
+  },
+
+  certInAuditReport: async () => {
+    return securityService.getLatestAuditReport();
+  },
+
+  latestLoadBenchmark: async () => {
+    return securityService.getLatestLoadBenchmark();
+  },
+
+  disasterRecoveryStatus: async () => {
+    return securityService.getDisasterRecoveryStatus();
+  },
+
+  stagingRolloutStatus: async () => {
+    return securityService.getStagingRolloutStatus();
+  },
+
+  productionRunbooks: async () => {
+    return securityService.getProductionRunbooks();
+  },
+
+  runCertInAudit: async () => {
+    return securityService.runCertInAudit();
+  },
+
+  redactPersonalData: async ({ text }: { text: string }) => {
+    return securityService.redactPii(text);
+  },
+
+  simulateLoadTest: async (args: any) => {
+    return securityService.runLoadBenchmark(args);
+  },
+
+  executeDisasterRecoveryDrill: async ({ simulatedFailureType }: { simulatedFailureType?: any }) => {
+    return securityService.executeDrFailoverDrill(simulatedFailureType);
+  },
+
+  promoteStagingRolloutStage: async () => {
+    return securityService.promoteRolloutStage();
   },
 };
 

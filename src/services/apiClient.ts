@@ -565,6 +565,67 @@ class ApiClient {
     return this.request(`/api/v1/ledger/gazette/${applicationId}`);
   }
 
+  // --- Phase 10: Security Auditing (Cert-In), Load Testing & Staging Runbooks ---
+
+  async runCertInSecurityAudit(): Promise<ApiResponse> {
+    return this.request('/api/v1/security/audit/run', {
+      method: 'POST',
+    });
+  }
+
+  async getCertInSecurityReport(): Promise<ApiResponse> {
+    return this.request('/api/v1/security/audit/report');
+  }
+
+  async redactPersonalData(params: { text?: string; payload?: Record<string, any> }): Promise<ApiResponse> {
+    return this.request('/api/v1/security/dpdp/redact', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async simulateLoadBenchmark(params?: {
+    concurrentSubmissions?: number;
+    durationSeconds?: number;
+    scenarioName?: string;
+    targetEndpoint?: string;
+    peakRpsThreshold?: number;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/security/load-test/simulate', {
+      method: 'POST',
+      body: JSON.stringify(params || {}),
+    });
+  }
+
+  async getLatestLoadBenchmark(): Promise<ApiResponse> {
+    return this.request('/api/v1/security/load-test/latest');
+  }
+
+  async getDisasterRecoveryStatus(): Promise<ApiResponse> {
+    return this.request('/api/v1/security/dr/status');
+  }
+
+  async executeDisasterRecoveryDrill(simulatedFailureType?: string): Promise<ApiResponse> {
+    return this.request('/api/v1/security/dr/drill', {
+      method: 'POST',
+      body: JSON.stringify({ simulatedFailureType }),
+    });
+  }
+
+  async getStagingRolloutStatus(): Promise<ApiResponse> {
+    return this.request('/api/v1/security/staging/status');
+  }
+
+  async promoteStagingRolloutStage(): Promise<ApiResponse> {
+    return this.request('/api/v1/security/staging/promote', {
+      method: 'POST',
+    });
+  }
+
+  async getProductionRunbooks(): Promise<ApiResponse> {
+    return this.request('/api/v1/security/runbook');
+  }
+
   async checkHealth(): Promise<any> {
     try {
       const res = await fetch(`${this.baseUrl}/health`);

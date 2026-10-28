@@ -42,6 +42,8 @@ tags:
     description: Finite State Machine (FSM) orchestration, statutory SLA turnaround tracking, workload balancing, and multi-channel notifications
   - name: Ledger
     description: Cryptographic hash-chained audit ledger, Merkle root notarization, and digital clearance certificate registry
+  - name: Security & Staging
+    description: CERT-In compliance audit, OWASP Top 10 defenses, DPDP Act 2023 redaction, 10,000-user load benchmark, Disaster Recovery RPO/RTO failover, and Production Staging Runbooks
   - name: System
     description: Health and telemetry probes for database, cache, and object storage
 
@@ -1043,6 +1045,113 @@ paths:
         '200':
           description: Gazette summary dossier
 
+  /api/v1/security/audit/run:
+    post:
+      tags: [Security & Staging]
+      summary: Execute automated CERT-In & OWASP Top 10 security audit
+      responses:
+        '200':
+          description: Signed CERT-In security clearance report
+
+  /api/v1/security/audit/report:
+    get:
+      tags: [Security & Staging]
+      summary: Retrieve latest CERT-In security audit report
+      responses:
+        '200':
+          description: Latest CERT-In audit report
+
+  /api/v1/security/dpdp/redact:
+    post:
+      tags: [Security & Staging]
+      summary: Redact sensitive PII under Digital Personal Data Protection (DPDP) Act 2023
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text: { type: string }
+                payload: { type: object }
+      responses:
+        '200':
+          description: Redacted personal data with tamper-proof audit attestation
+
+  /api/v1/security/load-test/simulate:
+    post:
+      tags: [Security & Staging]
+      summary: Simulate high-concurrency peak filing deadline stress benchmark (10,000 users)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                concurrentSubmissions: { type: integer, default: 10000 }
+                durationSeconds: { type: integer, default: 60 }
+                scenarioName: { type: string }
+                targetEndpoint: { type: string }
+                peakRpsThreshold: { type: integer, default: 1200 }
+      responses:
+        '200':
+          description: Latency percentiles and throughput benchmark report
+
+  /api/v1/security/load-test/latest:
+    get:
+      tags: [Security & Staging]
+      summary: Retrieve latest high-concurrency load benchmark report
+      responses:
+        '200':
+          description: Latest load benchmark report
+
+  /api/v1/security/dr/status:
+    get:
+      tags: [Security & Staging]
+      summary: Retrieve live Disaster Recovery & High-Availability replication status
+      responses:
+        '200':
+          description: Current RPO/RTO metrics and replication health
+
+  /api/v1/security/dr/drill:
+    post:
+      tags: [Security & Staging]
+      summary: Execute automated Disaster Recovery failover drill
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                simulatedFailureType: { type: string, enum: [REGION_OUTAGE, PRIMARY_DB_CRASH, S3_STORAGE_PARTITION] }
+      responses:
+        '200':
+          description: Completed DR failover drill certification
+
+  /api/v1/security/staging/status:
+    get:
+      tags: [Security & Staging]
+      summary: Retrieve staged pilot rollout progress and readiness gates
+      responses:
+        '200':
+          description: Stage status (Stage A, Stage B, Stage C) and gate evaluations
+
+  /api/v1/security/staging/promote:
+    post:
+      tags: [Security & Staging]
+      summary: Promote institutional staging rollout to the next phase
+      responses:
+        '200':
+          description: Updated rollout stage
+
+  /api/v1/security/runbook:
+    get:
+      tags: [Security & Staging]
+      summary: Retrieve production standard operating procedures and runbooks
+      responses:
+        '200':
+          description: Operational runbooks and escalation matrices
+
 components:
   schemas:
     ApplicationStatus:
@@ -1143,5 +1252,60 @@ components:
         mimeType: { type: string }
         institutionName: { type: string }
         registrationNumber: { type: string }
+
+    CertInAuditReport:
+      type: object
+      properties:
+        reportId: { type: string }
+        auditScope: { type: string }
+        empanelledAuditor: { type: string }
+        standard: { type: string }
+        status: { type: string, enum: [COMPLIANT, NON_COMPLIANT, CONDITIONALLY_COMPLIANT] }
+        overallScore: { type: integer }
+        totalChecksEvaluated: { type: integer }
+        passedChecks: { type: integer }
+        criticalVulnerabilitiesCount: { type: integer }
+        highVulnerabilitiesCount: { type: integer }
+        cryptographicSignature: { type: string }
+        generatedAt: { type: string, format: date-time }
+        validUntil: { type: string, format: date-time }
+
+    LoadTestBenchmarkReport:
+      type: object
+      properties:
+        testId: { type: string }
+        scenarioName: { type: string }
+        totalSubmissionsExecuted: { type: integer }
+        achievedThroughputRps: { type: integer }
+        errorRatePercentage: { type: number }
+        verdict: { type: string, enum: [PASSED, FAILED, DEGRADED] }
+        latency:
+          type: object
+          properties:
+            p50Ms: { type: integer }
+            p90Ms: { type: integer }
+            p95Ms: { type: integer }
+            p99Ms: { type: integer }
+
+    DisasterRecoveryStatus:
+      type: object
+      properties:
+        serviceName: { type: string }
+        deploymentMode: { type: string }
+        targetRpoSeconds: { type: number }
+        achievedRpoSeconds: { type: number }
+        targetRtoSeconds: { type: number }
+        achievedRtoSeconds: { type: number }
+        operationalReadiness: { type: string }
+
+    StagingRolloutStatus:
+      type: object
+      properties:
+        currentStage: { type: string }
+        stageDisplayName: { type: string }
+        progressPercentage: { type: integer }
+        targetGoLiveDate: { type: string, format: date-time }
+        allGatesSatisfied: { type: boolean }
+
 
 
