@@ -493,6 +493,78 @@ class ApiClient {
     });
   }
 
+  // --- Phase 9: Immutable Audit Ledger & Regulatory Reporting ---
+
+  async recordAuditEvent(params: {
+    applicationId: string;
+    institutionId?: string;
+    actorId: string;
+    actorName: string;
+    actorRole: string;
+    actionType: string;
+    actionDescription: string;
+    payload: Record<string, any>;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/ledger/record', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async getLedgerChain(params?: {
+    page?: number;
+    limit?: number;
+    applicationId?: string;
+    actionType?: string;
+  }): Promise<ApiResponse> {
+    const query = new URLSearchParams();
+    if (params?.page) query.append('page', String(params.page));
+    if (params?.limit) query.append('limit', String(params.limit));
+    if (params?.applicationId) query.append('applicationId', params.applicationId);
+    if (params?.actionType) query.append('actionType', params.actionType);
+
+    return this.request(`/api/v1/ledger/chain?${query.toString()}`);
+  }
+
+  async verifyLedgerIntegrity(): Promise<ApiResponse> {
+    return this.request('/api/v1/ledger/verify');
+  }
+
+  async getLedgerMerkleRoot(): Promise<ApiResponse> {
+    return this.request('/api/v1/ledger/merkle-root');
+  }
+
+  async generateComplianceCertificate(params: {
+    applicationId: string;
+    complianceScore?: number;
+    sanctionedIntake?: number;
+    approvedProgramsCount?: number;
+    calculatedSfr?: number;
+    authorizerName?: string;
+    authorizerDesignation?: string;
+  }): Promise<ApiResponse> {
+    return this.request('/api/v1/ledger/certificates/generate', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async verifyComplianceCertificate(certificateNumber: string): Promise<ApiResponse> {
+    return this.request(`/api/v1/ledger/certificates/verify/${certificateNumber}`);
+  }
+
+  async getApplicationComplianceCertificate(applicationId: string): Promise<ApiResponse> {
+    return this.request(`/api/v1/ledger/certificates/${applicationId}`);
+  }
+
+  async getRegulatoryIntelligence(): Promise<ApiResponse> {
+    return this.request('/api/v1/ledger/intelligence');
+  }
+
+  async getGazetteDossier(applicationId: string): Promise<ApiResponse> {
+    return this.request(`/api/v1/ledger/gazette/${applicationId}`);
+  }
+
   async checkHealth(): Promise<any> {
     try {
       const res = await fetch(`${this.baseUrl}/health`);

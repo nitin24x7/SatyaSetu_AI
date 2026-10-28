@@ -40,6 +40,8 @@ tags:
     description: Document forensics, Error Level Analysis (ELA), Copy-Move Forgery Detection (CMFD), and pHash deduplication
   - name: Workflow
     description: Finite State Machine (FSM) orchestration, statutory SLA turnaround tracking, workload balancing, and multi-channel notifications
+  - name: Ledger
+    description: Cryptographic hash-chained audit ledger, Merkle root notarization, and digital clearance certificate registry
   - name: System
     description: Health and telemetry probes for database, cache, and object storage
 
@@ -909,6 +911,137 @@ paths:
       responses:
         '200':
           description: Notification status updated
+
+  /api/v1/ledger/record:
+    post:
+      tags: [Ledger]
+      summary: Append immutable cryptographically hashed block to audit ledger
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [applicationId, actorId, actorName, actorRole, actionType, actionDescription, payload]
+              properties:
+                applicationId: { type: string }
+                institutionId: { type: string }
+                actorId: { type: string }
+                actorName: { type: string }
+                actorRole: { type: string }
+                actionType: { type: string }
+                actionDescription: { type: string }
+                payload: { type: object }
+      responses:
+        '201':
+          description: Block appended successfully
+
+  /api/v1/ledger/chain:
+    get:
+      tags: [Ledger]
+      summary: Retrieve chronological cryptographic audit blocks
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer }
+        - name: limit
+          in: query
+          schema: { type: integer }
+        - name: applicationId
+          in: query
+          schema: { type: string }
+        - name: actionType
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of audit blocks
+
+  /api/v1/ledger/verify:
+    get:
+      tags: [Ledger]
+      summary: Execute end-to-end cryptographic hash chain verification
+      responses:
+        '200':
+          description: Chain verification result
+
+  /api/v1/ledger/merkle-root:
+    get:
+      tags: [Ledger]
+      summary: Retrieve current binary Merkle tree root hash
+      responses:
+        '200':
+          description: Merkle root hash
+
+  /api/v1/ledger/certificates/generate:
+    post:
+      tags: [Ledger]
+      summary: Generate digitally signed compliance clearance certificate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [applicationId]
+              properties:
+                applicationId: { type: string }
+                complianceScore: { type: number }
+                sanctionedIntake: { type: integer }
+                approvedProgramsCount: { type: integer }
+                calculatedSfr: { type: number }
+                authorizerName: { type: string }
+                authorizerDesignation: { type: string }
+      responses:
+        '201':
+          description: Certificate generated
+
+  /api/v1/ledger/certificates/verify/{certificateNumber}:
+    get:
+      tags: [Ledger]
+      summary: Verify clearance certificate authenticity via QR scan
+      parameters:
+        - name: certificateNumber
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Certificate verification result
+
+  /api/v1/ledger/certificates/{applicationId}:
+    get:
+      tags: [Ledger]
+      summary: Retrieve clearance certificate for an application
+      parameters:
+        - name: applicationId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Certificate details
+
+  /api/v1/reports/intelligence:
+    get:
+      tags: [Analytics]
+      summary: Retrieve macroeconomic regulatory intelligence and defect indices
+      responses:
+        '200':
+          description: Regulatory intelligence report
+
+  /api/v1/reports/gazette/{applicationId}:
+    get:
+      tags: [Analytics]
+      summary: Generate official statutory gazette summary dossier
+      parameters:
+        - name: applicationId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Gazette summary dossier
 
 components:
   schemas:
