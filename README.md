@@ -1,7 +1,7 @@
 # SatyaSetu AI — Institutional Verification & Compliance Platform
 
 > **AI-Powered Regulatory Application Validation, Document Authentication & Compliance Verification Platform**  
-> *Production Architecture: Frontend, Core Microservices Backend, IDP Pipeline, Compliance Engine, Statutory Integrations & Document Forensics (Phase 7 Completed)*
+> *Production Architecture: Frontend, Core Microservices Backend, IDP Pipeline, Compliance Engine, Statutory Integrations, Document Forensics & Workflow Orchestration (Phase 8 Completed)*
 
 ---
 
@@ -47,6 +47,12 @@ The platform delivers an integrated regulatory lifecycle:
    - **PDF Structural Inspector**: In-depth parsing of incremental revision trees (`%%EOF` marker chaining), concealed white vector overlays masking original figures, and editing software footprint tracking (Photoshop, Canva, Illustrator on statutory gazettes).
    - **Perceptual Document Hashing (dHash & aHash)**: 64-bit gradient difference fingerprinting with Hamming distance thresholds ($\le 4$ bits) detecting recycled blueprints, duplicate land records, and cross-application document fraud.
    - **Forensic Tamper Scoring**: Unified tamper likelihood index ($0.00 - 1.00$) with spatial anomaly bounding box coordinates, severity classification, and automated audit flagging.
+10. **Workflow Orchestration, Review Loops & Statutory SLA Engine (Phase 8 Completed)**:
+    - **Finite State Machine (FSM)**: Strict legal state transitions graph (`Draft` → `Submitted` → `Under Verification` → `Action Required` ⇄ `Resubmitted` → `Verified` / `Rejected`) with deterministic precondition guards.
+    - **Executive Administrative Override**: Controlled directorate mechanism allowing Compliance Directors to reopen finalized cases with mandatory legal justification logging (> 15 characters).
+    - **Statutory SLA Turnaround Timers**: Automated tracking of regulatory windows (`INITIAL_SCRUTINY`: 7 days, `TECHNICAL_ASSESSMENT`: 14 days, `APPLICANT_REMEDIATION`: 10 days, `EXPEDITED_REVIEW`: 3 days) with automated Level 1 and Level 2 escalations upon SLA breach.
+    - **Workload Balancing & Automated Case Routing**: Dynamic multi-criteria routing allocating dossiers to evaluators based on discipline expertise, current queue depth, and historical SLA performance.
+    - **Multi-Channel Notification Dispatcher**: Transactional notifications across In-App, Email, TRAI DLT SMS (`GOV-SATYA`), and statutory webhooks.
 
 ---
 
@@ -75,6 +81,7 @@ flowchart TD
         COMP["Compliance & Concordance Engine\n(String Match, Calculus, Rules)"]
         AUTH["Identity, RBAC & Gov Integrations\n(JWT, TOTP, DigiLocker, eSign)"]
         FOR["Document Forensics & Anti-Fraud\n(ELA, CMFD, PDF Tree, pHash)"]
+        WF["Workflow Orchestration & SLA Engine\n(FSM, SLA Clock, Workload, Alerts)"]
     end
 
     subgraph Persistence["Enterprise Persistence Layer"]
@@ -93,11 +100,13 @@ flowchart TD
     D --> COMP
     D --> AUTH
     D --> FOR
+    D --> WF
     E --> H
     E --> IDP
     E --> COMP
     E --> AUTH
     E --> FOR
+    E --> WF
     H --> J
     H --> K
     I --> M
@@ -106,6 +115,8 @@ flowchart TD
     IDP --> I
     FOR --> L
     FOR --> I
+    WF --> L
+    WF --> K
 ```
 
 ---
@@ -194,6 +205,9 @@ npm run test:auth
 
 # Run Automated Document Forensics & Tamper Test Suite
 npm run test:forensics
+
+# Run Automated Workflow Orchestration & Statutory SLA Test Suite
+npm run test:workflow
 ```
 
 ---
@@ -223,6 +237,17 @@ The microservices gateway exposes standardized REST and GraphQL endpoints:
 | `/api/v1/forensics/fingerprint` | `POST` | Compute 64-bit perceptual dHash and check cross-application duplication |
 | `/api/v1/forensics/reports/:documentId` | `GET` | Retrieve cached forensic analysis report for a document |
 | `/api/v1/forensics/reports` | `GET` | List recent document forensic analysis reports |
+| `/api/v1/workflow/transition` | `POST` | Execute FSM State Transition with statutory precondition verification |
+| `/api/v1/workflow/override` | `POST` | Administrative override by Compliance Director to reopen finalized cases |
+| `/api/v1/workflow/allowed-transitions/:id` | `GET` | Query permitted next actions and target states for an application |
+| `/api/v1/workflow/history/:id` | `GET` | Retrieve chronological state transition event ledger |
+| `/api/v1/workflow/sla/:id` | `GET` | Query statutory turnaround SLA countdown and breach status |
+| `/api/v1/workflow/sla/evaluate-all` | `POST` | Batch evaluation of turnaround SLAs across all active applications |
+| `/api/v1/workflow/assign/auto` | `POST` | Automatically balance and assign application to optimal reviewer |
+| `/api/v1/workflow/reviewers/workload` | `GET` | Retrieve reviewer workload profiles, queue depths, and adherence scores |
+| `/api/v1/workflow/notifications/dispatch` | `POST` | Dispatch multi-channel notification (In-App, Email, TRAI DLT SMS, Webhook) |
+| `/api/v1/workflow/notifications/:recipientId` | `GET` | Retrieve notifications by recipient with unread filtering |
+| `/api/v1/workflow/notifications/:id/read` | `PATCH` | Mark notification record as read |
 | `/api/v1/applications` | `GET` | List applications with pagination, multi-field filters, and search |
 | `/api/v1/applications` | `POST` | Create draft or execute formal application submission |
 | `/api/v1/applications/:id` | `GET` | Retrieve complete application dossier with documents & findings |
@@ -308,7 +333,7 @@ psql -U postgres -d satyasetu -f server/src/db/seed.sql
 - **Routing:** React Router v6
 - **Persistence:** LocalStorage with versioned fallback + API Client Bridge
 
-### Backend Architecture (Phases 3 - 7)
+### Backend Architecture (Phases 3 - 8)
 - **Server Runtime:** Node.js + TypeScript (`tsx` / `tsc`)
 - **Web Framework:** Express 4 (Modular Routers & Controllers)
 - **Database:** PostgreSQL 14+ (`pg.Pool` connection pooling + Transactions)
@@ -326,3 +351,4 @@ psql -U postgres -d satyasetu -f server/src/db/seed.sql
 - **Role-Based Access Control (RBAC):** Scope-based access management across applicant, scrutiny, assessor, director, and admin tiers
 - **Statutory Integrations:** DigiLocker National Gateway adapter (consent-driven DPDP compliance), Aadhaar eSign PKI verification under IT Act 2000, and Ministry of Education AISHE/NAD registry synchronization
 - **Document Forensics & Anti-Fraud Engine:** Error Level Analysis (ELA) for quantization error residual discrepancies, Copy-Move Forgery Detection (CMFD) for cloned seals and duplicated signatures, PDF structural revision tree inspection for hidden white vector overlays, and 64-bit perceptual hashing (dHash/aHash) for cross-institutional document deduplication
+- **Workflow Orchestration & Case Management Engine:** Finite State Machine (FSM) enforcing legal regulatory transitions and precondition gates, Executive Administrative Override mechanism with mandatory justification logging, Statutory SLA turnaround timers (`INITIAL_SCRUTINY`, `TECHNICAL_ASSESSMENT`, `APPLICANT_REMEDIATION`, `EXPEDITED_REVIEW`) with automated multi-tiered breach escalations, intelligent workload auto-balancing matching assessor discipline specializations, and multi-channel notification dispatcher (In-App, Transactional Email, TRAI DLT SMS, Webhook)

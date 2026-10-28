@@ -6,6 +6,8 @@ import { digiLockerService } from '../integrations/digiLockerService';
 import { aadhaarESignService } from '../integrations/aadhaarESignService';
 import { nadAisheSyncService } from '../integrations/nadAisheSyncService';
 import { forensicService } from '../forensics/forensicService';
+import { workflowService } from '../workflow/workflowService';
+import { notificationDispatcher } from '../workflow/notificationDispatcher';
 
 export const graphqlResolvers = {
   applications: async (args: any) => {
@@ -201,6 +203,40 @@ export const graphqlResolvers = {
     isSimulatedRecycled?: boolean;
   }) => {
     return forensicService.analyzeDocument(args);
+  },
+
+  workflowHistory: async ({ applicationId }: { applicationId: string }) => {
+    return workflowService.getTransitionHistory(applicationId);
+  },
+
+  applicationSla: async ({ applicationId }: { applicationId: string }) => {
+    return workflowService.getApplicationSla(applicationId);
+  },
+
+  reviewerWorkloads: async () => {
+    return workflowService.getReviewerWorkload();
+  },
+
+  userNotifications: async ({ recipientId, unreadOnly }: { recipientId: string; unreadOnly?: boolean }) => {
+    return notificationDispatcher.getNotifications(recipientId, Boolean(unreadOnly));
+  },
+
+  transitionWorkflow: async (args: any) => {
+    return workflowService.executeTransition(args);
+  },
+
+  adminWorkflowOverride: async (args: any) => {
+    return workflowService.executeAdminOverride({
+      applicationId: args.applicationId,
+      justification: args.justification,
+      actorId: args.actorId,
+      actorName: args.actorName,
+      actorRole: 'ComplianceDirector',
+    });
+  },
+
+  autoAssignWorkflowReviewer: async ({ applicationId }: { applicationId: string }) => {
+    return workflowService.autoAssignReviewer(applicationId);
   },
 };
 

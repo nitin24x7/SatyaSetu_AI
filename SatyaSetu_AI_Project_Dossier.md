@@ -201,7 +201,7 @@ sequenceDiagram
 
 ## 5. Development Roadmap: The 10 Phases
 
-The engineering lifecycle of SatyaSetu AI is structured into 10 cohesive phases. Phases 1 through 7 are fully implemented, tested, and operational.
+The engineering lifecycle of SatyaSetu AI is structured into 10 cohesive phases. Phases 1 through 8 are fully implemented, tested, and operational.
 
 ```mermaid
 flowchart LR
@@ -211,7 +211,7 @@ flowchart LR
     P4 --> P5["5. Compliance Engine (Done)"]
     P5 --> P6["6. Identity & Security (Done)"]
     P6 --> P7["7. Forensics & Anti-Fraud (Done)"]
-    P7 --> P8["8. Workflow Orchestration"]
+    P7 --> P8["8. Workflow Orchestration (Done)"]
     P8 --> P9["9. Audit & Reporting"]
     P9 --> P10["10. Scale & Go-Live"]
 ```
@@ -289,13 +289,16 @@ flowchart LR
   - **Automated Verification Test Suite**: Verified via `npm run test:forensics`.
 
 ### Phase 8: Workflow Orchestration, Case Management & SLA Engine
-* **Status**: Upcoming
-* **Core Focus**: Automated case routing, workload balancing, and statutory SLA monitoring.
+* **Status**: Completed
+* **Core Focus**: Automated case routing, workload balancing, statutory SLA monitoring, and bidirectional review loops.
 * **Key Deliverables**:
-  - Priority triage engine dynamically routing high-risk dossiers to specialized scrutiny officers.
-  - Workload auto-balancing across available evaluators by technical discipline.
-  - SLA clock tracking statutory filing deadlines with automated escalation alerts.
-  - Multi-stage approval pipelines for multi-disciplinary council review.
+  - **Finite State Machine (FSM)**: Strict legal state transitions graph (`Draft` → `Submitted` → `Under Verification` → `Action Required` ⇄ `Resubmitted` → `Verified` / `Rejected`) with deterministic precondition evaluation (`WorkflowStateMachine`).
+  - **Executive Administrative Override**: Reopens terminal or contested regulatory cases under Compliance Director authorization with mandatory justification logging (> 15 characters).
+  - **Statutory SLA Turnaround Engine**: Monitors regulatory deadlines across intake triage (7 days / 168h), technical assessment (14 days / 336h), remediation windows (10 days / 240h), and expedited reviews (3 days / 72h) with automated Level 1 and Level 2 escalations (`StatutorySlaEngine`).
+  - **Workload Balancing & Automated Case Routing**: Multi-criteria weighted algorithm (`WorkloadRouter`) evaluating assessor discipline specializations, current queue backlogs, utilization rates, and historical SLA adherence scores to assign cases to optimal evaluators.
+  - **Multi-Channel Notification Dispatcher**: Event-driven transactional dispatcher (`NotificationDispatcher`) broadcasting across In-App, Transactional Email, Telecom Regulatory Authority of India (TRAI) DLT SMS (`GOV-SATYA`), and statutory webhooks.
+  - **REST & GraphQL Gateway Integration**: Dedicated REST endpoints (`/api/v1/workflow/*`), GraphQL types, queries, and mutations, plus frontend client methods in `src/services/apiClient.ts`.
+  - **Automated Verification Test Suite**: Verified via `npm run test:workflow`.
 
 ### Phase 9: Immutable Audit Ledger, Cryptographic Receipts & Compliance Reporting
 * **Status**: Upcoming

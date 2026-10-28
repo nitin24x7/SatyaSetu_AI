@@ -38,6 +38,8 @@ tags:
     description: Statutory government bridges (DigiLocker, Aadhaar eSign, AISHE / NAD)
   - name: Forensics
     description: Document forensics, Error Level Analysis (ELA), Copy-Move Forgery Detection (CMFD), and pHash deduplication
+  - name: Workflow
+    description: Finite State Machine (FSM) orchestration, statutory SLA turnaround tracking, workload balancing, and multi-channel notifications
   - name: System
     description: Health and telemetry probes for database, cache, and object storage
 
@@ -735,6 +737,178 @@ paths:
       responses:
         '200':
           description: List of forensic reports
+
+  /api/v1/workflow/transition:
+    post:
+      tags: [Workflow]
+      summary: Execute FSM State Transition with statutory precondition validation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [applicationId, action, targetState, actorId, actorName, actorRole]
+              properties:
+                applicationId: { type: string }
+                action: { type: string }
+                targetState: { type: string }
+                actorId: { type: string }
+                actorName: { type: string }
+                actorRole: { type: string }
+                comment: { type: string }
+                justification: { type: string }
+                complianceScore: { type: number }
+      responses:
+        '200':
+          description: State transition executed successfully
+        '400':
+          description: Precondition validation or legal transition failure
+
+  /api/v1/workflow/override:
+    post:
+      tags: [Workflow]
+      summary: Executive Administrative Override by Compliance Director
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [applicationId, justification, actorId, actorName]
+              properties:
+                applicationId: { type: string }
+                justification: { type: string }
+                actorId: { type: string }
+                actorName: { type: string }
+      responses:
+        '200':
+          description: Administrative override applied and case reopened
+
+  /api/v1/workflow/allowed-transitions/{applicationId}:
+    get:
+      tags: [Workflow]
+      summary: Query permitted next actions and target states
+      parameters:
+        - name: applicationId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Allowed transition options
+
+  /api/v1/workflow/history/{applicationId}:
+    get:
+      tags: [Workflow]
+      summary: Retrieve chronological state machine transition events
+      parameters:
+        - name: applicationId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Transition history ledger
+
+  /api/v1/workflow/sla/{applicationId}:
+    get:
+      tags: [Workflow]
+      summary: Query statutory SLA turnaround metrics and breach status
+      parameters:
+        - name: applicationId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: SLA tracking metrics and countdown
+
+  /api/v1/workflow/sla/evaluate-all:
+    post:
+      tags: [Workflow]
+      summary: Batch evaluate statutory SLAs across all active applications
+      responses:
+        '200':
+          description: SLA audit summary and escalation count
+
+  /api/v1/workflow/assign/auto:
+    post:
+      tags: [Workflow]
+      summary: Automatically balance and assign application to optimal reviewer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [applicationId]
+              properties:
+                applicationId: { type: string }
+      responses:
+        '200':
+          description: Reviewer auto-assigned successfully
+
+  /api/v1/workflow/reviewers/workload:
+    get:
+      tags: [Workflow]
+      summary: Get workload balance and queue depths for all reviewers
+      responses:
+        '200':
+          description: Reviewer workload profiles and utilization rates
+
+  /api/v1/workflow/notifications/dispatch:
+    post:
+      tags: [Workflow]
+      summary: Dispatch multi-channel notification (In-App, Email, SMS, Webhook)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [recipientId, recipientRole, eventType]
+              properties:
+                recipientId: { type: string }
+                recipientRole: { type: string }
+                eventType: { type: string }
+                applicationId: { type: string }
+                channels: { type: array, items: { type: string } }
+                customTitle: { type: string }
+                customMessage: { type: string }
+      responses:
+        '200':
+          description: Notifications dispatched
+
+  /api/v1/workflow/notifications/{recipientId}:
+    get:
+      tags: [Workflow]
+      summary: Retrieve notifications by recipient ID
+      parameters:
+        - name: recipientId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: unreadOnly
+          in: query
+          required: false
+          schema: { type: boolean }
+      responses:
+        '200':
+          description: Recipient notifications
+
+  /api/v1/workflow/notifications/{id}/read:
+    patch:
+      tags: [Workflow]
+      summary: Mark notification as read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Notification status updated
 
 components:
   schemas:

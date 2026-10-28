@@ -455,6 +455,97 @@ export const graphqlSchema = buildSchema(`
     summary: String!
   }
 
+  type PreconditionCheckGQL {
+    id: String!
+    name: String!
+    description: String!
+    passed: Boolean!
+    severity: String!
+    details: String
+  }
+
+  type PreconditionEvaluationResultGQL {
+    canTransition: Boolean!
+    checks: [PreconditionCheckGQL!]!
+    blockingReasons: [String!]!
+    warnings: [String!]!
+  }
+
+  type TransitionEventGQL {
+    id: String!
+    applicationId: String!
+    fromState: String!
+    toState: String!
+    action: String!
+    actorId: String!
+    actorName: String!
+    actorRole: String!
+    timestamp: String!
+    comment: String
+    justification: String
+    preconditionsMet: Boolean!
+  }
+
+  type SlaTrackingRecordGQL {
+    applicationId: String!
+    policyType: String!
+    startTimestamp: String!
+    deadlineTimestamp: String!
+    elapsedHours: Float!
+    remainingHours: Float!
+    percentageElapsed: Float!
+    status: String!
+    escalationLevel: String!
+    escalatedAt: String
+    escalatedTo: String
+    lastEvaluatedAt: String!
+  }
+
+  type ReviewerWorkloadProfileGQL {
+    reviewerId: String!
+    name: String!
+    email: String!
+    department: String!
+    disciplines: [String!]!
+    currentActiveCases: Int!
+    maxCapacity: Int!
+    utilizationRate: Float!
+    slaAdherenceScore: Float!
+    isAvailable: Boolean!
+  }
+
+  type AutoAssignmentResultGQL {
+    applicationId: String!
+    assignedReviewerId: String!
+    assignedReviewerName: String!
+    department: String!
+    matchScore: Int!
+    assignmentReason: String!
+    assignedAt: String!
+  }
+
+  type NotificationRecordGQL {
+    id: String!
+    recipientId: String!
+    recipientRole: String!
+    channel: String!
+    eventType: String!
+    title: String!
+    message: String!
+    applicationId: String
+    status: String!
+    read: Boolean!
+    createdAt: String!
+  }
+
+  type WorkflowTransitionResultGQL {
+    success: Boolean!
+    application: Application!
+    transitionEvent: TransitionEventGQL!
+    sla: SlaTrackingRecordGQL
+    evaluationResult: PreconditionEvaluationResultGQL!
+  }
+
   input ApplicationInput {
     institutionId: String
     institutionName: String!
@@ -499,6 +590,11 @@ export const graphqlSchema = buildSchema(`
 
     forensicReport(documentId: String!): ForensicReport
     recentForensicReports: [ForensicReport!]!
+
+    workflowHistory(applicationId: ID!): [TransitionEventGQL!]!
+    applicationSla(applicationId: ID!): SlaTrackingRecordGQL
+    reviewerWorkloads: [ReviewerWorkloadProfileGQL!]!
+    userNotifications(recipientId: ID!, unreadOnly: Boolean): [NotificationRecordGQL!]!
   }
 
   type Mutation {
@@ -507,6 +603,27 @@ export const graphqlSchema = buildSchema(`
     requestCorrections(id: ID!, findingIds: [String!]!, comment: String!, dueDate: String): Application!
     resubmitApplication(id: ID!, applicantResponse: String!): Application!
     recordDecision(id: ID!, decision: String!, reasonOrComment: String!): Application!
+
+    transitionWorkflow(
+      applicationId: ID!
+      action: String!
+      targetState: String!
+      actorId: String!
+      actorName: String!
+      actorRole: String!
+      comment: String
+      justification: String
+      complianceScore: Float
+    ): WorkflowTransitionResultGQL!
+
+    adminWorkflowOverride(
+      applicationId: ID!
+      justification: String!
+      actorId: String!
+      actorName: String!
+    ): WorkflowTransitionResultGQL!
+
+    autoAssignWorkflowReviewer(applicationId: ID!): AutoAssignmentResultGQL!
 
     enqueueIdpProcessing(
       documentId: String!
