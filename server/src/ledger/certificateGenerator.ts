@@ -210,3 +210,4 @@ export class CertificateGenerator {
 }
 
 export const certificateGenerator = new CertificateGenerator();
+

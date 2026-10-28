@@ -146,3 +146,4 @@ export interface GazetteDossier {
   merkleNotarizationHash: string;
   digitalAttestation: string;
 }
+

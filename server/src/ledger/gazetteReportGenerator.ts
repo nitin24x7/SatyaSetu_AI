@@ -56,3 +56,4 @@ export class GazetteReportGenerator {
 }
 
 export const gazetteReportGenerator = new GazetteReportGenerator();
+
