@@ -1,7 +1,7 @@
 # SatyaSetu AI — Institutional Verification & Compliance Platform
 
 > **AI-Powered Regulatory Application Validation, Document Authentication & Compliance Verification Platform**  
-> *Production Architecture: Frontend, Core Microservices Backend, IDP Pipeline, Compliance Engine, Statutory Integrations, Document Forensics & Workflow Orchestration (Phase 8 Completed)*
+> *Production Architecture: Frontend, Core Microservices Backend, IDP Pipeline, Compliance Engine, Statutory Integrations, Document Forensics, Workflow Orchestration & Immutable Ledger (Phase 9 Completed)*
 
 ---
 
@@ -53,6 +53,13 @@ The platform delivers an integrated regulatory lifecycle:
     - **Statutory SLA Turnaround Timers**: Automated tracking of regulatory windows (`INITIAL_SCRUTINY`: 7 days, `TECHNICAL_ASSESSMENT`: 14 days, `APPLICANT_REMEDIATION`: 10 days, `EXPEDITED_REVIEW`: 3 days) with automated Level 1 and Level 2 escalations upon SLA breach.
     - **Workload Balancing & Automated Case Routing**: Dynamic multi-criteria routing allocating dossiers to evaluators based on discipline expertise, current queue depth, and historical SLA performance.
     - **Multi-Channel Notification Dispatcher**: Transactional notifications across In-App, Email, TRAI DLT SMS (`GOV-SATYA`), and statutory webhooks.
+11. **Immutable Audit Ledger, Cryptographic Receipts & Regulatory Reporting (Phase 9 Completed)**:
+    - **Cryptographic Hash-Chained Audit Ledger**: Append-only event store computing SHA-256 block hashes linked to previous block digests with platform HMAC-SHA256 digital signatures.
+    - **Automated Tamper Detection Engine**: Mathematically verifies chain integrity from Genesis to Head, catching any historical payload modification or link sequence break.
+    - **Binary Merkle Tree Root Computation**: Generates 256-bit cryptographic Merkle roots across all blocks for decentralized regulatory notarization.
+    - **Verifiable Compliance Clearance Certificate Generator**: Issues official clearance certificates (`SAT-CERT-2026-XXXX-XXXX`) with digital seal signatures, certificate digests, and embedded QR verification payloads.
+    - **Regulatory Business Intelligence & Analytics**: Live computation of national clearance ratios, state-wise compliance distributions, and common statutory deficit frequency indices (Cadre SFR, Municipal Fire NOC, instructional carpet area).
+    - **Statutory Gazette Dossier Compilation**: Formats official extraordinary government gazette dossiers with Merkle references and digital attestations.
 
 ---
 
@@ -82,6 +89,7 @@ flowchart TD
         AUTH["Identity, RBAC & Gov Integrations\n(JWT, TOTP, DigiLocker, eSign)"]
         FOR["Document Forensics & Anti-Fraud\n(ELA, CMFD, PDF Tree, pHash)"]
         WF["Workflow Orchestration & SLA Engine\n(FSM, SLA Clock, Workload, Alerts)"]
+        LEDGER["Cryptographic Audit Ledger & BI\n(Hash Chains, Merkle Tree, Certs)"]
     end
 
     subgraph Persistence["Enterprise Persistence Layer"]
@@ -101,12 +109,14 @@ flowchart TD
     D --> AUTH
     D --> FOR
     D --> WF
+    D --> LEDGER
     E --> H
     E --> IDP
     E --> COMP
     E --> AUTH
     E --> FOR
     E --> WF
+    E --> LEDGER
     H --> J
     H --> K
     I --> M
@@ -117,6 +127,8 @@ flowchart TD
     FOR --> I
     WF --> L
     WF --> K
+    LEDGER --> K
+    LEDGER --> L
 ```
 
 ---
@@ -208,6 +220,9 @@ npm run test:forensics
 
 # Run Automated Workflow Orchestration & Statutory SLA Test Suite
 npm run test:workflow
+
+# Run Automated Cryptographic Audit Ledger & BI Test Suite
+npm run test:ledger
 ```
 
 ---
@@ -248,6 +263,15 @@ The microservices gateway exposes standardized REST and GraphQL endpoints:
 | `/api/v1/workflow/notifications/dispatch` | `POST` | Dispatch multi-channel notification (In-App, Email, TRAI DLT SMS, Webhook) |
 | `/api/v1/workflow/notifications/:recipientId` | `GET` | Retrieve notifications by recipient with unread filtering |
 | `/api/v1/workflow/notifications/:id/read` | `PATCH` | Mark notification record as read |
+| `/api/v1/ledger/record` | `POST` | Append immutable cryptographically hashed block to audit ledger |
+| `/api/v1/ledger/chain` | `GET` | Retrieve chronological cryptographic audit blocks with pagination |
+| `/api/v1/ledger/verify` | `GET` | Execute full cryptographic hash chain verification from Genesis to Head |
+| `/api/v1/ledger/merkle-root` | `GET` | Retrieve current cryptographic binary Merkle tree root hash |
+| `/api/v1/ledger/certificates/generate` | `POST` | Issue digitally signed compliance clearance certificate with QR seal |
+| `/api/v1/ledger/certificates/verify/:cert` | `GET` | Public endpoint to verify clearance certificate authenticity via QR scan |
+| `/api/v1/ledger/certificates/:appId` | `GET` | Retrieve issued compliance clearance certificate for an application |
+| `/api/v1/reports/intelligence` | `GET` | Executive macroeconomic regulatory intelligence and defect frequency indices |
+| `/api/v1/reports/gazette/:appId` | `GET` | Generate official statutory gazette summary dossier for appellate tribunal |
 | `/api/v1/applications` | `GET` | List applications with pagination, multi-field filters, and search |
 | `/api/v1/applications` | `POST` | Create draft or execute formal application submission |
 | `/api/v1/applications/:id` | `GET` | Retrieve complete application dossier with documents & findings |
@@ -333,7 +357,7 @@ psql -U postgres -d satyasetu -f server/src/db/seed.sql
 - **Routing:** React Router v6
 - **Persistence:** LocalStorage with versioned fallback + API Client Bridge
 
-### Backend Architecture (Phases 3 - 8)
+### Backend Architecture (Phases 3 - 9)
 - **Server Runtime:** Node.js + TypeScript (`tsx` / `tsc`)
 - **Web Framework:** Express 4 (Modular Routers & Controllers)
 - **Database:** PostgreSQL 14+ (`pg.Pool` connection pooling + Transactions)
@@ -352,3 +376,4 @@ psql -U postgres -d satyasetu -f server/src/db/seed.sql
 - **Statutory Integrations:** DigiLocker National Gateway adapter (consent-driven DPDP compliance), Aadhaar eSign PKI verification under IT Act 2000, and Ministry of Education AISHE/NAD registry synchronization
 - **Document Forensics & Anti-Fraud Engine:** Error Level Analysis (ELA) for quantization error residual discrepancies, Copy-Move Forgery Detection (CMFD) for cloned seals and duplicated signatures, PDF structural revision tree inspection for hidden white vector overlays, and 64-bit perceptual hashing (dHash/aHash) for cross-institutional document deduplication
 - **Workflow Orchestration & Case Management Engine:** Finite State Machine (FSM) enforcing legal regulatory transitions and precondition gates, Executive Administrative Override mechanism with mandatory justification logging, Statutory SLA turnaround timers (`INITIAL_SCRUTINY`, `TECHNICAL_ASSESSMENT`, `APPLICANT_REMEDIATION`, `EXPEDITED_REVIEW`) with automated multi-tiered breach escalations, intelligent workload auto-balancing matching assessor discipline specializations, and multi-channel notification dispatcher (In-App, Transactional Email, TRAI DLT SMS, Webhook)
+- **Cryptographic Audit Ledger & Regulatory Reporting Engine:** Append-only SHA-256 hash-chained event store with platform HMAC-SHA256 digital signatures, automated tamper detection engine detecting retroactive content mutation, 256-bit binary Merkle tree root computation for batch regulatory notarization, verifiable compliance clearance certificates with QR verification seals and digests, live macroeconomic regulatory business intelligence (regional distribution, defect frequency indices, SLA trends), and statutory gazette dossier compilation for appellate reviews

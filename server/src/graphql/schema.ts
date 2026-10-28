@@ -546,6 +546,142 @@ export const graphqlSchema = buildSchema(`
     evaluationResult: PreconditionEvaluationResultGQL!
   }
 
+  type AuditBlockGQL {
+    sequenceNumber: Int!
+    blockId: String!
+    timestamp: String!
+    applicationId: String!
+    institutionId: String
+    actorId: String!
+    actorName: String!
+    actorRole: String!
+    actionType: String!
+    actionDescription: String!
+    payloadHash: String!
+    previousBlockHash: String!
+    blockHash: String!
+    digitalSignature: String!
+  }
+
+  type LedgerVerificationResultGQL {
+    isValid: Boolean!
+    totalBlocks: Int!
+    verifiedBlocks: Int!
+    genesisHash: String!
+    headHash: String!
+    merkleRoot: String!
+    tamperedBlockIndex: Int
+    tamperedDetails: String
+    verifiedAt: String!
+  }
+
+  type ComplianceCertificateGQL {
+    certificateNumber: String!
+    applicationId: String!
+    institutionId: String!
+    institutionName: String!
+    institutionType: String!
+    aisheCode: String!
+    state: String!
+    academicYear: String!
+    sanctionedIntake: Int!
+    approvedProgramsCount: Int!
+    calculatedSfr: Float!
+    complianceScore: Int!
+    issuedAt: String!
+    validUntil: String!
+    status: String!
+    issuingAuthority: String!
+    authorizerName: String!
+    authorizerDesignation: String!
+    merkleBlockSequence: Int!
+    certificateDigest: String!
+    qrVerificationPayload: String!
+    qrVerificationUrl: String!
+    digitalSealSignature: String!
+  }
+
+  type CertificateVerificationResultGQL {
+    isValid: Boolean!
+    certificateNumber: String!
+    status: String!
+    institutionName: String
+    complianceScore: Int
+    issuedAt: String
+    validUntil: String
+    merkleVerificationStatus: String!
+    message: String!
+  }
+
+  type RegionalMetricGQL {
+    state: String!
+    totalApplications: Int!
+    approved: Int!
+    rejected: Int!
+    pending: Int!
+    complianceRatePercent: Float!
+  }
+
+  type DefectFrequencyIndexGQL {
+    category: String!
+    defectName: String!
+    incidentCount: Int!
+    percentageOfTotalDefects: Float!
+    recommendedRemediation: String!
+  }
+
+  type DisciplineMetricGQL {
+    discipline: String!
+    applicationsCount: Int!
+    avgSfr: Float!
+    complianceRatePercent: Float!
+  }
+
+  type RegulatoryOverallMetricsGQL {
+    totalApplications: Int!
+    approvedCount: Int!
+    rejectedCount: Int!
+    underVerificationCount: Int!
+    actionRequiredCount: Int!
+    clearanceRatePercent: Float!
+    averageTurnaroundDays: Float!
+    slaAdherencePercent: Float!
+  }
+
+  type TamperTrendsGQL {
+    totalScanned: Int!
+    cleanCount: Int!
+    tamperedCount: Int!
+    tamperRatePercent: Float!
+    mostFrequentAnomaly: String!
+  }
+
+  type RegulatoryIntelligenceGQL {
+    overallMetrics: RegulatoryOverallMetricsGQL!
+    regionalDistribution: [RegionalMetricGQL!]!
+    defectFrequencyIndices: [DefectFrequencyIndexGQL!]!
+    disciplineDistribution: [DisciplineMetricGQL!]!
+    tamperForensicTrends: TamperTrendsGQL!
+    generatedAt: String!
+  }
+
+  type GazetteDossierGQL {
+    gazetteReference: String!
+    title: String!
+    applicationId: String!
+    institutionName: String!
+    aisheCode: String!
+    publicationDate: String!
+    academicYear: String!
+    statutoryFindingsSummary: String!
+    cadreSummary: String!
+    infrastructureSummary: String!
+    forensicAuthenticitySummary: String!
+    finalRegulatoryVerdict: String!
+    merkleNotarizationHash: String!
+    digitalAttestation: String!
+  }
+
   input ApplicationInput {
     institutionId: String
     institutionName: String!
@@ -595,6 +731,14 @@ export const graphqlSchema = buildSchema(`
     applicationSla(applicationId: ID!): SlaTrackingRecordGQL
     reviewerWorkloads: [ReviewerWorkloadProfileGQL!]!
     userNotifications(recipientId: ID!, unreadOnly: Boolean): [NotificationRecordGQL!]!
+
+    ledgerBlocks(page: Int, limit: Int, applicationId: String): [AuditBlockGQL!]!
+    verifyLedgerIntegrity: LedgerVerificationResultGQL!
+    ledgerMerkleRoot: String!
+    complianceCertificate(applicationId: String!): ComplianceCertificateGQL
+    verifyComplianceCertificate(certificateNumber: String!): CertificateVerificationResultGQL!
+    regulatoryIntelligence: RegulatoryIntelligenceGQL!
+    gazetteDossier(applicationId: String!): GazetteDossierGQL!
   }
 
   type Mutation {
@@ -649,6 +793,16 @@ export const graphqlSchema = buildSchema(`
       isSimulatedCloned: Boolean
       isSimulatedRecycled: Boolean
     ): ForensicReport!
+
+    generateComplianceCertificate(
+      applicationId: String!
+      complianceScore: Int
+      sanctionedIntake: Int
+      approvedProgramsCount: Int
+      calculatedSfr: Float
+      authorizerName: String
+      authorizerDesignation: String
+    ): ComplianceCertificateGQL!
   }
 `);
 

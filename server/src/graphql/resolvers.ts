@@ -8,6 +8,7 @@ import { nadAisheSyncService } from '../integrations/nadAisheSyncService';
 import { forensicService } from '../forensics/forensicService';
 import { workflowService } from '../workflow/workflowService';
 import { notificationDispatcher } from '../workflow/notificationDispatcher';
+import { ledgerService } from '../ledger/ledgerService';
 
 export const graphqlResolvers = {
   applications: async (args: any) => {
@@ -237,6 +238,38 @@ export const graphqlResolvers = {
 
   autoAssignWorkflowReviewer: async ({ applicationId }: { applicationId: string }) => {
     return workflowService.autoAssignReviewer(applicationId);
+  },
+
+  ledgerBlocks: async (args: any) => {
+    return ledgerService.getBlocks(args).blocks;
+  },
+
+  verifyLedgerIntegrity: async () => {
+    return ledgerService.verifyChainIntegrity();
+  },
+
+  ledgerMerkleRoot: async () => {
+    return ledgerService.getMerkleRoot();
+  },
+
+  complianceCertificate: async ({ applicationId }: { applicationId: string }) => {
+    return ledgerService.getCertificateByApplicationId(applicationId);
+  },
+
+  verifyComplianceCertificate: async ({ certificateNumber }: { certificateNumber: string }) => {
+    return ledgerService.verifyCertificate(certificateNumber);
+  },
+
+  regulatoryIntelligence: async () => {
+    return ledgerService.getRegulatoryIntelligence();
+  },
+
+  gazetteDossier: async ({ applicationId }: { applicationId: string }) => {
+    return ledgerService.getGazetteDossier(applicationId);
+  },
+
+  generateComplianceCertificate: async (args: any) => {
+    return ledgerService.generateClearanceCertificate(args);
   },
 };
 

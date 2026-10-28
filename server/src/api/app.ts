@@ -19,6 +19,7 @@ import { authRouter } from './routes/auth.router';
 import { integrationsRouter } from './routes/integrations.router';
 import { forensicsRouter } from './routes/forensics.router';
 import workflowRouter from './routes/workflow.router';
+import ledgerRouter from './routes/ledger.router';
 import { graphqlSchema } from '../graphql/schema';
 import { graphqlResolvers } from '../graphql/resolvers';
 
@@ -75,12 +76,13 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/integrations', integrationsRouter);
 app.use('/api/v1/forensics', forensicsRouter);
 app.use('/api/v1/workflow', workflowRouter);
+app.use('/api/v1/ledger', ledgerRouter);
 
 // Root Gateway Info
 app.get('/', (_req: Request, res: Response) => {
   res.json({
     name: 'SatyaSetu AI Core Microservices Gateway',
-    version: '1.0.0-phase8',
+    version: '1.0.0-phase9',
     status: 'ACTIVE',
     endpoints: {
       health: '/health',
@@ -90,6 +92,7 @@ app.get('/', (_req: Request, res: Response) => {
       integrations: '/api/v1/integrations',
       forensics: '/api/v1/forensics',
       workflow: '/api/v1/workflow',
+      ledger: '/api/v1/ledger',
       applications: '/api/v1/applications',
       documents: '/api/v1/documents',
       institutions: '/api/v1/institutions',
