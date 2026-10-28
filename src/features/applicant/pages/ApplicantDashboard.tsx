@@ -49,10 +49,10 @@ export const ApplicantDashboard: React.FC = () => {
   const actionRequired = myApplications.filter((a) => a.status === 'Action Required').length;
   const verified = myApplications.filter((a) => a.status === 'Verified').length;
 
-  // Chart Data
+  // Chart Data with Teal theme
   const chartData = [
     { name: 'Drafts', value: drafts, color: '#94A3B8' },
-    { name: 'Under Verification', value: underVerification, color: '#315FEA' },
+    { name: 'Under Verification', value: underVerification, color: '#0D9488' },
     { name: 'Action Required', value: actionRequired, color: '#F97316' },
     { name: 'Verified', value: verified, color: '#10B981' },
     {
@@ -82,21 +82,21 @@ export const ApplicantDashboard: React.FC = () => {
     .slice(0, 5);
 
   return (
-    <div className="space-y-6">
-      {/* Top Banner & Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-border shadow-xs">
+    <div className="space-y-6 antialiased">
+      {/* Top Banner & Header - iOS Squircle */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-blue">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200/60">
               Institution Portal
             </span>
             <span className="text-slate-300">•</span>
-            <span className="text-xs text-slate-muted">{currentInstitution.aisheCode}</span>
+            <span className="text-xs text-slate-500 font-medium">{currentInstitution.aisheCode}</span>
           </div>
-          <h1 className="text-2xl font-bold text-navy-deep mt-1">
+          <h1 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">
             {currentInstitution.name}
           </h1>
-          <p className="text-xs text-slate-muted mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Manage institutional recognition dossiers, track regulatory validations, and resolve compliance notices.
           </p>
         </div>
@@ -104,9 +104,9 @@ export const ApplicantDashboard: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/applicant/applications/new')}
-            className="px-4 py-2.5 bg-brand-blue hover:bg-brand-blue-dark text-white text-sm font-semibold rounded-xl transition-all shadow-xs flex items-center gap-2"
+            className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-2xl transition-all shadow-sm shadow-teal-600/20 flex items-center gap-2"
           >
-            <PlusCircle size={18} />
+            <PlusCircle size={17} />
             <span>Create New Application</span>
           </button>
         </div>
@@ -114,13 +114,13 @@ export const ApplicantDashboard: React.FC = () => {
 
       {/* Action Required Alert Banner if any cases need attention */}
       {actionRequiredApps.length > 0 && (
-        <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-orange-950 animate-in fade-in duration-200">
+        <div className="bg-orange-50/80 border border-orange-200 rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-orange-950 animate-in fade-in duration-200 shadow-2xs">
           <div className="flex items-start sm:items-center gap-3">
-            <div className="p-2 bg-orange-100 rounded-lg text-orange-600 shrink-0 mt-0.5 sm:mt-0">
+            <div className="p-2.5 bg-orange-100 rounded-2xl text-orange-600 shrink-0 mt-0.5 sm:mt-0">
               <AlertTriangle size={20} />
             </div>
             <div>
-              <div className="font-semibold text-sm">
+              <div className="font-bold text-sm">
                 Action Required on {actionRequiredApps.length} Application{actionRequiredApps.length > 1 ? 's' : ''}
               </div>
               <p className="text-xs text-orange-800 mt-0.5">
@@ -130,7 +130,7 @@ export const ApplicantDashboard: React.FC = () => {
           </div>
           <button
             onClick={() => navigate(`/applicant/applications/${actionRequiredApps[0].id}`)}
-            className="px-3.5 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold rounded-lg shrink-0 transition-colors"
+            className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold rounded-xl shrink-0 transition-colors shadow-xs"
           >
             Resolve Case {actionRequiredApps[0].id}
           </button>
@@ -138,7 +138,7 @@ export const ApplicantDashboard: React.FC = () => {
       )}
 
       {/* Metric Cards Row */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <MetricCard
           title="Total Applications"
           value={total}
@@ -152,18 +152,18 @@ export const ApplicantDashboard: React.FC = () => {
           value={drafts}
           subtitle="Unsubmitted forms"
           icon={FileEdit}
-          iconColor="text-slate-600"
+          iconColor="text-slate-500"
           iconBg="bg-slate-100"
           onClick={() => setStatusFilter('Draft')}
           active={statusFilter === 'Draft'}
         />
         <MetricCard
-          title="Under Verification"
+          title="Under Review"
           value={underVerification}
           subtitle="Under reviewer audit"
           icon={Clock}
-          iconColor="text-blue-600"
-          iconBg="bg-blue-50"
+          iconColor="text-teal-600"
+          iconBg="bg-teal-50"
           onClick={() => setStatusFilter('Under Verification')}
           active={statusFilter === 'Under Verification'}
         />
@@ -183,7 +183,7 @@ export const ApplicantDashboard: React.FC = () => {
           active={statusFilter === 'Action Required'}
         />
         <MetricCard
-          title="Verified / Approved"
+          title="Verified"
           value={verified}
           subtitle="Approved applications"
           icon={CheckCircle2}
@@ -197,14 +197,14 @@ export const ApplicantDashboard: React.FC = () => {
       {/* Split layout: Recent Applications Table & Distribution Chart + Timeline */}
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Applications Table */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-border p-5 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200/80 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
               <div>
-                <h3 className="font-semibold text-base text-navy-deep">
+                <h3 className="font-bold text-base text-slate-900 tracking-tight">
                   Recent Applications
                 </h3>
-                <p className="text-xs text-slate-muted">
+                <p className="text-xs text-slate-500">
                   Showing {filteredApps.length} of {total} applications
                 </p>
               </div>
@@ -212,19 +212,19 @@ export const ApplicantDashboard: React.FC = () => {
               {/* Table search & filter controls */}
               <div className="flex items-center gap-2">
                 <div className="relative">
-                  <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search my cases..."
-                    className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-border focus:outline-hidden focus:ring-1 focus:ring-brand-blue"
+                    className="pl-8 pr-3 py-1.5 text-xs rounded-2xl border border-slate-200/80 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                   />
                 </div>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-border bg-white text-slate-text font-medium"
+                  className="px-3 py-1.5 text-xs rounded-2xl border border-slate-200/80 bg-white text-slate-700 font-medium"
                 >
                   <option value="ALL">All Statuses</option>
                   <option value="Draft">Drafts</option>
@@ -239,10 +239,10 @@ export const ApplicantDashboard: React.FC = () => {
             </div>
 
             {/* Applications Table */}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-2xl border border-slate-200/60">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-border text-slate-muted font-medium bg-surface-subtle">
+                  <tr className="border-b border-slate-200/80 text-slate-500 font-semibold bg-slate-50">
                     <th className="py-2.5 px-3">Application ID</th>
                     <th className="py-2.5 px-3">Type</th>
                     <th className="py-2.5 px-3">Submitted</th>
@@ -254,7 +254,7 @@ export const ApplicantDashboard: React.FC = () => {
                 <tbody className="divide-y divide-slate-100">
                   {filteredApps.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-muted">
+                      <td colSpan={6} className="py-8 text-center text-slate-400 font-medium">
                         No applications match the current filter.
                       </td>
                     </tr>
@@ -263,15 +263,15 @@ export const ApplicantDashboard: React.FC = () => {
                       <tr
                         key={app.id}
                         onClick={() => navigate(`/applicant/applications/${app.id}`)}
-                        className="hover:bg-slate-50 cursor-pointer transition-colors"
+                        className="hover:bg-slate-50/80 cursor-pointer transition-colors"
                       >
-                        <td className="py-3 px-3 font-semibold text-brand-blue">
+                        <td className="py-3 px-3 font-semibold text-teal-700 font-mono">
                           {app.id}
                         </td>
-                        <td className="py-3 px-3 text-slate-text font-medium">
+                        <td className="py-3 px-3 text-slate-800 font-medium">
                           {app.applicationType}
                         </td>
-                        <td className="py-3 px-3 text-slate-muted">
+                        <td className="py-3 px-3 text-slate-500">
                           {formatDateShort(app.submittedAt || app.createdAt)}
                         </td>
                         <td className="py-3 px-3">
@@ -292,7 +292,7 @@ export const ApplicantDashboard: React.FC = () => {
                           <Link
                             to={`/applicant/applications/${app.id}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="inline-flex items-center gap-1 text-xs text-brand-blue hover:underline font-semibold"
+                            className="inline-flex items-center gap-1 text-xs text-teal-700 hover:underline font-semibold"
                           >
                             <span>Details</span>
                             <ChevronRight size={14} />
@@ -306,11 +306,11 @@ export const ApplicantDashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-muted">
+          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
             <span>Showing top recent submissions</span>
             <Link
               to="/applicant/applications"
-              className="text-brand-blue font-semibold hover:underline flex items-center gap-1"
+              className="text-teal-700 font-semibold hover:underline flex items-center gap-1"
             >
               <span>View All Applications</span>
               <ArrowRight size={14} />
@@ -321,16 +321,16 @@ export const ApplicantDashboard: React.FC = () => {
         {/* Right 1 Col: Status Distribution & Recent Activity */}
         <div className="space-y-6">
           {/* Status Distribution Pie */}
-          <div className="bg-white rounded-xl border border-slate-border p-5 shadow-xs">
-            <h3 className="font-semibold text-sm text-navy-deep mb-3">
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            <h3 className="font-bold text-sm text-slate-900 mb-3 tracking-tight">
               Application Status Distribution
             </h3>
             {chartData.length === 0 ? (
-              <div className="h-44 flex items-center justify-center text-xs text-slate-muted">
+              <div className="h-44 flex items-center justify-center text-xs text-slate-400">
                 No active records
               </div>
             ) : (
-              <div className="h-48 w-full">
+              <div className="h-44 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -338,8 +338,8 @@ export const ApplicantDashboard: React.FC = () => {
                       cx="50%"
                       cy="50%"
                       innerRadius={45}
-                      outerRadius={70}
-                      paddingAngle={4}
+                      outerRadius={65}
+                      paddingAngle={3}
                       dataKey="value"
                     >
                       {chartData.map((entry, index) => (
@@ -349,15 +349,13 @@ export const ApplicantDashboard: React.FC = () => {
                     <RechartsTooltip
                       contentStyle={{
                         backgroundColor: '#FFFFFF',
-                        borderColor: '#E4E9F1',
-                        borderRadius: '8px',
+                        borderColor: '#E2E8F0',
+                        borderRadius: '16px',
                         fontSize: '11px',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
                       }}
                     />
-                    <Legend
-                      wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
-                      iconSize={8}
-                    />
+                    <Legend wrapperStyle={{ fontSize: '11px' }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -365,31 +363,34 @@ export const ApplicantDashboard: React.FC = () => {
           </div>
 
           {/* Recent Activity Timeline */}
-          <div className="bg-white rounded-xl border border-slate-border p-5 shadow-xs">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-sm text-navy-deep">
-                Recent Case Timeline
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-sm text-slate-900 tracking-tight">
+                Recent Regulatory Events
               </h3>
-              <span className="text-[10px] text-slate-400 font-mono">ACTIVITY</span>
+              <Link
+                to="/applicant/notifications"
+                className="text-xs text-teal-700 hover:underline font-semibold"
+              >
+                Notifications
+              </Link>
             </div>
+
             {recentActivities.length === 0 ? (
-              <p className="text-xs text-slate-muted">No recent events recorded.</p>
+              <div className="text-xs text-slate-400 py-4 text-center">No recent events recorded.</div>
             ) : (
-              <div className="space-y-3.5 relative before:absolute before:inset-0 before:left-2.5 before:w-0.5 before:bg-slate-100">
+              <div className="space-y-3.5 relative before:absolute before:inset-0 before:left-2 before:w-0.5 before:bg-slate-100">
                 {recentActivities.map((act) => (
-                  <div key={act.id} className="relative flex items-start gap-3 pl-6 text-xs">
-                    <span className="absolute left-1.5 top-1 w-2.5 h-2.5 rounded-full bg-brand-blue ring-4 ring-white" />
+                  <div key={act.id} className="relative flex items-start gap-2.5 pl-5 text-xs">
+                    <span className="absolute left-1 top-1 w-2 h-2 rounded-full bg-teal-500 ring-4 ring-white" />
                     <div>
-                      <div className="font-semibold text-slate-text flex items-center gap-1.5">
-                        <span>{act.action}</span>
-                        <span className="text-[10px] text-brand-blue font-mono">[{act.appId}]</span>
+                      <div className="font-semibold text-slate-800">{act.action}</div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">
+                        {act.actorName} • {formatDateShort(act.timestamp)}
                       </div>
-                      <p className="text-slate-muted text-[11px] mt-0.5 line-clamp-2">
+                      <p className="text-[11px] text-slate-600 mt-0.5 line-clamp-2">
                         {act.description}
                       </p>
-                      <span className="text-[10px] text-slate-400 mt-0.5 block">
-                        {formatDate(act.timestamp)}
-                      </span>
                     </div>
                   </div>
                 ))}
@@ -401,4 +402,3 @@ export const ApplicantDashboard: React.FC = () => {
     </div>
   );
 };
-

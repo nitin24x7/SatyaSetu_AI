@@ -14,6 +14,7 @@ import {
   UserCheck,
   Building2,
   Calendar,
+  Sparkles,
 } from 'lucide-react';
 import { MetricCard } from '../../../components/ui/MetricCard';
 import { StatusBadge } from '../../../components/ui/StatusBadge';
@@ -74,7 +75,7 @@ export const AdminDashboard: React.FC = () => {
 
   // Status Distribution Chart Data
   const statusChartData = [
-    { name: 'Submitted (New)', count: pending, color: '#315FEA' },
+    { name: 'Submitted (New)', count: pending, color: '#0D9488' },
     { name: 'Under Verification', count: underVerification, color: '#F59E0B' },
     { name: 'Resubmitted', count: resubmitted, color: '#8B5CF6' },
     { name: 'Action Required', count: actionRequired, color: '#F97316' },
@@ -93,29 +94,29 @@ export const AdminDashboard: React.FC = () => {
   }, [applications]);
 
   return (
-    <div className="space-y-6">
-      {/* Top Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-border shadow-xs">
+    <div className="space-y-6 antialiased">
+      {/* Top Banner - iOS Squircle */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-700">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200/60">
               Admin Console
             </span>
             <span className="text-slate-300">•</span>
-            <span className="text-xs text-slate-muted">{currentReviewer.department}</span>
+            <span className="text-xs text-slate-500 font-medium">{currentReviewer.department}</span>
           </div>
-          <h1 className="text-2xl font-bold text-navy-deep mt-1">
+          <h1 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">
             Verification & Compliance Pipeline
           </h1>
-          <p className="text-xs text-slate-muted mt-1">
-            Live regulatory triage, simulated optical extractions, concordance auditing, and statutory clearance.
+          <p className="text-xs text-slate-500 mt-1">
+            Live regulatory triage, deterministic optical extractions, concordance auditing, and statutory clearance.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <Link
             to="/admin/review-queue"
-            className="px-4 py-2.5 bg-navy-deep hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition-all shadow-xs flex items-center gap-2"
+            className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-2xl transition-all shadow-sm shadow-teal-600/20 flex items-center gap-2"
           >
             <ListTodo size={16} />
             <span>Open Review Queue ({pending + resubmitted})</span>
@@ -124,35 +125,35 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       {/* AICTE Decision-Support & Statutory Operational Strip */}
-      <div className="bg-gradient-to-r from-blue-900 via-navy-deep to-slate-900 text-white rounded-2xl p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-teal-900 via-teal-950 to-slate-900 text-white rounded-3xl p-5 shadow-xs border border-teal-800/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="bg-amber-400 text-slate-900 text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider font-mono">
+            <span className="bg-amber-400 text-slate-900 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
               AICTE EOA 2026-27
             </span>
-            <h2 className="text-sm font-bold">
+            <h2 className="text-sm font-bold tracking-tight">
               AI-Enabled Decision Support & Statutory Approval Dashboard
             </h2>
           </div>
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-teal-100/80">
             Automated scrutiny of technical education institutions for Extension of Approval (EoA), course additions, and capacity verification.
           </p>
         </div>
 
         <div className="flex items-center gap-3 shrink-0 text-xs">
-          <div className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
-            <span className="text-[10px] text-slate-300 block">EVC Inspections:</span>
+          <div className="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 backdrop-blur-xs">
+            <span className="text-[10px] text-teal-200 block font-medium">EVC Inspections:</span>
             <span className="font-bold text-amber-300">
               {applications.filter((a) => a.physicalInspectionRequired).length} Flagged
             </span>
           </div>
-          <div className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
-            <span className="text-[10px] text-slate-300 block">Authority Gateways:</span>
+          <div className="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 backdrop-blur-xs">
+            <span className="text-[10px] text-teal-200 block font-medium">Authority Gateways:</span>
             <span className="font-bold text-emerald-300">5 Connected</span>
           </div>
-          <div className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
-            <span className="text-[10px] text-slate-300 block">TER Reconciliation:</span>
-            <span className="font-bold text-blue-200">100% Match</span>
+          <div className="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 backdrop-blur-xs">
+            <span className="text-[10px] text-teal-200 block font-medium">TER Reconciliation:</span>
+            <span className="font-bold text-teal-200">100% Match</span>
           </div>
         </div>
       </div>
@@ -160,19 +161,19 @@ export const AdminDashboard: React.FC = () => {
       {/* Metric Cards Row */}
       <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
         <MetricCard
-          title="Total Applications"
+          title="Total Cases"
           value={total}
           subtitle="All active records"
           icon={FileText}
           onClick={() => navigate('/admin/applications')}
         />
         <MetricCard
-          title="Pending Verification"
+          title="Pending"
           value={pending}
           subtitle="Awaiting triage"
           icon={Clock}
-          iconColor="text-blue-600"
-          iconBg="bg-blue-50"
+          iconColor="text-teal-600"
+          iconBg="bg-teal-50"
           badge={pending > 0 ? { text: 'New', variant: 'warning' } : undefined}
           onClick={() => navigate('/admin/applications?status=Submitted')}
         />
@@ -186,7 +187,7 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => navigate('/admin/applications?status=Under Verification')}
         />
         <MetricCard
-          title="Action Required"
+          title="Action Req."
           value={actionRequired}
           subtitle="Applicant fixing"
           icon={AlertTriangle}
@@ -197,7 +198,7 @@ export const AdminDashboard: React.FC = () => {
         <MetricCard
           title="Verified"
           value={verified}
-          subtitle="Simulated approval"
+          subtitle="Statutory approval"
           icon={CheckCircle2}
           iconColor="text-emerald-600"
           iconBg="bg-emerald-50"
@@ -214,11 +215,11 @@ export const AdminDashboard: React.FC = () => {
         />
       </div>
 
-      {/* Charts Section */}
+      {/* Charts Section - Smooth Squircles */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Status Distribution Pie Chart */}
-        <div className="bg-white rounded-xl border border-slate-border p-5 shadow-xs">
-          <h3 className="font-semibold text-sm text-navy-deep mb-3">
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+          <h3 className="font-bold text-sm text-slate-900 mb-3 tracking-tight">
             Application Status Breakdown
           </h3>
           <div className="h-56 w-full">
@@ -240,9 +241,10 @@ export const AdminDashboard: React.FC = () => {
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#FFFFFF',
-                    borderColor: '#E4E9F1',
-                    borderRadius: '8px',
+                    borderColor: '#E2E8F0',
+                    borderRadius: '16px',
                     fontSize: '11px',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
                   }}
                 />
                 <Legend wrapperStyle={{ fontSize: '11px' }} />
@@ -252,24 +254,25 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Institution Type Bar Chart */}
-        <div className="bg-white rounded-xl border border-slate-border p-5 shadow-xs">
-          <h3 className="font-semibold text-sm text-navy-deep mb-3">
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+          <h3 className="font-bold text-sm text-slate-900 mb-3 tracking-tight">
             Applications by Institution Classification
           </h3>
           <div className="h-56 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={institutionTypeData}>
-                <XAxis dataKey="name" stroke="#69778D" fontSize={11} />
-                <YAxis stroke="#69778D" fontSize={11} allowDecimals={false} />
+                <XAxis dataKey="name" stroke="#64748B" fontSize={11} />
+                <YAxis stroke="#64748B" fontSize={11} allowDecimals={false} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#FFFFFF',
-                    borderColor: '#E4E9F1',
-                    borderRadius: '8px',
+                    borderColor: '#E2E8F0',
+                    borderRadius: '16px',
                     fontSize: '11px',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
                   }}
                 />
-                <Bar dataKey="count" fill="#315FEA" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="count" fill="#0D9488" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -279,30 +282,30 @@ export const AdminDashboard: React.FC = () => {
       {/* Priority Review Queue & Recent Admin Activity */}
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Priority Queue (2 Cols) */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-border p-5 shadow-xs">
+        <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200/80 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-bold text-sm text-navy-deep flex items-center gap-2">
-                <ListTodo size={16} className="text-brand-blue" />
+              <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                <ListTodo size={16} className="text-teal-600" />
                 <span>Priority Verification Queue</span>
               </h3>
-              <p className="text-xs text-slate-muted mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Cases requiring immediate assessor attention, resubmitted fixes, or high risk scores.
               </p>
             </div>
             <Link
               to="/admin/review-queue"
-              className="text-xs font-semibold text-brand-blue hover:underline flex items-center gap-1"
+              className="text-xs font-semibold text-teal-700 hover:underline flex items-center gap-1"
             >
               <span>View Full Queue</span>
               <ArrowRight size={13} />
             </Link>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-2xl border border-slate-200/60">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-slate-border bg-surface-subtle text-slate-muted font-medium">
+                <tr className="border-b border-slate-200/80 bg-slate-50 text-slate-500 font-semibold">
                   <th className="py-2.5 px-3">Case ID</th>
                   <th className="py-2.5 px-3">Institution</th>
                   <th className="py-2.5 px-3">Status</th>
@@ -316,12 +319,12 @@ export const AdminDashboard: React.FC = () => {
                   <tr
                     key={app.id}
                     onClick={() => navigate(`/admin/applications/${app.id}`)}
-                    className="hover:bg-slate-50 cursor-pointer transition-colors"
+                    className="hover:bg-slate-50/80 cursor-pointer transition-colors"
                   >
-                    <td className="py-3 px-3 font-mono font-bold text-brand-blue">
+                    <td className="py-3 px-3 font-mono font-bold text-teal-700">
                       {app.id}
                     </td>
-                    <td className="py-3 px-3 text-slate-800 font-medium truncate max-w-[180px]">
+                    <td className="py-3 px-3 text-slate-800 font-semibold truncate max-w-[180px]">
                       {app.institutionName}
                     </td>
                     <td className="py-3 px-3">
@@ -330,13 +333,13 @@ export const AdminDashboard: React.FC = () => {
                     <td className="py-3 px-3">
                       <RiskBadge risk={app.riskLevel} size="sm" />
                     </td>
-                    <td className="py-3 px-3 text-slate-600 truncate max-w-[130px]">
+                    <td className="py-3 px-3 text-slate-500 truncate max-w-[130px]">
                       {app.assignedReviewerName || 'Unassigned'}
                     </td>
                     <td className="py-3 px-3 text-right">
                       <Link
                         to={`/admin/applications/${app.id}`}
-                        className="px-2.5 py-1 text-xs bg-brand-blue text-white rounded font-medium hover:bg-brand-blue-dark"
+                        className="px-3 py-1 text-xs bg-teal-600 text-white rounded-xl font-semibold hover:bg-teal-700 shadow-2xs"
                       >
                         Review
                       </Link>
@@ -349,14 +352,14 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Audit Activity Stream (1 Col) */}
-        <div className="bg-white rounded-xl border border-slate-border p-5 shadow-xs">
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-sm text-navy-deep">
-              Recent Administrative Activity
+            <h3 className="font-bold text-sm text-slate-900">
+              Recent Activity
             </h3>
             <Link
               to="/admin/audit-logs"
-              className="text-xs text-brand-blue hover:underline font-semibold"
+              className="text-xs text-teal-700 hover:underline font-semibold"
             >
               Full Log
             </Link>
@@ -365,7 +368,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="space-y-3.5 relative before:absolute before:inset-0 before:left-2 before:w-0.5 before:bg-slate-100">
             {recentActivities.map((act) => (
               <div key={act.id} className="relative flex items-start gap-2.5 pl-5 text-xs">
-                <span className="absolute left-1 top-1 w-2 h-2 rounded-full bg-navy-light ring-4 ring-white" />
+                <span className="absolute left-1 top-1 w-2 h-2 rounded-full bg-teal-500 ring-4 ring-white" />
                 <div>
                   <div className="font-semibold text-slate-800">{act.action}</div>
                   <div className="text-[10px] text-slate-400 mt-0.5">
@@ -383,4 +386,3 @@ export const AdminDashboard: React.FC = () => {
     </div>
   );
 };
-

@@ -30,27 +30,27 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     switch (variant) {
       case 'danger':
         return {
-          icon: <AlertCircle className="text-status-error" size={24} />,
-          iconBg: 'bg-status-error-bg',
-          buttonBg: 'bg-status-error hover:bg-red-700 text-white',
+          icon: <AlertCircle className="text-rose-600" size={22} />,
+          iconBg: 'bg-rose-50 border border-rose-200/60',
+          buttonBg: 'bg-rose-600 hover:bg-rose-700 text-white shadow-xs shadow-rose-600/20',
         };
       case 'warning':
         return {
-          icon: <AlertTriangle className="text-status-warning" size={24} />,
-          iconBg: 'bg-status-warning-bg',
-          buttonBg: 'bg-status-warning hover:bg-amber-700 text-white',
+          icon: <AlertTriangle className="text-amber-600" size={22} />,
+          iconBg: 'bg-amber-50 border border-amber-200/60',
+          buttonBg: 'bg-amber-600 hover:bg-amber-700 text-white shadow-xs shadow-amber-600/20',
         };
       case 'success':
         return {
-          icon: <CheckCircle2 className="text-status-success" size={24} />,
-          iconBg: 'bg-status-success-bg',
-          buttonBg: 'bg-status-success hover:bg-emerald-700 text-white',
+          icon: <CheckCircle2 className="text-emerald-600" size={22} />,
+          iconBg: 'bg-emerald-50 border border-emerald-200/60',
+          buttonBg: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs shadow-emerald-600/20',
         };
       default:
         return {
-          icon: <HelpCircle className="text-brand-blue" size={24} />,
-          iconBg: 'bg-brand-blue-light',
-          buttonBg: 'bg-brand-blue hover:bg-brand-blue-dark text-white',
+          icon: <HelpCircle className="text-teal-600" size={22} />,
+          iconBg: 'bg-teal-50 border border-teal-200/60',
+          buttonBg: 'bg-teal-600 hover:bg-teal-700 text-white shadow-xs shadow-teal-600/20',
         };
     }
   };
@@ -58,33 +58,33 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   const styles = getVariantStyles();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-deep/60 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="bg-white rounded-xl shadow-xl border border-slate-border max-w-md w-full overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-150">
+      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200/80 max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-150">
         <div className="p-6">
           <div className="flex items-start gap-4">
-            <div className={`p-3 rounded-full shrink-0 ${styles.iconBg}`}>
+            <div className={`p-3 rounded-2xl shrink-0 ${styles.iconBg}`}>
               {styles.icon}
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-slate-text">{title}</h3>
+                <h3 className="text-base font-bold text-slate-900">{title}</h3>
                 <button
                   onClick={onCancel}
-                  className="text-slate-muted hover:text-slate-text p-1 rounded-md"
+                  className="text-slate-400 hover:text-slate-700 p-1 rounded-xl hover:bg-slate-100 transition-colors"
                 >
                   <X size={18} />
                 </button>
               </div>
-              <div className="mt-2 text-sm text-slate-muted">{description}</div>
+              <div className="mt-2 text-xs text-slate-600 leading-relaxed">{description}</div>
             </div>
           </div>
         </div>
-        <div className="bg-surface-subtle px-6 py-3.5 flex justify-end gap-3 border-t border-slate-border">
+        <div className="bg-slate-50/80 px-6 py-4 flex justify-end gap-3 border-t border-slate-100">
           <button
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="px-4 py-2 text-sm font-medium text-slate-text bg-white border border-slate-border rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50"
+            className="px-4 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200/80 rounded-xl hover:bg-slate-100 transition-colors disabled:opacity-50 shadow-2xs"
           >
             {cancelText}
           </button>
@@ -92,14 +92,12 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             type="button"
             onClick={onConfirm}
             disabled={loading}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors flex items-center gap-2 ${styles.buttonBg} disabled:opacity-50`}
+            className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all disabled:opacity-50 ${styles.buttonBg}`}
           >
-            {loading && <span className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />}
-            {confirmText}
+            {loading ? 'Processing...' : confirmText}
           </button>
         </div>
       </div>
     </div>
   );
 };
-

@@ -44,7 +44,7 @@ export const AdminReportsPage: React.FC = () => {
   // Outcome Chart Data
   const outcomeData = [
     { name: 'Simulated Approval (Verified)', count: verified, color: '#10B981' },
-    { name: 'Under Scrutiny / Review', count: underVerification, color: '#315FEA' },
+    { name: 'Under Scrutiny / Review', count: underVerification, color: '#0D9488' },
     { name: 'Corrections Required', count: actionRequired, color: '#F59E0B' },
     { name: 'Rejected (Deficit)', count: rejected, color: '#EF4444' },
   ].filter((d) => d.count > 0);
@@ -112,10 +112,10 @@ export const AdminReportsPage: React.FC = () => {
       {/* Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-navy-deep">
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
             Regulatory Analytics & Compliance Reports
           </h1>
-          <p className="text-xs text-slate-muted">
+          <p className="text-xs text-slate-500 mt-1">
             Aggregated institutional application throughput, validation clearance rates, and failure distributions.
           </p>
         </div>
@@ -123,14 +123,14 @@ export const AdminReportsPage: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => window.print()}
-            className="px-3.5 py-2 border border-slate-border text-slate-700 bg-white hover:bg-slate-50 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors shadow-xs"
+            className="px-3.5 py-2 border border-slate-200/80 text-slate-700 bg-white hover:bg-slate-50 text-xs font-semibold rounded-2xl flex items-center gap-1.5 transition-colors shadow-2xs"
           >
             <Printer size={15} />
             <span>Print Report View</span>
           </button>
           <button
             onClick={handleExportCSV}
-            className="px-3.5 py-2 bg-navy-deep hover:bg-slate-800 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors shadow-xs"
+            className="px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-2xl flex items-center gap-1.5 transition-colors shadow-xs shadow-teal-600/20"
           >
             <Download size={15} />
             <span>Export Analytics CSV</span>
@@ -140,32 +140,32 @@ export const AdminReportsPage: React.FC = () => {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-xl border border-slate-border shadow-xs">
-          <span className="text-xs font-semibold text-slate-muted">Total Filings Handled</span>
-          <div className="text-2xl font-bold text-navy-deep mt-1">{total} Cases</div>
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Filings</span>
+          <div className="text-2xl font-extrabold text-slate-900 mt-1">{total} Cases</div>
           <span className="text-[11px] text-slate-400 mt-1 block">Cycle 2026-2027</span>
         </div>
-        <div className="bg-white p-5 rounded-xl border border-slate-border shadow-xs">
-          <span className="text-xs font-semibold text-slate-muted">Clearance Approval Ratio</span>
-          <div className="text-2xl font-bold text-status-success mt-1">{clearanceRate}%</div>
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Clearance Ratio</span>
+          <div className="text-2xl font-extrabold text-emerald-600 mt-1">{clearanceRate}%</div>
           <span className="text-[11px] text-slate-400 mt-1 block">Of adjudicated cases</span>
         </div>
-        <div className="bg-white p-5 rounded-xl border border-slate-border shadow-xs">
-          <span className="text-xs font-semibold text-slate-muted">Average Turnaround (Simulated)</span>
-          <div className="text-2xl font-bold text-brand-blue mt-1">4.2 Days</div>
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Avg Turnaround</span>
+          <div className="text-2xl font-extrabold text-teal-700 mt-1">4.2 Days</div>
           <span className="text-[11px] text-slate-400 mt-1 block">From submission to decision</span>
         </div>
-        <div className="bg-white p-5 rounded-xl border border-slate-border shadow-xs">
-          <span className="text-xs font-semibold text-slate-muted">Active Corrections Loop</span>
-          <div className="text-2xl font-bold text-orange-600 mt-1">{actionRequired} Cases</div>
-          <span className="text-[11px] text-slate-400 mt-1 block">Awaiting applicant resubmission</span>
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Active Loop</span>
+          <div className="text-2xl font-extrabold text-orange-600 mt-1">{actionRequired} Cases</div>
+          <span className="text-[11px] text-slate-400 mt-1 block">Awaiting resubmission</span>
         </div>
       </div>
 
       {/* Charts Section */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Outcome Breakdown */}
-        <div className="bg-white p-5 rounded-xl border border-slate-border shadow-xs">
+        <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
           <h3 className="font-bold text-sm text-navy-deep mb-3">
             Adjudication Outcome Distribution
           </h3>

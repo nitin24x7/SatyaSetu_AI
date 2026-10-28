@@ -198,10 +198,10 @@ export const AdminApplicationsPage: React.FC = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-navy-deep">
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
             Regulatory Applications Pipeline
           </h1>
-          <p className="text-xs text-slate-muted">
+          <p className="text-xs text-slate-500 mt-1">
             Inspect dossiers, assign regulatory reviewers, evaluate OCR concordance, and execute compliance workflows.
           </p>
         </div>
@@ -209,7 +209,7 @@ export const AdminApplicationsPage: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={handleExportCSV}
-            className="px-3.5 py-2 border border-slate-border text-slate-700 bg-white hover:bg-slate-50 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors shadow-xs"
+            className="px-3.5 py-2 border border-slate-200/80 text-slate-700 bg-white hover:bg-slate-50 text-xs font-semibold rounded-2xl flex items-center gap-1.5 transition-colors shadow-2xs"
           >
             <Download size={15} />
             <span>Export Filtered CSV</span>
@@ -218,7 +218,7 @@ export const AdminApplicationsPage: React.FC = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-white rounded-xl border border-slate-border p-4 shadow-xs space-y-3">
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
           {/* Search */}
           <div className="relative lg:col-span-2">
@@ -357,12 +357,12 @@ export const AdminApplicationsPage: React.FC = () => {
         )}
       </div>
 
-      {/* Main Table */}
-      <div className="bg-white rounded-xl border border-slate-border shadow-xs overflow-hidden">
+      {/* Main Table - iOS Squircle */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-slate-border bg-surface-subtle text-slate-muted font-semibold">
+              <tr className="border-b border-slate-200/80 bg-slate-50 text-slate-500 font-semibold">
                 <th className="py-3 px-3 w-8">
                   <input
                     type="checkbox"

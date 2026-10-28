@@ -204,22 +204,22 @@ export const AdminReviewWorkspacePage: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Top Breadcrumb & Status Navigation Header */}
-      <div className="bg-white rounded-2xl border border-slate-border p-4 shadow-xs">
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-start sm:items-center gap-3">
             <Link
               to="/admin/applications"
-              className="p-2 border border-slate-border hover:bg-slate-50 text-slate-600 rounded-xl transition-colors shrink-0"
+              className="p-2 border border-slate-200/80 hover:bg-slate-50 text-slate-600 rounded-2xl transition-colors shrink-0 shadow-2xs"
               title="Return to Pipeline"
             >
               <ArrowLeft size={16} />
             </Link>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-mono font-black text-lg text-navy-deep">{application.id}</span>
+                <span className="font-mono font-black text-lg text-slate-900">{application.id}</span>
                 <StatusBadge status={application.status} size="sm" />
                 <RiskBadge risk={application.riskLevel} size="sm" />
-                <span className="text-xs px-2 py-0.5 rounded bg-blue-50 text-brand-blue font-semibold border border-blue-100">
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-800 font-bold border border-teal-200/70">
                   {application.applicationType}
                 </span>
               </div>
@@ -238,7 +238,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                   startVerification(application.id);
                   success('Verification Started', `Case assigned to ${currentReviewer.name}.`);
                 }}
-                className="px-3.5 py-1.5 bg-brand-blue hover:bg-brand-blue-dark text-white text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1.5"
+                className="px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-xl shadow-xs shadow-teal-600/20 flex items-center gap-1.5"
               >
                 <CheckCircle2 size={14} /> Start Verification
               </button>
@@ -253,7 +253,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                   success('Assessor Assigned', 'Case successfully reassigned.');
                 }
               }}
-              className="text-xs p-1.5 rounded-lg border border-slate-border bg-white text-slate-700"
+              className="text-xs p-1.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 font-medium"
             >
               <option value="">Assign Assessor...</option>
               {config.reviewers.map((r) => (
@@ -277,7 +277,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                   );
                   setIsCorrectionsOpen(true);
                 }}
-                className="px-3 py-1.5 border border-orange-200 bg-orange-50 hover:bg-orange-100 text-orange-800 text-xs font-semibold rounded-lg flex items-center gap-1.5"
+                className="px-3 py-1.5 border border-orange-200 bg-orange-50 hover:bg-orange-100 text-orange-800 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-2xs"
               >
                 <AlertTriangle size={14} /> Request Corrections
               </button>
@@ -289,7 +289,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                 syncAicteMasterData(application.id);
                 success('AICTE Master Synchronized', 'Historical approval records and TER payment status updated.');
               }}
-              className="px-3 py-1.5 border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-lg flex items-center gap-1.5"
+              className="px-3 py-1.5 border border-teal-200 bg-teal-50 hover:bg-teal-100 text-teal-800 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-2xs"
               title="Retrieve relevant institutional records from central AICTE portal"
             >
               <Landmark size={14} /> Sync AICTE
@@ -306,7 +306,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                 }, 600);
               }}
               disabled={isQueryingAuthorities}
-              className="px-3 py-1.5 border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold rounded-lg flex items-center gap-1.5"
+              className="px-3 py-1.5 border border-teal-200 bg-teal-50 hover:bg-teal-100 text-teal-800 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-2xs"
               title="Query DigiLocker, State DTE, and Affiliating University APIs"
             >
               <Link2 size={14} className={isQueryingAuthorities ? 'animate-spin' : ''} />
@@ -316,10 +316,10 @@ export const AdminReviewWorkspacePage: React.FC = () => {
             {/* EVC Physical Inspection Flag */}
             <button
               onClick={() => setIsEvcModalOpen(true)}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-colors ${
+              className={`px-3 py-1.5 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors shadow-2xs ${
                 application.physicalInspectionRequired
                   ? 'bg-amber-100 border border-amber-300 text-amber-900 shadow-xs'
-                  : 'border border-slate-border text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+                  : 'border border-slate-200/80 text-slate-700 hover:text-slate-900 hover:bg-slate-50'
               }`}
               title="Flag or review Expert Visit Committee (EVC) on-site physical inspection"
             >
@@ -331,7 +331,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
             {application.riskLevel !== 'High' && (
               <button
                 onClick={() => setIsFlagOpen(true)}
-                className="px-3 py-1.5 border border-slate-border text-slate-600 hover:text-slate-900 text-xs font-medium rounded-lg hover:bg-slate-50 flex items-center gap-1"
+                className="px-3 py-1.5 border border-slate-200/80 text-slate-600 hover:text-slate-900 text-xs font-medium rounded-xl hover:bg-slate-50 flex items-center gap-1 shadow-2xs"
                 title="Flag for specialized forensic investigation"
               >
                 <Flag size={14} /> Flag High-Risk
@@ -344,7 +344,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
               application.status === 'Submitted') && (
               <button
                 onClick={() => setIsApproveOpen(true)}
-                className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1.5"
+                className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-xs shadow-emerald-600/20 flex items-center gap-1.5"
               >
                 <CheckCircle2 size={14} /> Record Approval
               </button>
@@ -356,7 +356,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
               application.status === 'Action Required') && (
               <button
                 onClick={() => setIsRejectOpen(true)}
-                className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1.5"
+                className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl shadow-xs shadow-rose-600/20 flex items-center gap-1.5"
               >
                 <XCircle size={14} /> Record Rejection
               </button>
@@ -366,7 +366,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
             {(application.status === 'Verified' || application.status === 'Rejected') && (
               <button
                 onClick={() => setIsReopenOpen(true)}
-                className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-xl shadow-xs shadow-amber-600/20 flex items-center gap-1.5"
               >
                 <RotateCcw size={14} /> Administrative Override / Reopen
               </button>
@@ -377,7 +377,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
 
       {/* Resubmitted Notice Banner if applicant provided updates */}
       {application.status === 'Resubmitted' && (
-        <div className="bg-purple-50 border border-purple-200 rounded-xl p-3.5 flex items-start gap-3 text-purple-950 text-xs animate-in fade-in duration-150">
+        <div className="bg-purple-50/80 border border-purple-200 rounded-2xl p-4 flex items-start gap-3 text-purple-950 text-xs animate-in fade-in duration-150 shadow-2xs">
           <RotateCcw size={16} className="text-purple-600 shrink-0 mt-0.5" />
           <div>
             <span className="font-bold">Applicant Resubmission Received: </span>
@@ -388,13 +388,13 @@ export const AdminReviewWorkspacePage: React.FC = () => {
 
       {/* EVC Physical Inspection Banner */}
       {application.physicalInspectionRequired && (
-        <div className="bg-amber-50 border border-amber-300 rounded-xl p-3.5 flex items-start justify-between gap-3 text-amber-950 text-xs animate-in fade-in duration-150 shadow-xs">
+        <div className="bg-amber-50/90 border border-amber-300 rounded-3xl p-4 flex items-start justify-between gap-3 text-amber-950 text-xs animate-in fade-in duration-150 shadow-xs">
           <div className="flex items-start gap-2.5">
             <Compass size={18} className="text-amber-700 shrink-0 mt-0.5 animate-pulse" />
             <div>
               <div className="font-bold text-amber-900 flex items-center gap-2">
                 <span>AICTE Expert Visit Committee (EVC) Physical Inspection Recommended</span>
-                <span className="bg-amber-200 text-amber-800 text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold">
+                <span className="bg-amber-200 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-mono font-bold">
                   EVC-ACTION-REQUIRED
                 </span>
               </div>
@@ -416,9 +416,9 @@ export const AdminReviewWorkspacePage: React.FC = () => {
       )}
 
       {/* Statutory Advisory Decision-Support Notice */}
-      <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 flex items-center justify-between gap-2 text-slate-600 text-[11px]">
+      <div className="bg-teal-50/70 border border-teal-200/70 rounded-2xl px-4 py-2.5 flex items-center justify-between gap-2 text-teal-950 text-[11px] shadow-2xs">
         <div className="flex items-center gap-2">
-          <Shield size={14} className="text-brand-blue shrink-0" />
+          <Shield size={14} className="text-teal-700 shrink-0" />
           <span>
             <strong>AICTE Decision Support Safeguard:</strong> All AI-generated flags, concordance markers, and compliance calculus are preliminary decision-support outputs. Statutory scrutiny, physical inspections where required, and final regulatory decisions remain strictly with competent AICTE authorities.
           </span>
@@ -429,7 +429,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
       {/* THREE-PANEL REVIEW WORKSPACE */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-[680px]">
         {/* PANEL 1: LEFT PANEL — Document Checklist & Missing Items (3 cols) */}
-        <div className="lg:col-span-3 bg-white rounded-2xl border border-slate-border shadow-xs p-4 flex flex-col justify-between overflow-y-auto max-h-[750px]">
+        <div className="lg:col-span-3 bg-white rounded-3xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] p-5 flex flex-col justify-between overflow-y-auto max-h-[750px]">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-navy-deep">
@@ -448,10 +448,10 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                   <div
                     key={doc.id}
                     onClick={() => setSelectedDocId(doc.id)}
-                    className={`p-3 rounded-xl border text-xs cursor-pointer transition-all ${
+                    className={`p-3 rounded-2xl border text-xs cursor-pointer transition-all ${
                       isSelected
-                        ? 'border-brand-blue bg-brand-blue-light/40 shadow-xs ring-1 ring-brand-blue/30'
-                        : 'border-slate-border hover:border-slate-300 hover:bg-slate-50'
+                        ? 'border-teal-500 bg-teal-50/40 shadow-xs ring-1 ring-teal-500/30'
+                        : 'border-slate-200/80 hover:border-slate-300 hover:bg-slate-50/80'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-1">
@@ -511,12 +511,12 @@ export const AdminReviewWorkspacePage: React.FC = () => {
         </div>
 
         {/* PANEL 2: CENTER PANEL — Document Preview & Optical Inspection (5 cols) */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-border shadow-xs flex flex-col overflow-hidden max-h-[750px]">
+        <div className="lg:col-span-5 bg-white rounded-3xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col overflow-hidden max-h-[750px]">
           {/* Preview Toolbar */}
-          <div className="p-3 border-b border-slate-border bg-surface-subtle flex items-center justify-between text-xs">
+          <div className="p-3.5 border-b border-slate-200/80 bg-slate-50/60 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2 truncate">
-              <FileText size={15} className="text-brand-blue shrink-0" />
-              <span className="font-semibold text-slate-800 truncate">
+              <FileText size={15} className="text-teal-600 shrink-0" />
+              <span className="font-bold text-slate-800 truncate">
                 {activeDoc?.category || 'Document Preview'}
               </span>
             </div>
@@ -524,15 +524,15 @@ export const AdminReviewWorkspacePage: React.FC = () => {
             <div className="flex items-center gap-1 shrink-0">
               <button
                 onClick={() => setZoomLevel((z) => Math.max(70, z - 10))}
-                className="p-1 hover:bg-slate-200 rounded text-slate-600"
+                className="p-1.5 hover:bg-slate-200/80 rounded-xl text-slate-600 transition-colors"
                 title="Zoom Out"
               >
                 <ZoomOut size={14} />
               </button>
-              <span className="text-[10px] font-mono w-10 text-center">{zoomLevel}%</span>
+              <span className="text-[10px] font-mono w-10 text-center font-bold text-slate-600">{zoomLevel}%</span>
               <button
                 onClick={() => setZoomLevel((z) => Math.min(140, z + 10))}
-                className="p-1 hover:bg-slate-200 rounded text-slate-600"
+                className="p-1.5 hover:bg-slate-200/80 rounded-xl text-slate-600 transition-colors"
                 title="Zoom In"
               >
                 <ZoomIn size={14} />
@@ -612,14 +612,14 @@ export const AdminReviewWorkspacePage: React.FC = () => {
         </div>
 
         {/* PANEL 3: RIGHT PANEL — Findings, Field Concordance & Compliance Checklist (4 cols) */}
-        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-border shadow-xs flex flex-col overflow-hidden max-h-[750px]">
-          {/* Tab Navigation */}
-          <div className="p-1.5 border-b border-slate-border bg-surface-subtle flex gap-1 overflow-x-auto">
+        <div className="lg:col-span-4 bg-white rounded-3xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col overflow-hidden max-h-[750px]">
+          {/* Tab Navigation - Smooth iOS Squircles */}
+          <div className="p-1.5 border-b border-slate-200/80 bg-slate-50/80 flex gap-1 overflow-x-auto">
             <button
               onClick={() => setActiveRightTab('findings')}
-              className={`px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap ${
+              className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all whitespace-nowrap ${
                 activeRightTab === 'findings'
-                  ? 'bg-white text-navy-deep shadow-xs'
+                  ? 'bg-white text-teal-900 shadow-xs border border-slate-200/60'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
@@ -627,9 +627,9 @@ export const AdminReviewWorkspacePage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveRightTab('extracted')}
-              className={`px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap ${
+              className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all whitespace-nowrap ${
                 activeRightTab === 'extracted'
-                  ? 'bg-white text-navy-deep shadow-xs'
+                  ? 'bg-white text-teal-900 shadow-xs border border-slate-200/60'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
@@ -637,9 +637,9 @@ export const AdminReviewWorkspacePage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveRightTab('authorities')}
-              className={`px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap flex items-center gap-1 ${
+              className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all whitespace-nowrap flex items-center gap-1 ${
                 activeRightTab === 'authorities'
-                  ? 'bg-white text-navy-deep shadow-xs'
+                  ? 'bg-white text-teal-900 shadow-xs border border-slate-200/60'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
@@ -647,9 +647,9 @@ export const AdminReviewWorkspacePage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveRightTab('infrastructure')}
-              className={`px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap flex items-center gap-1 ${
+              className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all whitespace-nowrap flex items-center gap-1 ${
                 activeRightTab === 'infrastructure'
-                  ? 'bg-white text-navy-deep shadow-xs'
+                  ? 'bg-white text-teal-900 shadow-xs border border-slate-200/60'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
@@ -657,9 +657,9 @@ export const AdminReviewWorkspacePage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveRightTab('activity')}
-              className={`px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap ${
+              className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all whitespace-nowrap ${
                 activeRightTab === 'activity'
-                  ? 'bg-white text-navy-deep shadow-xs'
+                  ? 'bg-white text-teal-900 shadow-xs border border-slate-200/60'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >

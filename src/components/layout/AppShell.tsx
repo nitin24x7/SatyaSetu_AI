@@ -12,7 +12,7 @@ export const AppShell: React.FC<AppShellProps> = ({ role }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-surface-bg flex">
+    <div className="min-h-screen bg-surface-bg flex antialiased">
       {/* Sidebar navigation */}
       <Sidebar
         role={role}
@@ -28,16 +28,16 @@ export const AppShell: React.FC<AppShellProps> = ({ role }) => {
           onMobileMenuToggle={() => setMobileOpen(!mobileOpen)}
         />
 
-        {/* Global simulated notice banner */}
-        <div className="bg-navy-deep text-slate-300 px-4 py-1.5 text-xs flex items-center justify-between border-b border-navy-light/40 no-print">
+        {/* Global simulated notice banner - Soft iOS Teal Style */}
+        <div className="bg-teal-50/80 text-teal-900 px-4 py-2 text-xs flex items-center justify-between border-b border-teal-100/70 no-print transition-all">
           <div className="flex items-center gap-2 truncate">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-            <span className="font-semibold text-white">SIMULATED ENVIRONMENT:</span>
-            <span className="truncate text-slate-300">
-              All OCR extractions, compliance findings, and approval decisions are deterministic mock simulations.
+            <span className="w-2 h-2 rounded-full bg-teal-500 shrink-0" />
+            <span className="font-bold text-teal-950">SIMULATED ENVIRONMENT:</span>
+            <span className="truncate text-teal-800 font-medium">
+              All OCR extractions, compliance findings, and approval decisions are deterministic simulations.
             </span>
           </div>
-          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-400 shrink-0 ml-4 font-mono">
+          <div className="hidden sm:flex items-center gap-1.5 text-[10px] text-teal-700 shrink-0 ml-4 font-mono font-semibold px-2.5 py-0.5 rounded-full bg-teal-100/70 border border-teal-200/60">
             <span>LOCAL STATE PERSISTED</span>
           </div>
         </div>
@@ -50,4 +50,3 @@ export const AppShell: React.FC<AppShellProps> = ({ role }) => {
     </div>
   );
 };
-

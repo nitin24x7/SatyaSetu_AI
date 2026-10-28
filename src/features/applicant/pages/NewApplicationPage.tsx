@@ -319,8 +319,8 @@ export const NewApplicationPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Multi-Step Progress Stepper */}
-      <div className="bg-white rounded-xl border border-slate-border p-4 shadow-xs">
+      {/* Multi-Step Progress Stepper - iOS Squircle */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
         <div className="grid grid-cols-4 gap-2">
           {[
             { step: 1, title: 'Institution Info', icon: Building2 },
@@ -360,8 +360,8 @@ export const NewApplicationPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Step Content */}
-      <div className="bg-white rounded-xl border border-slate-border p-6 shadow-xs">
+      {/* Step Content - iOS Squircle */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
         {/* STEP 1: Institution Information */}
         {currentStep === 1 && (
           <div className="space-y-5 animate-in fade-in duration-150">

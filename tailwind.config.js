@@ -8,42 +8,60 @@ export default {
     extend: {
       colors: {
         navy: {
-          DEFAULT: '#142B4A',
-          deep: '#0B1930',
-          light: '#1F3F6D',
+          DEFAULT: '#0F766E', // rich teal-700
+          deep: '#134E4A',    // dark teal-900
+          light: '#14B8A6',   // vibrant teal-500
         },
         brand: {
-          blue: '#315FEA',
-          'blue-light': '#EAF0FF',
-          'blue-dark': '#2146BA',
+          DEFAULT: '#0D9488', // teal-600
+          teal: '#0D9488',
+          'teal-light': '#F0FDFA',
+          'teal-dark': '#0F766E',
+          blue: '#0D9488',    // seamlessly rerouted to teal
+          'blue-light': '#F0FDFA',
+          'blue-dark': '#0F766E',
         },
         surface: {
-          bg: '#F6F8FC',
+          bg: '#F8FAFC',
           card: '#FFFFFF',
-          sidebar: '#0B1930',
-          subtle: '#F1F4F9',
+          sidebar: '#FFFFFF',
+          subtle: '#F1F5F9',
         },
         slate: {
-          text: '#17243A',
-          muted: '#69778D',
-          border: '#E4E9F1',
+          text: '#0F172A',
+          muted: '#64748B',
+          border: '#E2E8F0',
         },
         status: {
-          success: '#16845B',
-          'success-bg': '#E8F7F0',
-          warning: '#B7791F',
-          'warning-bg': '#FEF7E7',
-          error: '#C63F46',
-          'error-bg': '#FDF0F0',
-          info: '#2762B8',
-          'info-bg': '#EBF2FC',
+          success: '#059669',
+          'success-bg': '#ECFDF5',
+          warning: '#D97706',
+          'warning-bg': '#FFFBEB',
+          error: '#E11D48',
+          'error-bg': '#FFF1F2',
+          info: '#0D9488',
+          'info-bg': '#F0FDFA',
         }
       },
+      borderRadius: {
+        'squircle-sm': '12px',
+        'squircle': '18px',
+        'squircle-md': '22px',
+        'squircle-lg': '28px',
+        'squircle-xl': '36px',
+        'ios': '20px',
+        'ios-lg': '26px',
+        'ios-xl': '32px',
+      },
+      boxShadow: {
+        'ios': '0 2px 12px -2px rgba(13, 148, 136, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03)',
+        'ios-card': '0 1px 3px rgba(0, 0, 0, 0.03), 0 8px 24px -4px rgba(15, 23, 42, 0.04)',
+        'ios-elevated': '0 12px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(13, 148, 136, 0.05)',
+      },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Text', 'SF Pro Display', 'system-ui', 'sans-serif'],
       },
     },
   },
   plugins: [],
 }
-

@@ -12,6 +12,7 @@ import {
   ChevronDown,
   Info,
   ExternalLink,
+  Sparkles,
 } from 'lucide-react';
 import { NotificationPanel } from './NotificationPanel';
 
@@ -78,30 +79,30 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
     : [];
 
   return (
-    <header className="h-16 bg-white border-b border-slate-border sticky top-0 z-30 px-4 lg:px-6 flex items-center justify-between gap-4">
+    <header className="h-16 bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 px-4 lg:px-6 flex items-center justify-between gap-4 transition-all">
       {/* Left: Mobile hamburger & Breadcrumbs */}
       <div className="flex items-center gap-3 min-w-0">
         <button
           onClick={onMobileMenuToggle}
-          className="lg:hidden p-2 text-slate-muted hover:text-slate-text rounded-lg hover:bg-slate-100"
+          className="lg:hidden p-2 text-slate-500 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition-colors"
           aria-label="Toggle Navigation"
         >
           <Menu size={20} />
         </button>
 
         {/* Breadcrumb Trail */}
-        <nav className="hidden sm:flex items-center gap-1.5 text-xs text-slate-muted truncate font-medium">
+        <nav className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 truncate font-medium">
           {breadcrumbs.map((crumb, idx) => (
             <React.Fragment key={crumb.url}>
               {idx > 0 && <ChevronRight size={13} className="text-slate-300 shrink-0" />}
               {idx === breadcrumbs.length - 1 ? (
-                <span className="text-slate-text font-semibold capitalize truncate">
+                <span className="text-slate-900 font-semibold capitalize truncate">
                   {crumb.label}
                 </span>
               ) : (
                 <Link
                   to={crumb.url}
-                  className="hover:text-brand-blue capitalize transition-colors truncate"
+                  className="hover:text-teal-600 capitalize transition-colors truncate"
                 >
                   {crumb.label}
                 </Link>
@@ -111,10 +112,10 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
         </nav>
       </div>
 
-      {/* Center: Search input with auto-suggest */}
+      {/* Center: Search input with auto-suggest - Smooth squircle */}
       <div ref={searchRef} className="relative hidden md:block max-w-xs w-full">
         <div className="relative">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             value={searchQuery}
@@ -124,18 +125,18 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
             }}
             onFocus={() => setSearchResultsOpen(true)}
             placeholder="Search by ID, college, or type..."
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-border bg-surface-subtle focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-brand-blue focus:border-brand-blue transition-all"
+            className="w-full pl-9 pr-3.5 py-1.5 text-xs rounded-2xl border border-slate-200/80 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all placeholder:text-slate-400"
           />
         </div>
 
         {/* Search Results Dropdown */}
         {searchResultsOpen && searchQuery.trim() && (
-          <div className="absolute left-0 right-0 top-10 bg-white rounded-lg shadow-lg border border-slate-border p-2 z-50">
-            <div className="text-[10px] uppercase font-semibold text-slate-400 px-2 py-1">
+          <div className="absolute left-0 right-0 top-11 bg-white rounded-2xl shadow-xl border border-slate-200/80 p-2 z-50 animate-in fade-in zoom-in-95 duration-100">
+            <div className="text-[10px] uppercase font-bold text-slate-400 px-2 py-1">
               Matching Applications ({filteredApps.length})
             </div>
             {filteredApps.length === 0 ? (
-              <div className="text-xs text-slate-muted p-2">No matching applications found.</div>
+              <div className="text-xs text-slate-400 p-2">No matching applications found.</div>
             ) : (
               filteredApps.map((app) => (
                 <div
@@ -149,13 +150,13 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
                       navigate(`/applicant/applications/${app.id}`);
                     }
                   }}
-                  className="p-2 hover:bg-slate-50 rounded cursor-pointer transition-colors"
+                  className="p-2 hover:bg-slate-50 rounded-xl cursor-pointer transition-colors"
                 >
-                  <div className="flex items-center justify-between text-xs font-semibold text-slate-text">
+                  <div className="flex items-center justify-between text-xs font-semibold text-slate-800">
                     <span>{app.id}</span>
-                    <span className="text-[10px] font-normal text-slate-muted">{app.status}</span>
+                    <span className="text-[10px] font-normal text-slate-400">{app.status}</span>
                   </div>
-                  <div className="text-[11px] text-slate-muted truncate">{app.institutionName}</div>
+                  <div className="text-[11px] text-slate-500 truncate">{app.institutionName}</div>
                 </div>
               ))
             )}
@@ -166,21 +167,21 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
       {/* Right: Demo status pill, Notifications, and Identity Switcher */}
       <div className="flex items-center gap-3 shrink-0">
         {/* Simulated Demo Notice */}
-        <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-800 text-[11px] font-medium">
-          <Info size={13} className="text-amber-600" />
-          <span>Statutory Verification Environment • Enterprise Architecture</span>
+        <div className="hidden xl:flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50/80 border border-teal-200/60 text-teal-900 text-[11px] font-medium">
+          <Sparkles size={13} className="text-teal-600" />
+          <span>Statutory Verification Environment</span>
         </div>
 
         {/* Notifications Icon with Dropdown */}
         <div className="relative">
           <button
             onClick={() => setNotificationOpen(!notificationOpen)}
-            className="relative p-2 text-slate-muted hover:text-slate-text hover:bg-slate-100 rounded-lg transition-colors"
+            className="relative p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-2xl border border-slate-200/70 transition-colors"
             title="Notifications"
           >
             <Bell size={18} />
             {unreadCount(role) > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-status-error ring-2 ring-white animate-pulse" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white animate-pulse" />
             )}
           </button>
           <NotificationPanel
@@ -194,18 +195,18 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
         <div ref={dropdownRef} className="relative">
           <button
             onClick={() => setIdentityDropdownOpen(!identityDropdownOpen)}
-            className="flex items-center gap-2.5 p-1.5 rounded-lg border border-slate-border hover:bg-slate-50 transition-colors text-left"
+            className="flex items-center gap-2.5 p-1.5 rounded-2xl border border-slate-200/80 hover:bg-slate-50/80 transition-all text-left shadow-2xs"
           >
-            <div className="w-8 h-8 rounded-full bg-brand-blue text-white flex items-center justify-center font-semibold text-xs shrink-0 shadow-xs">
+            <div className="w-8 h-8 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
               {role === 'admin'
                 ? currentReviewer.name.charAt(0)
                 : currentInstitution.name.charAt(0)}
             </div>
             <div className="hidden md:block max-w-[130px]">
-              <div className="text-xs font-semibold text-slate-text truncate">
+              <div className="text-xs font-semibold text-slate-800 truncate">
                 {role === 'admin' ? currentReviewer.name : currentInstitution.name}
               </div>
-              <div className="text-[10px] text-slate-muted truncate">
+              <div className="text-[10px] text-teal-700 font-medium truncate">
                 {role === 'admin' ? currentReviewer.role : currentInstitution.representativeName}
               </div>
             </div>
@@ -214,12 +215,12 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
 
           {/* Identity Switcher Menu */}
           {identityDropdownOpen && (
-            <div className="absolute right-0 top-12 z-50 w-72 bg-white rounded-xl shadow-xl border border-slate-border p-2 animate-in fade-in zoom-in-95 duration-150">
+            <div className="absolute right-0 top-12 z-50 w-72 bg-white rounded-2xl shadow-xl border border-slate-200/80 p-2 animate-in fade-in zoom-in-95 duration-150">
               <div className="px-3 py-2 border-b border-slate-100">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   Switch Active Identity (Demo)
                 </div>
-                <div className="text-xs text-slate-muted mt-0.5">
+                <div className="text-xs text-slate-500 mt-0.5">
                   Allows testing cross-institution and multi-reviewer behaviors.
                 </div>
               </div>
@@ -233,16 +234,16 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
                         setCurrentInstitutionId(inst.id);
                         setIdentityDropdownOpen(false);
                       }}
-                      className={`w-full text-left p-2 rounded-lg text-xs transition-colors flex items-start gap-2 ${
+                      className={`w-full text-left p-2 rounded-xl text-xs transition-colors flex items-start gap-2 ${
                         inst.id === currentInstitution.id
-                          ? 'bg-brand-blue-light text-brand-blue font-semibold'
-                          : 'hover:bg-slate-50 text-slate-text'
+                          ? 'bg-teal-50 text-teal-800 font-semibold border border-teal-200/60'
+                          : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
-                      <Building2 size={15} className="shrink-0 mt-0.5" />
+                      <Building2 size={15} className="shrink-0 mt-0.5 text-teal-600" />
                       <div className="truncate">
                         <div className="truncate">{inst.name}</div>
-                        <div className="text-[10px] text-slate-muted">{inst.state} • {inst.institutionType}</div>
+                        <div className="text-[10px] text-slate-400">{inst.state} • {inst.institutionType}</div>
                       </div>
                     </button>
                   ))}
@@ -256,16 +257,16 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
                         setCurrentReviewerId(rev.id);
                         setIdentityDropdownOpen(false);
                       }}
-                      className={`w-full text-left p-2 rounded-lg text-xs transition-colors flex items-start gap-2 ${
+                      className={`w-full text-left p-2 rounded-xl text-xs transition-colors flex items-start gap-2 ${
                         rev.id === currentReviewer.id
-                          ? 'bg-brand-blue-light text-brand-blue font-semibold'
-                          : 'hover:bg-slate-50 text-slate-text'
+                          ? 'bg-teal-50 text-teal-800 font-semibold border border-teal-200/60'
+                          : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
-                      <User size={15} className="shrink-0 mt-0.5" />
+                      <User size={15} className="shrink-0 mt-0.5 text-teal-600" />
                       <div className="truncate">
                         <div className="truncate">{rev.name}</div>
-                        <div className="text-[10px] text-slate-muted">{rev.role}</div>
+                        <div className="text-[10px] text-slate-400">{rev.role}</div>
                       </div>
                     </button>
                   ))}
@@ -276,7 +277,7 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
                 <Link
                   to={role === 'applicant' ? '/applicant/profile' : '/admin/settings'}
                   onClick={() => setIdentityDropdownOpen(false)}
-                  className="block px-3 py-1.5 text-xs text-brand-blue hover:underline font-medium text-center"
+                  className="block px-3 py-1.5 text-xs text-teal-700 hover:underline font-semibold text-center"
                 >
                   {role === 'applicant' ? 'Edit Institution Profile' : 'Configure Verification Settings'}
                 </Link>
@@ -288,4 +289,3 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
     </header>
   );
 };
-
