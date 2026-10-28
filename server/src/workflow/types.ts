@@ -156,3 +156,4 @@ export interface AllowedTransitionOption {
   requiresJustification: boolean;
   requiredRole: string[];
 }
+
