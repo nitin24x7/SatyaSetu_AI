@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { ShieldCheck, Info } from 'lucide-react';
+import { RegulatoryChatbot } from '../chat/RegulatoryChatbot';
 
 interface AppShellProps {
   role: 'applicant' | 'admin';
@@ -47,6 +48,9 @@ export const AppShell: React.FC<AppShellProps> = ({ role }) => {
           <Outlet />
         </main>
       </div>
+
+      {/* Interactive AICTE Regulatory Assistant Chatbot (Groq Powered) */}
+      <RegulatoryChatbot />
     </div>
   );
 };

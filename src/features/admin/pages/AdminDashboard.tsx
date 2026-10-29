@@ -15,6 +15,7 @@ import {
   Building2,
   Calendar,
   Sparkles,
+  Compass,
 } from 'lucide-react';
 import { MetricCard } from '../../../components/ui/MetricCard';
 import { StatusBadge } from '../../../components/ui/StatusBadge';
@@ -95,124 +96,147 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <div className="space-y-6 antialiased">
-      {/* Top Banner - iOS Squircle */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200/60">
-              Admin Console
-            </span>
-            <span className="text-slate-300">•</span>
-            <span className="text-xs text-slate-500 font-medium">{currentReviewer.department}</span>
+      {/* Top Greeting & Date */}
+      <div>
+        <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+          Welcome back, {currentReviewer.name.split(' ')[0]}
+        </h1>
+        <p className="text-xs text-slate-400 font-medium mt-0.5">
+          {new Date().toLocaleDateString('en-IN', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+          })} • {currentReviewer.role} ({currentReviewer.department})
+        </p>
+      </div>
+
+      {/* Hero Decks - Pastel Gradient & Glassmorphism */}
+      <div className="grid md:grid-cols-3 gap-5">
+        {/* Main Deck (2 cols): Soft Pink/Rose Gradient Deck */}
+        <div className="md:col-span-2 rounded-3xl p-7 bg-gradient-to-br from-[#FFE5EC]/90 via-[#FFF0F4]/75 to-white/80 border border-rose-200/70 backdrop-blur-md shadow-[0_4px_20px_rgba(244,63,94,0.06)] flex flex-col justify-between">
+          <div className="space-y-3">
+            <div className="w-10 h-10 rounded-2xl bg-white/90 border border-rose-200/80 flex items-center justify-center text-rose-600 shadow-2xs">
+              <TrendingUp size={20} />
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-200/60 text-rose-800 text-[10px] font-extrabold uppercase tracking-wider mb-2 font-mono">
+                AICTE EOA 2026-27 CYCLE
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                Regulatory Decision Support & Approval Scrutiny
+              </h2>
+              <p className="text-xs text-slate-600 leading-relaxed mt-1.5 max-w-xl">
+                Automated compliance checking against the AICTE Approval Process Handbook. Real-time document forensics, Cadre SFR ratios, instructional carpet area calculus, and TER payment reconciliation.
+              </p>
+            </div>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">
-            Verification & Compliance Pipeline
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Live regulatory triage, deterministic optical extractions, concordance auditing, and statutory clearance.
-          </p>
+
+          <div className="mt-6 flex items-center gap-3">
+            <button
+              onClick={() => navigate('/admin/review-queue')}
+              className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-2xl transition-all shadow-sm flex items-center gap-2"
+            >
+              <span>Open Review Queue ({pending + resubmitted})</span>
+              <ArrowRight size={14} />
+            </button>
+            <button
+              onClick={() => navigate('/admin/applications')}
+              className="px-4 py-2.5 bg-white/80 hover:bg-white text-slate-700 text-xs font-semibold rounded-2xl border border-rose-200/60 transition-all shadow-2xs"
+            >
+              All Applications ({total})
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Link
-            to="/admin/review-queue"
-            className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-2xl transition-all shadow-sm shadow-teal-600/20 flex items-center gap-2"
-          >
-            <ListTodo size={16} />
-            <span>Open Review Queue ({pending + resubmitted})</span>
-          </Link>
+        {/* Side Deck (1 col): Glassmorphic Card */}
+        <div className="rounded-3xl p-7 bg-white/75 backdrop-blur-md border border-slate-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.03)] flex flex-col justify-between">
+          <div className="space-y-3">
+            <div className="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 shadow-2xs">
+              <Compass size={20} />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-slate-900 tracking-tight">
+                EVC On-Site Inspection Triage
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed mt-1">
+                Review cases flagged for physical inspection by the Expert Visit Committee due to infrastructure or space deficits.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-slate-100/80 flex items-center justify-between">
+            <div className="text-xs">
+              <span className="font-bold text-amber-700">
+                {applications.filter((a) => a.physicalInspectionRequired).length} Institutions
+              </span>
+              <span className="text-[11px] text-slate-400 block">Flagged for EVC Visit</span>
+            </div>
+            <button
+              onClick={() => navigate('/admin/review-queue?tab=evc')}
+              className="px-3.5 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-800 text-xs font-semibold rounded-xl border border-teal-200/60 transition-colors"
+            >
+              View Triage
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* AICTE Decision-Support & Statutory Operational Strip */}
-      <div className="bg-gradient-to-r from-teal-900 via-teal-950 to-slate-900 text-white rounded-3xl p-5 shadow-xs border border-teal-800/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="bg-amber-400 text-slate-900 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
-              AICTE EOA 2026-27
-            </span>
-            <h2 className="text-sm font-bold tracking-tight">
-              AI-Enabled Decision Support & Statutory Approval Dashboard
-            </h2>
-          </div>
-          <p className="text-xs text-teal-100/80">
-            Automated scrutiny of technical education institutions for Extension of Approval (EoA), course additions, and capacity verification.
-          </p>
+      {/* Colorful Light Gradient Decks Row */}
+      <div>
+        <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
+          Active Adjudication Decks
         </div>
-
-        <div className="flex items-center gap-3 shrink-0 text-xs">
-          <div className="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 backdrop-blur-xs">
-            <span className="text-[10px] text-teal-200 block font-medium">EVC Inspections:</span>
-            <span className="font-bold text-amber-300">
-              {applications.filter((a) => a.physicalInspectionRequired).length} Flagged
-            </span>
-          </div>
-          <div className="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 backdrop-blur-xs">
-            <span className="text-[10px] text-teal-200 block font-medium">Authority Gateways:</span>
-            <span className="font-bold text-emerald-300">5 Connected</span>
-          </div>
-          <div className="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/10 backdrop-blur-xs">
-            <span className="text-[10px] text-teal-200 block font-medium">TER Reconciliation:</span>
-            <span className="font-bold text-teal-200">100% Match</span>
-          </div>
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3.5">
+          <MetricCard
+            title="Total Cases"
+            value={total}
+            subtitle="All active records"
+            icon={FileText}
+            colorScheme="rose"
+            onClick={() => navigate('/admin/applications')}
+          />
+          <MetricCard
+            title="Pending Review"
+            value={pending}
+            subtitle="Awaiting triage"
+            icon={Clock}
+            colorScheme="orange"
+            badge={pending > 0 ? { text: 'New', variant: 'warning' } : undefined}
+            onClick={() => navigate('/admin/applications?status=Submitted')}
+          />
+          <MetricCard
+            title="Under Scrutiny"
+            value={underVerification + resubmitted}
+            subtitle="Active audit"
+            icon={TrendingUp}
+            colorScheme="indigo"
+            onClick={() => navigate('/admin/applications?status=Under Verification')}
+          />
+          <MetricCard
+            title="Action Req."
+            value={actionRequired}
+            subtitle="Applicant fixing"
+            icon={AlertTriangle}
+            colorScheme="yellow"
+            onClick={() => navigate('/admin/applications?status=Action Required')}
+          />
+          <MetricCard
+            title="Verified"
+            value={verified}
+            subtitle="Approved cases"
+            icon={CheckCircle2}
+            colorScheme="green"
+            onClick={() => navigate('/admin/applications?status=Verified')}
+          />
+          <MetricCard
+            title="EVC Flagged"
+            value={applications.filter((a) => a.physicalInspectionRequired).length}
+            subtitle="Physical scrutiny"
+            icon={Compass}
+            colorScheme="teal"
+            onClick={() => navigate('/admin/review-queue')}
+          />
         </div>
-      </div>
-
-      {/* Metric Cards Row */}
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-        <MetricCard
-          title="Total Cases"
-          value={total}
-          subtitle="All active records"
-          icon={FileText}
-          onClick={() => navigate('/admin/applications')}
-        />
-        <MetricCard
-          title="Pending"
-          value={pending}
-          subtitle="Awaiting triage"
-          icon={Clock}
-          iconColor="text-teal-600"
-          iconBg="bg-teal-50"
-          badge={pending > 0 ? { text: 'New', variant: 'warning' } : undefined}
-          onClick={() => navigate('/admin/applications?status=Submitted')}
-        />
-        <MetricCard
-          title="Under Review"
-          value={underVerification + resubmitted}
-          subtitle="Active scrutiny"
-          icon={TrendingUp}
-          iconColor="text-amber-600"
-          iconBg="bg-amber-50"
-          onClick={() => navigate('/admin/applications?status=Under Verification')}
-        />
-        <MetricCard
-          title="Action Req."
-          value={actionRequired}
-          subtitle="Applicant fixing"
-          icon={AlertTriangle}
-          iconColor="text-orange-600"
-          iconBg="bg-orange-50"
-          onClick={() => navigate('/admin/applications?status=Action Required')}
-        />
-        <MetricCard
-          title="Verified"
-          value={verified}
-          subtitle="Statutory approval"
-          icon={CheckCircle2}
-          iconColor="text-emerald-600"
-          iconBg="bg-emerald-50"
-          onClick={() => navigate('/admin/applications?status=Verified')}
-        />
-        <MetricCard
-          title="Rejected"
-          value={rejected}
-          subtitle="Deficit cases"
-          icon={XCircle}
-          iconColor="text-rose-600"
-          iconBg="bg-rose-50"
-          onClick={() => navigate('/admin/applications?status=Rejected')}
-        />
       </div>
 
       {/* Charts Section - Smooth Squircles */}

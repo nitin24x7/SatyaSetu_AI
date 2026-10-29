@@ -83,32 +83,86 @@ export const ApplicantDashboard: React.FC = () => {
 
   return (
     <div className="space-y-6 antialiased">
-      {/* Top Banner & Header - iOS Squircle */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200/60">
-              Institution Portal
-            </span>
-            <span className="text-slate-300">•</span>
-            <span className="text-xs text-slate-500 font-medium">{currentInstitution.aisheCode}</span>
+      {/* Top Greeting & Date */}
+      <div>
+        <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+          Welcome back, {currentInstitution.representativeName.split(' ')[0]}
+        </h1>
+        <p className="text-xs text-slate-400 font-medium mt-0.5">
+          {new Date().toLocaleDateString('en-IN', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+          })} • {currentInstitution.name} ({currentInstitution.aisheCode})
+        </p>
+      </div>
+
+      {/* Hero Decks - Pastel Gradient & Glassmorphism */}
+      <div className="grid md:grid-cols-3 gap-5">
+        {/* Main Deck (2 cols): Soft Pink/Rose Gradient Deck */}
+        <div className="md:col-span-2 rounded-3xl p-7 bg-gradient-to-br from-[#FFE5EC]/90 via-[#FFF0F4]/75 to-white/80 border border-rose-200/70 backdrop-blur-md shadow-[0_4px_20px_rgba(244,63,94,0.06)] flex flex-col justify-between">
+          <div className="space-y-3">
+            <div className="w-10 h-10 rounded-2xl bg-white/90 border border-rose-200/80 flex items-center justify-center text-rose-600 shadow-2xs">
+              <PlusCircle size={20} />
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-200/60 text-rose-800 text-[10px] font-extrabold uppercase tracking-wider mb-2 font-mono">
+                APPROVAL PROCESS HANDBOOK (APH) 2026-27
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                Submit Institutional Approval & EoA Filing
+              </h2>
+              <p className="text-xs text-slate-600 leading-relaxed mt-1.5 max-w-xl">
+                File for Extension of Approval (EoA), course additions, or supernumerary quotas. Pre-populate existing AICTE central portal records and reconcile your Technical Education Regulatory (TER) fee payment.
+              </p>
+            </div>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">
-            {currentInstitution.name}
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Manage institutional recognition dossiers, track regulatory validations, and resolve compliance notices.
-          </p>
+
+          <div className="mt-6 flex items-center gap-3">
+            <button
+              onClick={() => navigate('/applicant/applications/new')}
+              className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-2xl transition-all shadow-sm flex items-center gap-2"
+            >
+              <span>Create New Application</span>
+              <ArrowRight size={14} />
+            </button>
+            <button
+              onClick={() => navigate('/applicant/documents')}
+              className="px-4 py-2.5 bg-white/80 hover:bg-white text-slate-700 text-xs font-semibold rounded-2xl border border-rose-200/60 transition-all shadow-2xs"
+            >
+              Document Library
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate('/applicant/applications/new')}
-            className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-2xl transition-all shadow-sm shadow-teal-600/20 flex items-center gap-2"
-          >
-            <PlusCircle size={17} />
-            <span>Create New Application</span>
-          </button>
+        {/* Side Deck (1 col): Glassmorphic Card */}
+        <div className="rounded-3xl p-7 bg-white/75 backdrop-blur-md border border-slate-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.03)] flex flex-col justify-between">
+          <div className="space-y-3">
+            <div className="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 shadow-2xs">
+              <Calendar size={20} />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-slate-900 tracking-tight">
+                AICTE Central Records Ready
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed mt-1">
+                Retrieve prior year EoA letters, approved intake numbers, and verify Bharatkosh TER challans directly from central databases.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-slate-100/80 flex items-center justify-between">
+            <div className="text-xs">
+              <span className="font-bold text-teal-700">Pre-fill Available</span>
+              <span className="text-[11px] text-slate-400 block">Single-click retrieval</span>
+            </div>
+            <button
+              onClick={() => navigate('/applicant/applications/new')}
+              className="px-3.5 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-800 text-xs font-semibold rounded-xl border border-teal-200/60 transition-colors"
+            >
+              Draft Now
+            </button>
+          </div>
         </div>
       </div>
 
@@ -137,61 +191,63 @@ export const ApplicantDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Metric Cards Row */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <MetricCard
-          title="Total Applications"
-          value={total}
-          subtitle="All cycle submissions"
-          icon={FileText}
-          onClick={() => setStatusFilter('ALL')}
-          active={statusFilter === 'ALL'}
-        />
-        <MetricCard
-          title="Drafts"
-          value={drafts}
-          subtitle="Unsubmitted forms"
-          icon={FileEdit}
-          iconColor="text-slate-500"
-          iconBg="bg-slate-100"
-          onClick={() => setStatusFilter('Draft')}
-          active={statusFilter === 'Draft'}
-        />
-        <MetricCard
-          title="Under Review"
-          value={underVerification}
-          subtitle="Under reviewer audit"
-          icon={Clock}
-          iconColor="text-teal-600"
-          iconBg="bg-teal-50"
-          onClick={() => setStatusFilter('Under Verification')}
-          active={statusFilter === 'Under Verification'}
-        />
-        <MetricCard
-          title="Action Required"
-          value={actionRequired}
-          subtitle="Corrections pending"
-          icon={AlertTriangle}
-          iconColor="text-orange-600"
-          iconBg="bg-orange-50"
-          badge={
-            actionRequired > 0
-              ? { text: 'Needs Action', variant: 'warning' }
-              : undefined
-          }
-          onClick={() => setStatusFilter('Action Required')}
-          active={statusFilter === 'Action Required'}
-        />
-        <MetricCard
-          title="Verified"
-          value={verified}
-          subtitle="Approved applications"
-          icon={CheckCircle2}
-          iconColor="text-emerald-600"
-          iconBg="bg-emerald-50"
-          onClick={() => setStatusFilter('Verified')}
-          active={statusFilter === 'Verified'}
-        />
+      {/* Metric Cards Row - Colorful Light Gradient Decks */}
+      <div>
+        <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
+          Application Overview Decks
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
+          <MetricCard
+            title="Total Filings"
+            value={total}
+            subtitle="All cycle submissions"
+            icon={FileText}
+            colorScheme="indigo"
+            onClick={() => setStatusFilter('ALL')}
+            active={statusFilter === 'ALL'}
+          />
+          <MetricCard
+            title="Saved Drafts"
+            value={drafts}
+            subtitle="Unsubmitted forms"
+            icon={FileEdit}
+            colorScheme="yellow"
+            onClick={() => setStatusFilter('Draft')}
+            active={statusFilter === 'Draft'}
+          />
+          <MetricCard
+            title="Under Review"
+            value={underVerification}
+            subtitle="Council audit"
+            icon={Clock}
+            colorScheme="teal"
+            onClick={() => setStatusFilter('Under Verification')}
+            active={statusFilter === 'Under Verification'}
+          />
+          <MetricCard
+            title="Action Req."
+            value={actionRequired}
+            subtitle="Corrections pending"
+            icon={AlertTriangle}
+            colorScheme="orange"
+            badge={
+              actionRequired > 0
+                ? { text: 'Needs Action', variant: 'warning' }
+                : undefined
+            }
+            onClick={() => setStatusFilter('Action Required')}
+            active={statusFilter === 'Action Required'}
+          />
+          <MetricCard
+            title="Verified / Approved"
+            value={verified}
+            subtitle="Approved applications"
+            icon={CheckCircle2}
+            colorScheme="green"
+            onClick={() => setStatusFilter('Verified')}
+            active={statusFilter === 'Verified'}
+          />
+        </div>
       </div>
 
       {/* Split layout: Recent Applications Table & Distribution Chart + Timeline */}

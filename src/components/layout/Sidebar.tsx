@@ -95,29 +95,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
         <div className="h-16 flex items-center justify-between px-4 border-b border-slate-100 shrink-0">
           <div
             onClick={() => navigate('/')}
-            className="flex items-center gap-3 cursor-pointer overflow-hidden group"
+            className="flex items-center cursor-pointer overflow-hidden group py-1"
+            title="SatyaSetu AI"
           >
-            <div className="w-9 h-9 rounded-2xl bg-teal-50 border border-teal-100/80 flex items-center justify-center shrink-0 shadow-xs p-1 group-hover:scale-105 transition-transform">
-              <img
-                src="/logo.png"
-                alt="SatyaSetu AI"
-                className="w-full h-full object-contain rounded-xl"
-                onError={(e) => {
-                  // Fallback if logo fails to load
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
-              />
-            </div>
-            {!collapsed && (
-              <div className="flex flex-col">
-                <span className="font-bold text-[15px] tracking-tight text-slate-900 flex items-center gap-1.5">
-                  SatyaSetu <span className="text-teal-700 font-extrabold text-[10px] px-1.5 py-0.5 bg-teal-50 border border-teal-200/70 rounded-md">AI</span>
-                </span>
-                <span className="text-[10px] text-slate-400 font-medium tracking-tight">
-                  Regulatory Verification
-                </span>
-              </div>
-            )}
+            <img
+              src="/logo.png"
+              alt="SatyaSetu AI"
+              className={
+                collapsed
+                  ? 'h-9 w-9 object-contain'
+                  : 'h-11 sm:h-12 w-auto max-w-[195px] object-contain transition-transform group-hover:scale-102'
+              }
+            />
           </div>
 
           <button

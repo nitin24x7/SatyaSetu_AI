@@ -254,3 +254,4 @@ npm run server:dev    # Backend Gateway on http://localhost:4000
 3. **Multi-Vector Forensic Suite**: Built-in ELA, CMFD, PDF binary structure, and dHash deduplication engines.
 4. **Standard Operating Procedures (SOPs)**: Production runbooks for CERT-In incident response, zero-downtime blue/green deployment, and cryptographic secret rotation.
 5. **Quality Assurance**: 100% clean build, zero TypeScript compile errors, and seven verified test suites passing with zero defects.
+

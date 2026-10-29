@@ -13,6 +13,7 @@ import {
   RotateCcw,
   Sparkles,
 } from 'lucide-react';
+import { RegulatoryChatbot } from '../components/chat/RegulatoryChatbot';
 
 export const WelcomePage: React.FC<WelcomePageProps> = () => {
   const navigate = useNavigate();
@@ -37,22 +38,13 @@ export const WelcomePage: React.FC<WelcomePageProps> = () => {
   return (
     <div className="min-h-screen bg-surface-bg flex flex-col justify-between antialiased">
       {/* Top Header */}
-      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-md px-6 py-4 flex items-center justify-between sticky top-0 z-30">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center p-1 shadow-xs">
-            <img src="/logo.png" alt="SatyaSetu AI" className="w-full h-full object-contain rounded-xl" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-lg text-slate-900 tracking-tight">SatyaSetu AI</span>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200/60 text-teal-700 uppercase">
-                Platform v1.0
-              </span>
-            </div>
-            <p className="text-xs text-slate-500">
-              Regulatory Application Validation & Institutional Document Verification Platform
-            </p>
-          </div>
+      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-md px-6 py-3.5 flex items-center justify-between sticky top-0 z-30">
+        <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+          <img
+            src="/logo.png"
+            alt="SatyaSetu AI"
+            className="h-12 sm:h-14 w-auto max-w-[240px] object-contain"
+          />
         </div>
 
         <div className="flex items-center gap-3">
@@ -215,6 +207,9 @@ export const WelcomePage: React.FC<WelcomePageProps> = () => {
       <footer className="border-t border-slate-200/80 bg-white py-4 px-6 text-center text-xs text-slate-400 font-medium">
         SatyaSetu AI — Institutional Application Validation & Regulatory Verification Platform
       </footer>
+
+      {/* Floating Groq-Powered AICTE Regulatory Chatbot */}
+      <RegulatoryChatbot />
     </div>
   );
 };
