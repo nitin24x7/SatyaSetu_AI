@@ -134,7 +134,7 @@ export const AdminSettingsPage: React.FC = () => {
                       className={`text-[10px] px-2 py-0.5 rounded font-semibold ${
                         rule.severity === 'Critical'
                           ? 'bg-red-50 text-red-700'
-                          : 'bg-amber-50 text-amber-700'
+                          : 'bg-blue-50 text-blue-700 border border-blue-200/60'
                       }`}
                     >
                       {rule.severity}

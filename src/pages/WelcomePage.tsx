@@ -79,7 +79,7 @@ export const WelcomePage: React.FC = () => {
               setActiveTab('overview');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className={`transition-colors hover:text-slate-950 ${activeTab === 'overview' ? 'text-teal-700 font-bold' : ''}`}
+            className={`transition-colors hover:text-slate-950 ${activeTab === 'overview' ? 'text-blue-600 font-bold' : ''}`}
           >
             Overview
           </button>
@@ -88,7 +88,7 @@ export const WelcomePage: React.FC = () => {
               setActiveTab('aph');
               document.getElementById('portals-section')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className={`transition-colors hover:text-slate-950 ${activeTab === 'aph' ? 'text-teal-700 font-bold' : ''}`}
+            className={`transition-colors hover:text-slate-950 ${activeTab === 'aph' ? 'text-blue-600 font-bold' : ''}`}
           >
             APH 2026-27 Norms
           </button>
@@ -97,7 +97,7 @@ export const WelcomePage: React.FC = () => {
               setActiveTab('gateways');
               document.getElementById('gateways-section')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className={`transition-colors hover:text-slate-950 ${activeTab === 'gateways' ? 'text-teal-700 font-bold' : ''}`}
+            className={`transition-colors hover:text-slate-950 ${activeTab === 'gateways' ? 'text-blue-600 font-bold' : ''}`}
           >
             Gateways
           </button>
@@ -106,7 +106,7 @@ export const WelcomePage: React.FC = () => {
               setActiveTab('forensics');
               document.getElementById('forensics-section')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className={`transition-colors hover:text-slate-950 ${activeTab === 'forensics' ? 'text-teal-700 font-bold' : ''}`}
+            className={`transition-colors hover:text-slate-950 ${activeTab === 'forensics' ? 'text-blue-600 font-bold' : ''}`}
           >
             Forensics
           </button>
@@ -116,9 +116,9 @@ export const WelcomePage: React.FC = () => {
         <div className="flex items-center gap-3">
           {/* Circular Accent Dots matching screenshot top-right */}
           <div className="hidden sm:flex items-center gap-1.5 mr-1">
-            <span className="w-6 h-6 rounded-full bg-blue-500/85 hover:bg-blue-600 transition-colors shadow-xs" title="Institutional Gateway" />
-            <span className="w-6 h-6 rounded-full bg-cyan-400/85 hover:bg-cyan-500 transition-colors shadow-xs" title="Digital Verification API" />
-            <span className="w-6 h-6 rounded-full bg-teal-400/85 hover:bg-teal-500 transition-colors shadow-xs" title="Merkle Audit Ledger" />
+            <span className="w-6 h-6 rounded-full bg-blue-600 hover:bg-blue-700 transition-colors shadow-xs" title="Institutional Gateway" />
+            <span className="w-6 h-6 rounded-full bg-sky-500 hover:bg-sky-600 transition-colors shadow-xs" title="Digital Verification API" />
+            <span className="w-6 h-6 rounded-full bg-cyan-500 hover:bg-cyan-600 transition-colors shadow-xs" title="Merkle Audit Ledger" />
           </div>
 
           <button
@@ -126,10 +126,10 @@ export const WelcomePage: React.FC = () => {
               resetDemoData();
               alert('Demo dataset has been reset to default baseline.');
             }}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs text-slate-600 hover:text-slate-900 border border-slate-200/80 rounded-xl hover:bg-slate-50 transition-colors shadow-2xs font-medium"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs text-slate-600 hover:text-slate-900 border border-slate-200/80 rounded-xl hover:bg-slate-50 transition-colors shadow-2xs font-medium cursor-pointer"
             title="Reset Demo Dataset"
           >
-            <RotateCcw size={12} className="text-teal-600" />
+            <RotateCcw size={12} className="text-blue-600" />
             <span className="hidden sm:inline">Reset Baseline</span>
           </button>
         </div>
@@ -153,9 +153,9 @@ export const WelcomePage: React.FC = () => {
 
         {/* LEFT FLOATING ORBS (Issuing Authorities & Statutory Registries) */}
         <div className="hidden xl:block absolute left-4 lg:left-12 2xl:left-24 top-24 bottom-24 w-52 pointer-events-none select-none z-10">
-          {/* Orb 1: AICTE Statutory Council (Orange/Gold Halo) */}
+          {/* Orb 1: AICTE Statutory Council (Royal Blue Halo) */}
           <div className="absolute top-4 left-6 animate-float-slow pointer-events-auto group cursor-pointer" title="AICTE Regulatory Council">
-            <div className="w-16 h-16 rounded-full bg-white border-2 border-amber-300/60 shadow-[0_10px_25px_rgba(245,158,11,0.2)] flex items-center justify-center text-amber-600 transition-transform group-hover:scale-110">
+            <div className="w-16 h-16 rounded-full bg-white border-2 border-blue-400/60 shadow-[0_10px_25px_rgba(37,99,235,0.2)] flex items-center justify-center text-blue-600 transition-transform group-hover:scale-110">
               <Building2 size={24} />
             </div>
             <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-bold text-slate-700 bg-white/95 px-2 py-0.5 rounded-full border border-slate-200/70 shadow-2xs opacity-0 group-hover:opacity-100 transition-opacity">
@@ -266,9 +266,9 @@ export const WelcomePage: React.FC = () => {
             </span>
           </div>
 
-          {/* Orb 12: TER Fee Payment Reconciliation (Gold/Amber Halo) */}
+          {/* Orb 12: TER Fee Payment Reconciliation (Blue/Indigo Halo) */}
           <div className="absolute top-[20rem] right-24 animate-float-slow pointer-events-auto group cursor-pointer" title="Bharatkosh / TER Gateway">
-            <div className="w-14 h-14 rounded-full bg-white border-2 border-amber-400/60 shadow-[0_10px_25px_rgba(245,158,11,0.2)] flex items-center justify-center text-amber-600 transition-transform group-hover:scale-110">
+            <div className="w-14 h-14 rounded-full bg-white border-2 border-blue-400/60 shadow-[0_10px_25px_rgba(37,99,235,0.2)] flex items-center justify-center text-blue-600 transition-transform group-hover:scale-110">
               <Coins size={20} />
             </div>
             <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-bold text-slate-700 bg-white/95 px-2 py-0.5 rounded-full border border-slate-200/70 shadow-2xs opacity-0 group-hover:opacity-100 transition-opacity">
@@ -281,24 +281,22 @@ export const WelcomePage: React.FC = () => {
         {/* Main Central Hero Block (matching reference typography)        */}
         {/* ============================================================== */}
         <div className="text-center max-w-3xl mx-auto z-20 flex flex-col items-center">
-          {/* Top Pill Announcement: "🎉 | Introducing APH 2026-27 AI Engine >" */}
+          {/* Top Pill Announcement */}
           <div
             onClick={() => document.getElementById('portals-section')?.scrollIntoView({ behavior: 'smooth' })}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-2xs text-xs font-semibold text-slate-800 hover:border-teal-400 hover:shadow-xs transition-all cursor-pointer mb-7 group"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-2xs text-xs font-semibold text-slate-800 hover:border-blue-400 hover:shadow-xs transition-all cursor-pointer mb-7 group"
           >
-            <span className="text-amber-500">🎉</span>
+            <span className="text-blue-600">✨</span>
             <span className="text-slate-300 font-light">|</span>
             <span className="text-slate-800">Introducing APH 2026-27 Scrutiny Engine</span>
             <ChevronRight size={13} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
           </div>
 
-          {/* Massive Uppercase Headline */}
+          {/* Massive Uppercase Headline - Exact Match to Reference Screenshot */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-950 tracking-tight leading-[1.05] uppercase">
             All Your Institutional<br />
-            Compliance{' '}
-            <span className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 bg-clip-text text-transparent">
-              In One Place!
-            </span>
+            Compliance <span className="text-blue-600">IN ONE</span>{' '}
+            <span className="text-cyan-500">PLACE!</span>
           </h1>
 
           {/* Subtitle */}
@@ -309,7 +307,7 @@ export const WelcomePage: React.FC = () => {
           {/* Feature Capsule / Pill Bar (matching reference screenshot) */}
           <div className="mt-7 inline-flex flex-wrap items-center justify-center gap-3 sm:gap-6 px-5 sm:px-7 py-2.5 rounded-2xl bg-white/85 backdrop-blur-md border border-slate-200/80 shadow-xs text-xs font-semibold text-slate-700">
             <span className="flex items-center gap-1.5 text-slate-700">
-              <Zap size={14} className="text-teal-600" />
+              <Zap size={14} className="text-blue-600" />
               <span>Automated Scrutiny</span>
             </span>
             <span className="text-slate-300 hidden sm:inline">•</span>
@@ -333,7 +331,7 @@ export const WelcomePage: React.FC = () => {
           <div className="mt-8 flex flex-col items-center gap-3">
             <button
               onClick={handleEnterApplicant}
-              className="px-10 py-3.5 bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm sm:text-base rounded-2xl shadow-lg shadow-blue-500/30 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+              className="px-10 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm sm:text-base rounded-2xl shadow-lg shadow-blue-500/25 hover:scale-105 active:scale-95 transition-all cursor-pointer"
             >
               Get Started
             </button>
@@ -378,7 +376,7 @@ export const WelcomePage: React.FC = () => {
         {/* ============================================================== */}
         <section id="portals-section" className="w-full max-w-5xl mx-auto mt-20 z-20 pt-8 border-t border-slate-200/60">
           <div className="text-center mb-8">
-            <span className="text-xs font-extrabold text-teal-700 uppercase tracking-wider font-mono">
+            <span className="text-xs font-extrabold text-blue-700 uppercase tracking-wider font-mono">
               DIRECT PORTAL ACCESS
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
@@ -391,12 +389,12 @@ export const WelcomePage: React.FC = () => {
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Card 1: Institutional Applicant Portal */}
-            <div className="bg-gradient-to-br from-[#E2F7F2]/90 via-[#F0FDF9]/70 to-white/80 rounded-3xl border border-teal-200/80 p-8 backdrop-blur-md shadow-[0_4px_24px_rgba(13,148,136,0.04)] hover:shadow-xl hover:border-teal-400 transition-all flex flex-col justify-between group">
+            <div className="bg-gradient-to-br from-[#EEF4FF]/90 via-[#F5F8FF]/70 to-white/80 rounded-3xl border border-blue-200/80 p-8 backdrop-blur-md shadow-[0_4px_24px_rgba(37,99,235,0.04)] hover:shadow-xl hover:border-blue-400 transition-all flex flex-col justify-between group">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-white border border-teal-200 flex items-center justify-center text-teal-700 mb-5 group-hover:scale-105 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-white border border-blue-200 flex items-center justify-center text-blue-600 mb-5 group-hover:scale-105 transition-transform shadow-xs">
                   <Building2 size={24} />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-800">
+                <span className="text-xs font-bold uppercase tracking-wider text-blue-800">
                   Institutional Role
                 </span>
                 <h3 className="text-xl font-bold text-slate-900 mt-1 mb-2">
@@ -406,17 +404,17 @@ export const WelcomePage: React.FC = () => {
                   For colleges, universities, and polytechnics to file Extension of Approval (EoA), upload statutory certificates, track live verification statuses, and rectify flagged deficiencies.
                 </p>
 
-                <div className="space-y-2 mb-6 border-t border-teal-100/80 pt-4">
+                <div className="space-y-2 mb-6 border-t border-blue-100/80 pt-4">
                   <div className="flex items-center gap-2 text-xs text-slate-700">
-                    <CheckCircle2 size={14} className="text-teal-600 shrink-0" />
+                    <CheckCircle2 size={14} className="text-blue-600 shrink-0" />
                     <span>4-Step Application Wizard with Pre-upload File Checks</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-slate-700">
-                    <CheckCircle2 size={14} className="text-teal-600 shrink-0" />
+                    <CheckCircle2 size={14} className="text-blue-600 shrink-0" />
                     <span>Document Library with Real-time Expiry & Forensic Badges</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-slate-700">
-                    <CheckCircle2 size={14} className="text-teal-600 shrink-0" />
+                    <CheckCircle2 size={14} className="text-blue-600 shrink-0" />
                     <span>Active Session: <strong>{currentInstitution.name}</strong></span>
                   </div>
                 </div>
@@ -424,7 +422,7 @@ export const WelcomePage: React.FC = () => {
 
               <button
                 onClick={handleEnterApplicant}
-                className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 group-hover:shadow-md cursor-pointer"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 group-hover:shadow-md cursor-pointer"
               >
                 <span>Launch Applicant Portal</span>
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
@@ -432,12 +430,12 @@ export const WelcomePage: React.FC = () => {
             </div>
 
             {/* Card 2: AICTE Admin Verification Console */}
-            <div className="bg-gradient-to-br from-[#FFE5EC]/90 via-[#FFF0F4]/70 to-white/80 rounded-3xl border border-rose-200/80 p-8 backdrop-blur-md shadow-[0_4px_24px_rgba(244,63,94,0.04)] hover:shadow-xl hover:border-rose-400 transition-all flex flex-col justify-between group">
+            <div className="bg-gradient-to-br from-[#F5F3FF]/90 via-[#FAF9FF]/70 to-white/80 rounded-3xl border border-indigo-200/80 p-8 backdrop-blur-md shadow-[0_4px_24px_rgba(99,102,241,0.04)] hover:shadow-xl hover:border-indigo-400 transition-all flex flex-col justify-between group">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-white border border-rose-200 flex items-center justify-center text-rose-600 mb-5 group-hover:scale-105 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-white border border-indigo-200 flex items-center justify-center text-indigo-600 mb-5 group-hover:scale-105 transition-transform shadow-xs">
                   <FileCheck2 size={24} />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-wider text-rose-800">
+                <span className="text-xs font-bold uppercase tracking-wider text-indigo-800">
                   Regulatory Evaluator Role
                 </span>
                 <h3 className="text-xl font-bold text-slate-900 mt-1 mb-2">
@@ -447,17 +445,17 @@ export const WelcomePage: React.FC = () => {
                   For AICTE Regional Officers and Scrutiny Committees to triage applications, review evidence-linked anomaly findings, trigger issuing authority re-queries, and record official regulatory decisions.
                 </p>
 
-                <div className="space-y-2 mb-6 border-t border-rose-100/80 pt-4">
+                <div className="space-y-2 mb-6 border-t border-indigo-100/80 pt-4">
                   <div className="flex items-center gap-2 text-xs text-slate-700">
-                    <CheckCircle2 size={14} className="text-rose-600 shrink-0" />
+                    <CheckCircle2 size={14} className="text-indigo-600 shrink-0" />
                     <span>Prioritized Scrutiny Queue with Risk Tier Badges</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-slate-700">
-                    <CheckCircle2 size={14} className="text-rose-600 shrink-0" />
+                    <CheckCircle2 size={14} className="text-indigo-600 shrink-0" />
                     <span>Side-by-side Document Forensics & Cadre SFR Analysis</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-slate-700">
-                    <CheckCircle2 size={14} className="text-rose-600 shrink-0" />
+                    <CheckCircle2 size={14} className="text-indigo-600 shrink-0" />
                     <span>Active Session: <strong>{currentReviewer.name}</strong></span>
                   </div>
                 </div>
@@ -473,23 +471,23 @@ export const WelcomePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Live Seed Applications Metrics Bar */}
+          {/* Live Seed Applications Metrics Bar (No Orange Sections) */}
           <div className="mt-8 bg-white/90 backdrop-blur-md rounded-3xl border border-slate-200/80 p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center shadow-xs">
             <div>
               <div className="text-[11px] text-slate-500 font-medium uppercase tracking-wider">Preloaded Cases</div>
               <div className="text-lg font-black text-slate-900 mt-0.5">{totalApplications} Applications</div>
             </div>
             <div>
-              <div className="text-[11px] text-amber-700 font-medium uppercase tracking-wider">In Verification</div>
-              <div className="text-lg font-black text-amber-700 mt-0.5">{underVerificationCount} Cases</div>
+              <div className="text-[11px] text-blue-700 font-medium uppercase tracking-wider">In Verification</div>
+              <div className="text-lg font-black text-blue-700 mt-0.5">{underVerificationCount} Cases</div>
             </div>
             <div>
               <div className="text-[11px] text-emerald-700 font-medium uppercase tracking-wider">Verified & Closed</div>
               <div className="text-lg font-black text-emerald-700 mt-0.5">{verifiedCount} Cases</div>
             </div>
             <div>
-              <div className="text-[11px] text-teal-700 font-medium uppercase tracking-wider">Auditing Engine</div>
-              <div className="text-lg font-black text-teal-700 mt-0.5">100% Deterministic</div>
+              <div className="text-[11px] text-blue-700 font-medium uppercase tracking-wider">Auditing Engine</div>
+              <div className="text-lg font-black text-blue-700 mt-0.5">100% Deterministic</div>
             </div>
           </div>
         </section>

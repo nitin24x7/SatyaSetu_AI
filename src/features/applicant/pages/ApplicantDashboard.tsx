@@ -121,14 +121,14 @@ export const ApplicantDashboard: React.FC = () => {
           <div className="mt-6 flex items-center gap-3">
             <button
               onClick={() => navigate('/applicant/applications/new')}
-              className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-2xl transition-all shadow-sm flex items-center gap-2"
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-2xl transition-all shadow-sm shadow-blue-500/25 flex items-center gap-2 cursor-pointer"
             >
               <span>Create New Application</span>
               <ArrowRight size={14} />
             </button>
             <button
               onClick={() => navigate('/applicant/documents')}
-              className="px-4 py-2.5 bg-white/80 hover:bg-white text-slate-700 text-xs font-semibold rounded-2xl border border-rose-200/60 transition-all shadow-2xs"
+              className="px-4 py-2.5 bg-white/80 hover:bg-white text-slate-700 text-xs font-semibold rounded-2xl border border-rose-200/60 transition-all shadow-2xs cursor-pointer"
             >
               Document Library
             </button>
@@ -138,7 +138,7 @@ export const ApplicantDashboard: React.FC = () => {
         {/* Side Deck (1 col): Glassmorphic Card */}
         <div className="rounded-3xl p-7 bg-white/75 backdrop-blur-md border border-slate-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.03)] flex flex-col justify-between">
           <div className="space-y-3">
-            <div className="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 shadow-2xs">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shadow-2xs">
               <Calendar size={20} />
             </div>
             <div>
@@ -153,12 +153,12 @@ export const ApplicantDashboard: React.FC = () => {
 
           <div className="mt-6 pt-4 border-t border-slate-100/80 flex items-center justify-between">
             <div className="text-xs">
-              <span className="font-bold text-teal-700">Pre-fill Available</span>
+              <span className="font-bold text-blue-700">Pre-fill Available</span>
               <span className="text-[11px] text-slate-400 block">Single-click retrieval</span>
             </div>
             <button
               onClick={() => navigate('/applicant/applications/new')}
-              className="px-3.5 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-800 text-xs font-semibold rounded-xl border border-teal-200/60 transition-colors"
+              className="px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold rounded-xl border border-blue-200/60 transition-colors cursor-pointer"
             >
               Draft Now
             </button>
@@ -166,25 +166,25 @@ export const ApplicantDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Action Required Alert Banner if any cases need attention */}
+      {/* Action Required Alert Banner if any cases need attention (Blue Theme) */}
       {actionRequiredApps.length > 0 && (
-        <div className="bg-orange-50/80 border border-orange-200 rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-orange-950 animate-in fade-in duration-200 shadow-2xs">
+        <div className="bg-blue-50/80 border border-blue-200 rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-blue-950 animate-in fade-in duration-200 shadow-2xs">
           <div className="flex items-start sm:items-center gap-3">
-            <div className="p-2.5 bg-orange-100 rounded-2xl text-orange-600 shrink-0 mt-0.5 sm:mt-0">
+            <div className="p-2.5 bg-blue-100 rounded-2xl text-blue-600 shrink-0 mt-0.5 sm:mt-0">
               <AlertTriangle size={20} />
             </div>
             <div>
               <div className="font-bold text-sm">
                 Action Required on {actionRequiredApps.length} Application{actionRequiredApps.length > 1 ? 's' : ''}
               </div>
-              <p className="text-xs text-orange-800 mt-0.5">
+              <p className="text-xs text-blue-800 mt-0.5">
                 The regulatory review panel has requested corrections or replacement documents before verification can proceed.
               </p>
             </div>
           </div>
           <button
             onClick={() => navigate(`/applicant/applications/${actionRequiredApps[0].id}`)}
-            className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold rounded-xl shrink-0 transition-colors shadow-xs"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shrink-0 transition-colors shadow-xs cursor-pointer"
           >
             Resolve Case {actionRequiredApps[0].id}
           </button>
@@ -229,7 +229,7 @@ export const ApplicantDashboard: React.FC = () => {
             value={actionRequired}
             subtitle="Corrections pending"
             icon={AlertTriangle}
-            colorScheme="orange"
+            colorScheme="blue"
             badge={
               actionRequired > 0
                 ? { text: 'Needs Action', variant: 'warning' }

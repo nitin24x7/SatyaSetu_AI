@@ -120,7 +120,7 @@ export const AdminReviewQueuePage: React.FC = () => {
           onClick={() => setActiveQueueTab('evc')}
           className={`px-3.5 py-2 text-xs font-bold rounded-2xl transition-all flex items-center gap-1.5 whitespace-nowrap shadow-2xs ${
             activeQueueTab === 'evc'
-              ? 'bg-amber-600 text-white shadow-sm shadow-amber-600/25'
+              ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/25'
               : 'text-slate-600 hover:bg-slate-100 bg-white border border-slate-200/80'
           }`}
         >

@@ -29,16 +29,16 @@ export const AppShell: React.FC<AppShellProps> = ({ role }) => {
           onMobileMenuToggle={() => setMobileOpen(!mobileOpen)}
         />
 
-        {/* Global simulated notice banner - Soft iOS Teal Style */}
-        <div className="bg-teal-50/80 text-teal-900 px-4 py-2 text-xs flex items-center justify-between border-b border-teal-100/70 no-print transition-all">
+        {/* Global simulated notice banner - Theme Royal Blue */}
+        <div className="bg-blue-50/70 text-blue-950 px-4 py-2 text-xs flex items-center justify-between border-b border-blue-100/80 no-print transition-all">
           <div className="flex items-center gap-2 truncate">
-            <span className="w-2 h-2 rounded-full bg-teal-500 shrink-0" />
-            <span className="font-bold text-teal-950">SIMULATED ENVIRONMENT:</span>
-            <span className="truncate text-teal-800 font-medium">
+            <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0" />
+            <span className="font-bold text-blue-950">SIMULATED ENVIRONMENT:</span>
+            <span className="truncate text-blue-900 font-medium">
               All OCR extractions, compliance findings, and approval decisions are deterministic simulations.
             </span>
           </div>
-          <div className="hidden sm:flex items-center gap-1.5 text-[10px] text-teal-700 shrink-0 ml-4 font-mono font-semibold px-2.5 py-0.5 rounded-full bg-teal-100/70 border border-teal-200/60">
+          <div className="hidden sm:flex items-center gap-1.5 text-[10px] text-blue-800 shrink-0 ml-4 font-mono font-semibold px-2.5 py-0.5 rounded-full bg-blue-100/80 border border-blue-200/60">
             <span>LOCAL STATE PERSISTED</span>
           </div>
         </div>

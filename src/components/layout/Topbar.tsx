@@ -102,7 +102,7 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
               ) : (
                 <Link
                   to={crumb.url}
-                  className="hover:text-teal-600 capitalize transition-colors truncate"
+                  className="hover:text-blue-600 capitalize transition-colors truncate"
                 >
                   {crumb.label}
                 </Link>
@@ -125,7 +125,7 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
             }}
             onFocus={() => setSearchResultsOpen(true)}
             placeholder="Search by ID, college, or type..."
-            className="w-full pl-9 pr-3.5 py-1.5 text-xs rounded-2xl border border-slate-200/80 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all placeholder:text-slate-400"
+            className="w-full pl-9 pr-3.5 py-1.5 text-xs rounded-2xl border border-slate-200/80 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400"
           />
         </div>
 
@@ -167,8 +167,8 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
       {/* Right: Demo status pill, Notifications, and Identity Switcher */}
       <div className="flex items-center gap-3 shrink-0">
         {/* Simulated Demo Notice */}
-        <div className="hidden xl:flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50/80 border border-teal-200/60 text-teal-900 text-[11px] font-medium">
-          <Sparkles size={13} className="text-teal-600" />
+        <div className="hidden xl:flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50/80 border border-blue-200/60 text-blue-900 text-[11px] font-medium">
+          <Sparkles size={13} className="text-blue-600" />
           <span>Statutory Verification Environment</span>
         </div>
 
@@ -197,7 +197,7 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
             onClick={() => setIdentityDropdownOpen(!identityDropdownOpen)}
             className="flex items-center gap-2.5 p-1.5 rounded-2xl border border-slate-200/80 hover:bg-slate-50/80 transition-all text-left shadow-2xs"
           >
-            <div className="w-8 h-8 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+            <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
               {role === 'admin'
                 ? currentReviewer.name.charAt(0)
                 : currentInstitution.name.charAt(0)}
@@ -206,7 +206,7 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
               <div className="text-xs font-semibold text-slate-800 truncate">
                 {role === 'admin' ? currentReviewer.name : currentInstitution.name}
               </div>
-              <div className="text-[10px] text-teal-700 font-medium truncate">
+              <div className="text-[10px] text-blue-700 font-medium truncate">
                 {role === 'admin' ? currentReviewer.role : currentInstitution.representativeName}
               </div>
             </div>
@@ -236,11 +236,11 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
                       }}
                       className={`w-full text-left p-2 rounded-xl text-xs transition-colors flex items-start gap-2 ${
                         inst.id === currentInstitution.id
-                          ? 'bg-teal-50 text-teal-800 font-semibold border border-teal-200/60'
+                          ? 'bg-blue-50 text-blue-800 font-semibold border border-blue-200/60'
                           : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
-                      <Building2 size={15} className="shrink-0 mt-0.5 text-teal-600" />
+                      <Building2 size={15} className="shrink-0 mt-0.5 text-blue-600" />
                       <div className="truncate">
                         <div className="truncate">{inst.name}</div>
                         <div className="text-[10px] text-slate-400">{inst.state} • {inst.institutionType}</div>
@@ -259,11 +259,11 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
                       }}
                       className={`w-full text-left p-2 rounded-xl text-xs transition-colors flex items-start gap-2 ${
                         rev.id === currentReviewer.id
-                          ? 'bg-teal-50 text-teal-800 font-semibold border border-teal-200/60'
+                          ? 'bg-blue-50 text-blue-800 font-semibold border border-blue-200/60'
                           : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
-                      <User size={15} className="shrink-0 mt-0.5 text-teal-600" />
+                      <User size={15} className="shrink-0 mt-0.5 text-blue-600" />
                       <div className="truncate">
                         <div className="truncate">{rev.name}</div>
                         <div className="text-[10px] text-slate-400">{rev.role}</div>
@@ -277,7 +277,7 @@ export const Topbar: React.FC<TopbarProps> = ({ role, onMobileMenuToggle }) => {
                 <Link
                   to={role === 'applicant' ? '/applicant/profile' : '/admin/settings'}
                   onClick={() => setIdentityDropdownOpen(false)}
-                  className="block px-3 py-1.5 text-xs text-teal-700 hover:underline font-semibold text-center"
+                  className="block px-3 py-1.5 text-xs text-blue-700 hover:underline font-semibold text-center"
                 >
                   {role === 'applicant' ? 'Edit Institution Profile' : 'Configure Verification Settings'}
                 </Link>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
 
-export type DeckColorScheme = 'rose' | 'orange' | 'green' | 'indigo' | 'yellow' | 'teal' | 'slate';
+export type DeckColorScheme = 'rose' | 'orange' | 'green' | 'indigo' | 'yellow' | 'teal' | 'slate' | 'blue';
 
 interface MetricCardProps {
   title: string;
@@ -26,13 +26,20 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   icon: Icon,
   iconColor,
   iconBg,
-  colorScheme = 'teal',
+  colorScheme = 'blue',
   badge,
   onClick,
   active,
 }) => {
   // Pastel glassmorphism themes matching iOS / modern design cards
   const themeStyles = {
+    blue: {
+      gradient: 'bg-gradient-to-br from-[#E0EFFF]/85 via-[#EEF5FF]/60 to-white/70',
+      border: 'border-blue-200/70',
+      iconText: 'text-blue-600',
+      iconBox: 'bg-white/90 border border-blue-100 shadow-2xs text-blue-600',
+      hoverBorder: 'hover:border-blue-400/80',
+    },
     rose: {
       gradient: 'bg-gradient-to-br from-[#FFE5EC]/85 via-[#FFF0F4]/60 to-white/70',
       border: 'border-rose-200/70',
@@ -41,11 +48,12 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       hoverBorder: 'hover:border-rose-400/80',
     },
     orange: {
-      gradient: 'bg-gradient-to-br from-[#FFE8D6]/85 via-[#FFF3EB]/60 to-white/70',
-      border: 'border-orange-200/70',
-      iconText: 'text-orange-600',
-      iconBox: 'bg-white/90 border border-orange-100 shadow-2xs text-orange-600',
-      hoverBorder: 'hover:border-orange-400/80',
+      // Replaced harsh orange with fresh soft pastel sky/cyan as requested
+      gradient: 'bg-gradient-to-br from-[#E0F2FE]/85 via-[#F0F9FF]/60 to-white/70',
+      border: 'border-sky-200/70',
+      iconText: 'text-sky-600',
+      iconBox: 'bg-white/90 border border-sky-100 shadow-2xs text-sky-600',
+      hoverBorder: 'hover:border-sky-400/80',
     },
     green: {
       gradient: 'bg-gradient-to-br from-[#EBF5DF]/85 via-[#F4FAEC]/60 to-white/70',

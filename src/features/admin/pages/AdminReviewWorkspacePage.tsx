@@ -318,12 +318,12 @@ export const AdminReviewWorkspacePage: React.FC = () => {
               onClick={() => setIsEvcModalOpen(true)}
               className={`px-3 py-1.5 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors shadow-2xs ${
                 application.physicalInspectionRequired
-                  ? 'bg-amber-100 border border-amber-300 text-amber-900 shadow-xs'
+                  ? 'bg-blue-100 border border-blue-300 text-blue-900 shadow-xs'
                   : 'border border-slate-200/80 text-slate-700 hover:text-slate-900 hover:bg-slate-50'
               }`}
               title="Flag or review Expert Visit Committee (EVC) on-site physical inspection"
             >
-              <Compass size={14} className={application.physicalInspectionRequired ? 'text-amber-700' : ''} />
+              <Compass size={14} className={application.physicalInspectionRequired ? 'text-blue-700' : ''} />
               {application.physicalInspectionRequired ? 'EVC Flagged' : 'Recommend EVC'}
             </button>
 
@@ -366,7 +366,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
             {(application.status === 'Verified' || application.status === 'Rejected') && (
               <button
                 onClick={() => setIsReopenOpen(true)}
-                className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-xl shadow-xs shadow-amber-600/20 flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-xs shadow-blue-600/20 flex items-center gap-1.5"
               >
                 <RotateCcw size={14} /> Administrative Override / Reopen
               </button>
@@ -386,19 +386,19 @@ export const AdminReviewWorkspacePage: React.FC = () => {
         </div>
       )}
 
-      {/* EVC Physical Inspection Banner */}
+      {/* EVC Physical Inspection Banner (Theme Blue/Indigo) */}
       {application.physicalInspectionRequired && (
-        <div className="bg-amber-50/90 border border-amber-300 rounded-3xl p-4 flex items-start justify-between gap-3 text-amber-950 text-xs animate-in fade-in duration-150 shadow-xs">
+        <div className="bg-blue-50/80 border border-blue-200 rounded-3xl p-4 flex items-start justify-between gap-3 text-blue-950 text-xs animate-in fade-in duration-150 shadow-xs">
           <div className="flex items-start gap-2.5">
-            <Compass size={18} className="text-amber-700 shrink-0 mt-0.5 animate-pulse" />
+            <Compass size={18} className="text-blue-700 shrink-0 mt-0.5 animate-pulse" />
             <div>
-              <div className="font-bold text-amber-900 flex items-center gap-2">
+              <div className="font-bold text-blue-900 flex items-center gap-2">
                 <span>AICTE Expert Visit Committee (EVC) Physical Inspection Recommended</span>
-                <span className="bg-amber-200 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-mono font-bold">
+                <span className="bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded-full font-mono font-bold">
                   EVC-ACTION-REQUIRED
                 </span>
               </div>
-              <p className="mt-0.5 text-amber-800">
+              <p className="mt-0.5 text-blue-800">
                 Grounds for on-site physical scrutiny: {application.inspectionRecommendationReason}
               </p>
             </div>
@@ -408,7 +408,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
               togglePhysicalInspection(application.id, false);
               success('EVC Flag Cleared', 'Physical inspection requirement removed.');
             }}
-            className="text-[11px] font-semibold text-amber-800 hover:text-amber-950 underline shrink-0"
+            className="text-[11px] font-semibold text-blue-800 hover:text-blue-950 underline shrink-0 cursor-pointer"
           >
             Clear Flag
           </button>
@@ -1058,17 +1058,17 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Expert Visit Committee (EVC) Physical Scrutiny Controller */}
-              <div className="p-3.5 bg-amber-50/60 border border-amber-300 rounded-xl space-y-2">
+              {/* Expert Visit Committee (EVC) Physical Scrutiny Controller (Blue Theme) */}
+              <div className="p-3.5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="font-bold text-amber-950 flex items-center gap-1.5">
-                    <Compass size={16} className="text-amber-800" />
+                  <div className="font-bold text-blue-950 flex items-center gap-1.5">
+                    <Compass size={16} className="text-blue-700" />
                     <span>Expert Visit Committee (EVC) Physical Inspection</span>
                   </div>
                   <span
                     className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                       application.physicalInspectionRequired
-                        ? 'bg-amber-200 text-amber-900'
+                        ? 'bg-blue-100 text-blue-900'
                         : 'bg-slate-200 text-slate-700'
                     }`}
                   >
@@ -1078,7 +1078,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
 
                 {application.physicalInspectionRequired ? (
                   <div className="space-y-2">
-                    <p className="text-[11px] text-amber-900">
+                    <p className="text-[11px] text-blue-900">
                       <strong>Flagged Grounds:</strong> {application.inspectionRecommendationReason}
                     </p>
                     <button
@@ -1086,7 +1086,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                         togglePhysicalInspection(application.id, false);
                         success('EVC Flag Cleared', 'Physical inspection requirement removed.');
                       }}
-                      className="w-full py-1.5 bg-white border border-amber-300 hover:bg-amber-100 text-amber-900 text-xs font-semibold rounded-lg transition-colors"
+                      className="w-full py-1.5 bg-white border border-blue-200 hover:bg-blue-50 text-blue-900 text-xs font-semibold rounded-lg transition-colors cursor-pointer"
                     >
                       Clear Physical Inspection Flag
                     </button>
@@ -1098,7 +1098,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                     </p>
                     <button
                       onClick={() => setIsEvcModalOpen(true)}
-                      className="w-full py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-xs"
+                      className="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-xs cursor-pointer"
                     >
                       Recommend EVC Physical Inspection
                     </button>

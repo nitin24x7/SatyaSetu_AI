@@ -123,13 +123,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
           <div
             className={`flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-semibold transition-all ${
               role === 'admin'
-                ? 'bg-amber-50/80 text-amber-900 border border-amber-200/70'
-                : 'bg-teal-50/80 text-teal-900 border border-teal-200/70'
+                ? 'bg-blue-50/90 text-blue-900 border border-blue-200/80'
+                : 'bg-slate-50 text-slate-800 border border-slate-200/70'
             }`}
           >
             <span
               className={`w-2 h-2 rounded-full shrink-0 ${
-                role === 'admin' ? 'bg-amber-500 animate-pulse' : 'bg-teal-500'
+                role === 'admin' ? 'bg-blue-600 animate-pulse' : 'bg-blue-500'
               }`}
             />
             {!collapsed && (
@@ -156,7 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
                 onClick={onMobileClose}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium transition-all group relative ${
                   isActive
-                    ? 'bg-teal-600 text-white font-semibold shadow-sm shadow-teal-600/25'
+                    ? 'bg-blue-600 text-white font-semibold shadow-sm shadow-blue-600/25'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
                 }`}
                 title={collapsed ? link.label : undefined}
@@ -164,14 +164,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
                 <Icon
                   size={18}
                   className={`shrink-0 transition-colors ${
-                    isActive ? 'text-white' : 'text-slate-400 group-hover:text-teal-600'
+                    isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-600'
                   }`}
                 />
                 {!collapsed && <span className="truncate">{link.label}</span>}
                 {link.badge !== undefined && link.badge > 0 && (
                   <span
                     className={`ml-auto text-xs px-2 py-0.5 rounded-full font-bold transition-colors ${
-                      isActive ? 'bg-white/90 text-teal-700' : 'bg-teal-100 text-teal-800'
+                      isActive ? 'bg-white/90 text-blue-700' : 'bg-blue-100 text-blue-800'
                     }`}
                   >
                     {link.badge}
@@ -193,7 +193,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
               <div className="text-xs font-semibold text-slate-800 truncate">
                 {role === 'admin' ? currentReviewer.name : currentInstitution.name}
               </div>
-              <div className="text-[11px] text-teal-700 font-medium truncate">
+              <div className="text-[11px] text-blue-700 font-medium truncate">
                 {role === 'admin' ? currentReviewer.role : currentInstitution.representativeName}
               </div>
             </div>
@@ -211,7 +211,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
             className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-white rounded-xl border border-transparent hover:border-slate-200/60 shadow-xs transition-all"
             title="Switch portal view"
           >
-            <RotateCcw size={14} className="text-teal-600 shrink-0" />
+            <RotateCcw size={14} className="text-blue-600 shrink-0" />
             {!collapsed && (
               <span>Switch to {role === 'admin' ? 'Applicant Portal' : 'Admin Console'}</span>
             )}

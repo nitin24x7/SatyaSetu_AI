@@ -134,14 +134,14 @@ export const AdminDashboard: React.FC = () => {
           <div className="mt-6 flex items-center gap-3">
             <button
               onClick={() => navigate('/admin/review-queue')}
-              className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-2xl transition-all shadow-sm flex items-center gap-2"
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-2xl transition-all shadow-sm shadow-blue-500/25 flex items-center gap-2 cursor-pointer"
             >
               <span>Open Review Queue ({pending + resubmitted})</span>
               <ArrowRight size={14} />
             </button>
             <button
               onClick={() => navigate('/admin/applications')}
-              className="px-4 py-2.5 bg-white/80 hover:bg-white text-slate-700 text-xs font-semibold rounded-2xl border border-rose-200/60 transition-all shadow-2xs"
+              className="px-4 py-2.5 bg-white/80 hover:bg-white text-slate-700 text-xs font-semibold rounded-2xl border border-rose-200/60 transition-all shadow-2xs cursor-pointer"
             >
               All Applications ({total})
             </button>
@@ -151,7 +151,7 @@ export const AdminDashboard: React.FC = () => {
         {/* Side Deck (1 col): Glassmorphic Card */}
         <div className="rounded-3xl p-7 bg-white/75 backdrop-blur-md border border-slate-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.03)] flex flex-col justify-between">
           <div className="space-y-3">
-            <div className="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 shadow-2xs">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shadow-2xs">
               <Compass size={20} />
             </div>
             <div>
@@ -166,14 +166,14 @@ export const AdminDashboard: React.FC = () => {
 
           <div className="mt-6 pt-4 border-t border-slate-100/80 flex items-center justify-between">
             <div className="text-xs">
-              <span className="font-bold text-amber-700">
+              <span className="font-bold text-blue-700">
                 {applications.filter((a) => a.physicalInspectionRequired).length} Institutions
               </span>
               <span className="text-[11px] text-slate-400 block">Flagged for EVC Visit</span>
             </div>
             <button
               onClick={() => navigate('/admin/review-queue?tab=evc')}
-              className="px-3.5 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-800 text-xs font-semibold rounded-xl border border-teal-200/60 transition-colors"
+              className="px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold rounded-xl border border-blue-200/60 transition-colors cursor-pointer"
             >
               View Triage
             </button>
@@ -200,7 +200,7 @@ export const AdminDashboard: React.FC = () => {
             value={pending}
             subtitle="Awaiting triage"
             icon={Clock}
-            colorScheme="orange"
+            colorScheme="blue"
             badge={pending > 0 ? { text: 'New', variant: 'warning' } : undefined}
             onClick={() => navigate('/admin/applications?status=Submitted')}
           />

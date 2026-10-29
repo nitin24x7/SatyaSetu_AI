@@ -138,7 +138,7 @@ export const AdminInstitutionsPage: React.FC = () => {
                           Flagged
                         </span>
                       ) : (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-semibold border border-amber-200">
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200">
                           Under Review
                         </span>
                       )}
