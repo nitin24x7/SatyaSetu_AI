@@ -91,11 +91,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
           collapsed ? 'w-20' : 'w-64'
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        {/* Brand Header - Centered & 2x Enriched Horizontal Logo */}
+        {/* Brand Header - Centered & 1.5x Horizontally Elongated Logo */}
         <div className="min-h-[92px] py-3 px-3 relative flex items-center justify-center border-b border-slate-100/90 shrink-0">
           <div
             onClick={() => navigate('/')}
-            className="w-full flex items-center justify-center cursor-pointer overflow-hidden group"
+            className="w-full flex items-center justify-center cursor-pointer group"
             title="SatyaSetu AI"
           >
             <img
@@ -104,7 +104,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
               className={
                 collapsed
                   ? 'h-11 w-11 object-contain mx-auto'
-                  : 'h-18 sm:h-20 w-auto max-w-[205px] object-contain mx-auto transition-transform group-hover:scale-105'
+                  : 'h-18 sm:h-20 w-auto object-contain mx-auto transition-all group-hover:opacity-95'
+              }
+              style={
+                collapsed
+                  ? undefined
+                  : {
+                      transform: 'scaleX(1.48)',
+                      transformOrigin: 'center',
+                    }
               }
             />
           </div>
