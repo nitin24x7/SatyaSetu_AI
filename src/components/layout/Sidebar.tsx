@@ -92,10 +92,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
         {/* Brand Header */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-slate-100 shrink-0">
+        <div className="h-16 flex items-center justify-between pl-3 pr-2 border-b border-slate-100 shrink-0">
           <div
             onClick={() => navigate('/')}
-            className="flex items-center cursor-pointer overflow-hidden group py-1"
+            className="flex-1 flex items-center cursor-pointer overflow-hidden group py-1"
             title="SatyaSetu AI"
           >
             <img
@@ -103,15 +103,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
               alt="SatyaSetu AI"
               className={
                 collapsed
-                  ? 'h-9 w-9 object-contain'
-                  : 'h-11 sm:h-12 w-auto max-w-[195px] object-contain transition-transform group-hover:scale-102'
+                  ? 'h-10 w-10 object-contain mx-auto'
+                  : 'h-14 w-full max-w-[192px] object-contain object-left transition-transform group-hover:scale-[1.02]'
               }
             />
           </div>
 
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="hidden lg:flex p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            className="hidden lg:flex p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors shrink-0 ml-1"
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
