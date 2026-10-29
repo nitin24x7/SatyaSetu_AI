@@ -61,14 +61,14 @@ export const WelcomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FAFCFF] flex flex-col justify-between antialiased overflow-x-hidden selection:bg-teal-100 selection:text-teal-900">
-      {/* Top Header with Floating Pill Navigation (matching reference screenshot) */}
-      <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-md border-b border-slate-200/60 px-4 lg:px-10 py-3.5 flex items-center justify-between transition-all">
-        {/* Left: Brand Logo */}
-        <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+      {/* Top Header with Floating Pill Navigation & 3x Enlarged Logo */}
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/60 px-4 lg:px-10 py-2 sm:py-3 flex items-center justify-between transition-all">
+        {/* Left: Brand Logo (Enlarged 3x) */}
+        <div className="flex items-center cursor-pointer py-1" onClick={() => navigate('/')}>
           <img
             src="/logo.png"
             alt="SatyaSetu AI"
-            className="h-10 sm:h-11 w-auto max-w-[210px] object-contain transition-transform hover:scale-102"
+            className="h-24 sm:h-28 lg:h-32 w-auto max-w-[340px] sm:max-w-[420px] object-contain transition-transform hover:scale-105 duration-200 drop-shadow-xs"
           />
         </div>
 

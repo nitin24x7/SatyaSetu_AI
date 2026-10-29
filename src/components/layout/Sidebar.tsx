@@ -91,11 +91,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
           collapsed ? 'w-20' : 'w-64'
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        {/* Brand Header */}
-        <div className="h-16 flex items-center justify-between pl-3 pr-2 border-b border-slate-100 shrink-0">
+        {/* Brand Header - Centered & 2x Enriched Horizontal Logo */}
+        <div className="min-h-[92px] py-3 px-3 relative flex items-center justify-center border-b border-slate-100/90 shrink-0">
           <div
             onClick={() => navigate('/')}
-            className="flex-1 flex items-center cursor-pointer overflow-hidden group py-1"
+            className="w-full flex items-center justify-center cursor-pointer overflow-hidden group"
             title="SatyaSetu AI"
           >
             <img
@@ -103,15 +103,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
               alt="SatyaSetu AI"
               className={
                 collapsed
-                  ? 'h-10 w-10 object-contain mx-auto'
-                  : 'h-14 w-full max-w-[192px] object-contain object-left transition-transform group-hover:scale-[1.02]'
+                  ? 'h-11 w-11 object-contain mx-auto'
+                  : 'h-18 sm:h-20 w-auto max-w-[205px] object-contain mx-auto transition-transform group-hover:scale-105'
               }
             />
           </div>
 
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="hidden lg:flex p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors shrink-0 ml-1"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 hidden lg:flex p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
