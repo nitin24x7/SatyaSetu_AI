@@ -91,8 +91,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
           collapsed ? 'w-20' : 'w-64'
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        {/* Brand Header - Centered & 1.5x Horizontally Elongated Logo */}
-        <div className="min-h-[92px] py-3 px-3 relative flex items-center justify-center border-b border-slate-100/90 shrink-0">
+        {/* Brand Header - Centered Logo (1.5x Height, Elongated Width Preserved) */}
+        <div
+          className={`${
+            collapsed ? 'min-h-[76px]' : 'min-h-[136px]'
+          } py-2 px-3 relative flex items-center justify-center border-b border-slate-100/90 shrink-0 transition-all duration-300`}
+        >
           <div
             onClick={() => navigate('/')}
             className="w-full flex items-center justify-center cursor-pointer group"
@@ -110,7 +114,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
                 collapsed
                   ? undefined
                   : {
-                      transform: 'scaleX(1.48)',
+                      transform: 'scaleX(1.48) scaleY(1.5)',
                       transformOrigin: 'center',
                     }
               }
