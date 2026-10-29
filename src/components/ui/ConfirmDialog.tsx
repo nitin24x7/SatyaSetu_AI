@@ -48,9 +48,9 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         };
       default:
         return {
-          icon: <HelpCircle className="text-teal-600" size={22} />,
-          iconBg: 'bg-teal-50 border border-teal-200/60',
-          buttonBg: 'bg-teal-600 hover:bg-teal-700 text-white shadow-xs shadow-teal-600/20',
+          icon: <HelpCircle className="text-blue-600" size={22} />,
+          iconBg: 'bg-blue-50 border border-blue-200/60',
+          buttonBg: 'bg-blue-600 hover:bg-blue-700 text-white shadow-xs shadow-blue-600/20',
         };
     }
   };

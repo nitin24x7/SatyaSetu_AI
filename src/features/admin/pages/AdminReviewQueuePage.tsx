@@ -81,7 +81,7 @@ export const AdminReviewQueuePage: React.FC = () => {
           onClick={() => setActiveQueueTab('new')}
           className={`px-3.5 py-2 text-xs font-bold rounded-2xl transition-all flex items-center gap-1.5 whitespace-nowrap shadow-2xs ${
             activeQueueTab === 'new'
-              ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/25'
+              ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/25'
               : 'text-slate-600 hover:bg-slate-100 bg-white border border-slate-200/80'
           }`}
         >
@@ -187,7 +187,7 @@ export const AdminReviewQueuePage: React.FC = () => {
                     <td className="py-3.5 px-4 text-right">
                       <Link
                         to={`/admin/applications/${app.id}`}
-                        className="px-3 py-1 bg-navy-deep text-white text-xs font-semibold rounded-md hover:bg-slate-800"
+                        className="px-3.5 py-1 text-xs bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 shadow-xs shadow-blue-500/20"
                       >
                         Evaluate
                       </Link>

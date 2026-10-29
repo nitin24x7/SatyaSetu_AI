@@ -60,7 +60,7 @@ export const AdminSettingsPage: React.FC = () => {
 
         <button
           onClick={handleSaveSettings}
-          className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-2xl flex items-center gap-1.5 transition-colors shadow-sm shadow-teal-600/20"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-2xl flex items-center gap-1.5 transition-colors shadow-sm shadow-blue-600/20"
         >
           <Save size={15} />
           <span>Save Changes</span>
@@ -73,7 +73,7 @@ export const AdminSettingsPage: React.FC = () => {
           onClick={() => setActiveTab('rules')}
           className={`px-3.5 py-2 text-xs font-bold rounded-2xl transition-all flex items-center gap-1.5 shadow-2xs ${
             activeTab === 'rules'
-              ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/25'
+              ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/25'
               : 'text-slate-600 hover:bg-slate-100 bg-white border border-slate-200/80'
           }`}
         >
@@ -85,7 +85,7 @@ export const AdminSettingsPage: React.FC = () => {
           onClick={() => setActiveTab('docs')}
           className={`px-3.5 py-2 text-xs font-bold rounded-2xl transition-all flex items-center gap-1.5 shadow-2xs ${
             activeTab === 'docs'
-              ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/25'
+              ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/25'
               : 'text-slate-600 hover:bg-slate-100 bg-white border border-slate-200/80'
           }`}
         >
@@ -97,7 +97,7 @@ export const AdminSettingsPage: React.FC = () => {
           onClick={() => setActiveTab('reviewers')}
           className={`px-3.5 py-2 text-xs font-bold rounded-2xl transition-all flex items-center gap-1.5 shadow-2xs ${
             activeTab === 'reviewers'
-              ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/25'
+              ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/25'
               : 'text-slate-600 hover:bg-slate-100 bg-white border border-slate-200/80'
           }`}
         >

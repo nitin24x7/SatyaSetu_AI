@@ -49,11 +49,11 @@ export const ApplicantDashboard: React.FC = () => {
   const actionRequired = myApplications.filter((a) => a.status === 'Action Required').length;
   const verified = myApplications.filter((a) => a.status === 'Verified').length;
 
-  // Chart Data with Teal theme
+  // Chart Data with Blue theme
   const chartData = [
     { name: 'Drafts', value: drafts, color: '#94A3B8' },
-    { name: 'Under Verification', value: underVerification, color: '#0D9488' },
-    { name: 'Action Required', value: actionRequired, color: '#F97316' },
+    { name: 'Under Verification', value: underVerification, color: '#2563EB' },
+    { name: 'Action Required', value: actionRequired, color: '#6366F1' },
     { name: 'Verified', value: verified, color: '#10B981' },
     {
       name: 'Rejected',
@@ -274,7 +274,7 @@ export const ApplicantDashboard: React.FC = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search my cases..."
-                    className="pl-8 pr-3 py-1.5 text-xs rounded-2xl border border-slate-200/80 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                    className="pl-8 pr-3 py-1.5 text-xs rounded-2xl border border-slate-200/80 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                   />
                 </div>
                 <select
@@ -321,7 +321,7 @@ export const ApplicantDashboard: React.FC = () => {
                         onClick={() => navigate(`/applicant/applications/${app.id}`)}
                         className="hover:bg-slate-50/80 cursor-pointer transition-colors"
                       >
-                        <td className="py-3 px-3 font-semibold text-teal-700 font-mono">
+                        <td className="py-3 px-3 font-semibold text-blue-600 font-mono">
                           {app.id}
                         </td>
                         <td className="py-3 px-3 text-slate-800 font-medium">
@@ -335,7 +335,7 @@ export const ApplicantDashboard: React.FC = () => {
                         </td>
                         <td className="py-3 px-3">
                           {app.status === 'Action Required' ? (
-                            <span className="text-orange-700 font-semibold flex items-center gap-1">
+                            <span className="text-indigo-700 font-semibold flex items-center gap-1">
                               <AlertTriangle size={12} /> Resolve Findings
                             </span>
                           ) : app.status === 'Draft' ? (
@@ -348,7 +348,7 @@ export const ApplicantDashboard: React.FC = () => {
                           <Link
                             to={`/applicant/applications/${app.id}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="inline-flex items-center gap-1 text-xs text-teal-700 hover:underline font-semibold"
+                            className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 hover:underline font-semibold"
                           >
                             <span>Details</span>
                             <ChevronRight size={14} />
@@ -366,7 +366,7 @@ export const ApplicantDashboard: React.FC = () => {
             <span>Showing top recent submissions</span>
             <Link
               to="/applicant/applications"
-              className="text-teal-700 font-semibold hover:underline flex items-center gap-1"
+              className="text-blue-600 font-semibold hover:text-blue-700 hover:underline flex items-center gap-1"
             >
               <span>View All Applications</span>
               <ArrowRight size={14} />
@@ -426,7 +426,7 @@ export const ApplicantDashboard: React.FC = () => {
               </h3>
               <Link
                 to="/applicant/notifications"
-                className="text-xs text-teal-700 hover:underline font-semibold"
+                className="text-xs text-blue-600 hover:text-blue-700 hover:underline font-semibold"
               >
                 Notifications
               </Link>
@@ -438,7 +438,7 @@ export const ApplicantDashboard: React.FC = () => {
               <div className="space-y-3.5 relative before:absolute before:inset-0 before:left-2 before:w-0.5 before:bg-slate-100">
                 {recentActivities.map((act) => (
                   <div key={act.id} className="relative flex items-start gap-2.5 pl-5 text-xs">
-                    <span className="absolute left-1 top-1 w-2 h-2 rounded-full bg-teal-500 ring-4 ring-white" />
+                    <span className="absolute left-1 top-1 w-2 h-2 rounded-full bg-blue-600 ring-4 ring-white" />
                     <div>
                       <div className="font-semibold text-slate-800">{act.action}</div>
                       <div className="text-[10px] text-slate-400 mt-0.5">

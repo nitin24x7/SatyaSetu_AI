@@ -76,10 +76,10 @@ export const AdminDashboard: React.FC = () => {
 
   // Status Distribution Chart Data
   const statusChartData = [
-    { name: 'Submitted (New)', count: pending, color: '#0D9488' },
-    { name: 'Under Verification', count: underVerification, color: '#F59E0B' },
+    { name: 'Submitted (New)', count: pending, color: '#2563EB' },
+    { name: 'Under Verification', count: underVerification, color: '#3B82F6' },
     { name: 'Resubmitted', count: resubmitted, color: '#8B5CF6' },
-    { name: 'Action Required', count: actionRequired, color: '#F97316' },
+    { name: 'Action Required', count: actionRequired, color: '#6366F1' },
     { name: 'Verified', count: verified, color: '#10B981' },
     { name: 'Rejected', count: rejected, color: '#EF4444' },
   ].filter((d) => d.count > 0);
@@ -296,7 +296,7 @@ export const AdminDashboard: React.FC = () => {
                     boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
                   }}
                 />
-                <Bar dataKey="count" fill="#0D9488" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="count" fill="#2563EB" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -310,7 +310,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                <ListTodo size={16} className="text-teal-600" />
+                <ListTodo size={16} className="text-blue-600" />
                 <span>Priority Verification Queue</span>
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -319,7 +319,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
             <Link
               to="/admin/review-queue"
-              className="text-xs font-semibold text-teal-700 hover:underline flex items-center gap-1"
+              className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1"
             >
               <span>View Full Queue</span>
               <ArrowRight size={13} />
@@ -345,7 +345,7 @@ export const AdminDashboard: React.FC = () => {
                     onClick={() => navigate(`/admin/applications/${app.id}`)}
                     className="hover:bg-slate-50/80 cursor-pointer transition-colors"
                   >
-                    <td className="py-3 px-3 font-mono font-bold text-teal-700">
+                    <td className="py-3 px-3 font-mono font-bold text-blue-600">
                       {app.id}
                     </td>
                     <td className="py-3 px-3 text-slate-800 font-semibold truncate max-w-[180px]">
@@ -363,7 +363,7 @@ export const AdminDashboard: React.FC = () => {
                     <td className="py-3 px-3 text-right">
                       <Link
                         to={`/admin/applications/${app.id}`}
-                        className="px-3 py-1 text-xs bg-teal-600 text-white rounded-xl font-semibold hover:bg-teal-700 shadow-2xs"
+                        className="px-3 py-1 text-xs bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 shadow-xs shadow-blue-500/20"
                       >
                         Review
                       </Link>
@@ -383,7 +383,7 @@ export const AdminDashboard: React.FC = () => {
             </h3>
             <Link
               to="/admin/audit-logs"
-              className="text-xs text-teal-700 hover:underline font-semibold"
+              className="text-xs text-blue-600 hover:text-blue-700 hover:underline font-semibold"
             >
               Full Log
             </Link>
@@ -392,7 +392,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="space-y-3.5 relative before:absolute before:inset-0 before:left-2 before:w-0.5 before:bg-slate-100">
             {recentActivities.map((act) => (
               <div key={act.id} className="relative flex items-start gap-2.5 pl-5 text-xs">
-                <span className="absolute left-1 top-1 w-2 h-2 rounded-full bg-teal-500 ring-4 ring-white" />
+                <span className="absolute left-1 top-1 w-2 h-2 rounded-full bg-blue-600 ring-4 ring-white" />
                 <div>
                   <div className="font-semibold text-slate-800">{act.action}</div>
                   <div className="text-[10px] text-slate-400 mt-0.5">

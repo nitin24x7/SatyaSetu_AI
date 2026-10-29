@@ -219,7 +219,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                 <span className="font-mono font-black text-lg text-slate-900">{application.id}</span>
                 <StatusBadge status={application.status} size="sm" />
                 <RiskBadge risk={application.riskLevel} size="sm" />
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-800 font-bold border border-teal-200/70">
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-800 font-bold border border-blue-200/70">
                   {application.applicationType}
                 </span>
               </div>
@@ -238,7 +238,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                   startVerification(application.id);
                   success('Verification Started', `Case assigned to ${currentReviewer.name}.`);
                 }}
-                className="px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-xl shadow-xs shadow-teal-600/20 flex items-center gap-1.5"
+                className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-xs shadow-blue-600/20 flex items-center gap-1.5"
               >
                 <CheckCircle2 size={14} /> Start Verification
               </button>
@@ -289,7 +289,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                 syncAicteMasterData(application.id);
                 success('AICTE Master Synchronized', 'Historical approval records and TER payment status updated.');
               }}
-              className="px-3 py-1.5 border border-teal-200 bg-teal-50 hover:bg-teal-100 text-teal-800 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-2xs"
+              className="px-3 py-1.5 border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-2xs"
               title="Retrieve relevant institutional records from central AICTE portal"
             >
               <Landmark size={14} /> Sync AICTE
@@ -306,7 +306,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                 }, 600);
               }}
               disabled={isQueryingAuthorities}
-              className="px-3 py-1.5 border border-teal-200 bg-teal-50 hover:bg-teal-100 text-teal-800 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-2xs"
+              className="px-3 py-1.5 border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-2xs"
               title="Query DigiLocker, State DTE, and Affiliating University APIs"
             >
               <Link2 size={14} className={isQueryingAuthorities ? 'animate-spin' : ''} />
@@ -416,9 +416,9 @@ export const AdminReviewWorkspacePage: React.FC = () => {
       )}
 
       {/* Statutory Advisory Decision-Support Notice */}
-      <div className="bg-teal-50/70 border border-teal-200/70 rounded-2xl px-4 py-2.5 flex items-center justify-between gap-2 text-teal-950 text-[11px] shadow-2xs">
+      <div className="bg-blue-50/70 border border-blue-200/70 rounded-2xl px-4 py-2.5 flex items-center justify-between gap-2 text-blue-950 text-[11px] shadow-2xs">
         <div className="flex items-center gap-2">
-          <Shield size={14} className="text-teal-700 shrink-0" />
+          <Shield size={14} className="text-blue-700 shrink-0" />
           <span>
             <strong>AICTE Decision Support Safeguard:</strong> All AI-generated flags, concordance markers, and compliance calculus are preliminary decision-support outputs. Statutory scrutiny, physical inspections where required, and final regulatory decisions remain strictly with competent AICTE authorities.
           </span>
@@ -450,7 +450,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
                     onClick={() => setSelectedDocId(doc.id)}
                     className={`p-3 rounded-2xl border text-xs cursor-pointer transition-all ${
                       isSelected
-                        ? 'border-teal-500 bg-teal-50/40 shadow-xs ring-1 ring-teal-500/30'
+                        ? 'border-blue-500 bg-blue-50/40 shadow-xs ring-1 ring-blue-500/30'
                         : 'border-slate-200/80 hover:border-slate-300 hover:bg-slate-50/80'
                     }`}
                   >
@@ -515,7 +515,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
           {/* Preview Toolbar */}
           <div className="p-3.5 border-b border-slate-200/80 bg-slate-50/60 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2 truncate">
-              <FileText size={15} className="text-teal-600 shrink-0" />
+              <FileText size={15} className="text-blue-600 shrink-0" />
               <span className="font-bold text-slate-800 truncate">
                 {activeDoc?.category || 'Document Preview'}
               </span>
@@ -619,7 +619,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
               onClick={() => setActiveRightTab('findings')}
               className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all whitespace-nowrap ${
                 activeRightTab === 'findings'
-                  ? 'bg-white text-teal-900 shadow-xs border border-slate-200/60'
+                  ? 'bg-white text-blue-900 shadow-xs border border-slate-200/60'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
@@ -629,7 +629,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
               onClick={() => setActiveRightTab('extracted')}
               className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all whitespace-nowrap ${
                 activeRightTab === 'extracted'
-                  ? 'bg-white text-teal-900 shadow-xs border border-slate-200/60'
+                  ? 'bg-white text-blue-900 shadow-xs border border-slate-200/60'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
@@ -639,7 +639,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
               onClick={() => setActiveRightTab('authorities')}
               className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all whitespace-nowrap flex items-center gap-1 ${
                 activeRightTab === 'authorities'
-                  ? 'bg-white text-teal-900 shadow-xs border border-slate-200/60'
+                  ? 'bg-white text-blue-900 shadow-xs border border-slate-200/60'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
@@ -649,7 +649,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
               onClick={() => setActiveRightTab('infrastructure')}
               className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all whitespace-nowrap flex items-center gap-1 ${
                 activeRightTab === 'infrastructure'
-                  ? 'bg-white text-teal-900 shadow-xs border border-slate-200/60'
+                  ? 'bg-white text-blue-900 shadow-xs border border-slate-200/60'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
@@ -659,7 +659,7 @@ export const AdminReviewWorkspacePage: React.FC = () => {
               onClick={() => setActiveRightTab('activity')}
               className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all whitespace-nowrap ${
                 activeRightTab === 'activity'
-                  ? 'bg-white text-teal-900 shadow-xs border border-slate-200/60'
+                  ? 'bg-white text-blue-900 shadow-xs border border-slate-200/60'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >

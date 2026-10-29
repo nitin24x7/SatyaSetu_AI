@@ -95,7 +95,7 @@ export const ApplicantApplicationsPage: React.FC = () => {
 
         <button
           onClick={() => navigate('/applicant/applications/new')}
-          className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-2xl flex items-center gap-2 transition-colors shadow-sm shadow-teal-600/20"
+          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-2xl flex items-center gap-2 transition-colors shadow-sm shadow-blue-600/20"
         >
           <PlusCircle size={15} />
           <span>New Application</span>

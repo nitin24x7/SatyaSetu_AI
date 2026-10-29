@@ -44,7 +44,7 @@ export const AdminReportsPage: React.FC = () => {
   // Outcome Chart Data
   const outcomeData = [
     { name: 'Simulated Approval (Verified)', count: verified, color: '#10B981' },
-    { name: 'Under Scrutiny / Review', count: underVerification, color: '#0D9488' },
+    { name: 'Under Scrutiny / Review', count: underVerification, color: '#2563EB' },
     { name: 'Corrections Required', count: actionRequired, color: '#F59E0B' },
     { name: 'Rejected (Deficit)', count: rejected, color: '#EF4444' },
   ].filter((d) => d.count > 0);
@@ -130,7 +130,7 @@ export const AdminReportsPage: React.FC = () => {
           </button>
           <button
             onClick={handleExportCSV}
-            className="px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-2xl flex items-center gap-1.5 transition-colors shadow-xs shadow-teal-600/20"
+            className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-2xl flex items-center gap-1.5 transition-colors shadow-xs shadow-blue-600/20"
           >
             <Download size={15} />
             <span>Export Analytics CSV</span>
@@ -152,7 +152,7 @@ export const AdminReportsPage: React.FC = () => {
         </div>
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Avg Turnaround</span>
-          <div className="text-2xl font-extrabold text-teal-700 mt-1">4.2 Days</div>
+          <div className="text-2xl font-extrabold text-blue-700 mt-1">4.2 Days</div>
           <span className="text-[11px] text-slate-400 mt-1 block">From submission to decision</span>
         </div>
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
