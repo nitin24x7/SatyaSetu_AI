@@ -21,6 +21,9 @@ import {
   Send,
   Eye,
   FileCode,
+  Landmark,
+  Compass,
+  BadgeCheck,
 } from 'lucide-react';
 import { StatusBadge } from '../../../components/ui/StatusBadge';
 import { RiskBadge } from '../../../components/ui/RiskBadge';
@@ -231,6 +234,31 @@ export const ApplicantApplicationDetailPage: React.FC = () => {
         </div>
       )}
 
+      {/* EVC Physical Inspection Notice for Applicant */}
+      {application.physicalInspectionRequired && (
+        <div className="bg-amber-50 border border-amber-300 rounded-2xl p-5 text-amber-950 flex items-start gap-3">
+          <div className="p-2.5 bg-amber-100 rounded-xl text-amber-700 shrink-0">
+            <Compass size={22} className="animate-pulse" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-bold text-amber-900">
+                Notice: Expert Visit Committee (EVC) Physical Inspection Recommended
+              </h3>
+              <span className="bg-amber-200 text-amber-900 text-[10px] px-2 py-0.5 rounded font-mono font-semibold">
+                PENDING EVC SCHEDULE
+              </span>
+            </div>
+            <p className="text-xs text-amber-800 mt-1">
+              The AICTE scrutiny committee has flagged specific infrastructure or documentary parameters for ground-truth physical verification. An authorized EVC inspection team will visit the campus in accordance with the Approval Process Handbook.
+            </p>
+            <div className="mt-2 text-xs bg-white/80 p-2.5 rounded-lg border border-amber-200 text-amber-900">
+              <strong>Grounds: </strong> {application.inspectionRecommendationReason}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Grid: Details Left (2 Cols) & Timeline Right (1 Col) */}
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Main Dossier Content */}
@@ -270,6 +298,47 @@ export const ApplicantApplicationDetailPage: React.FC = () => {
             </div>
           </div>
 
+          {/* AICTE Sanctioned Intake & TER Payment Card */}
+          <div className="bg-white rounded-xl border border-slate-border p-5 shadow-xs">
+            <h3 className="text-sm font-bold text-navy-deep mb-3 flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <Landmark size={16} className="text-indigo-600" />
+                <span>AICTE Central Approval & TER Regulatory Fee Status</span>
+              </span>
+              <span className="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded font-mono font-semibold">
+                ✓ AICTE CONNECTED
+              </span>
+            </h3>
+
+            <div className="grid sm:grid-cols-2 gap-3 text-xs">
+              <div>
+                <span className="text-slate-400 block text-[11px]">Previous Academic Year EoA Letter</span>
+                <span className="font-mono font-bold text-slate-900">
+                  {application.previousEoaRecord?.previousEoaRef || 'AICTE/SWRO/1-931829101/2025/EOA'}
+                </span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[11px]">Approved Intake vs Proposed</span>
+                <span className="font-bold text-slate-900">
+                  {application.previousEoaRecord?.approvedIntake || 940} Seats (Proposed: {application.proposedIntake || 940})
+                </span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[11px]">TER Regulatory Payment Status</span>
+                <span className="font-bold text-emerald-700 flex items-center gap-1">
+                  <BadgeCheck size={14} />
+                  {application.terPaymentStatus || 'CONFIRMED'} (₹{(application.terAmountPaid || 200000).toLocaleString()})
+                </span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[11px]">TER Challan / Bharatkosh Ref</span>
+                <span className="font-mono text-slate-800">
+                  {application.terTransactionRef || 'TER-2026-BK-918204'}
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Submitted Documents Section */}
           <div className="bg-white rounded-xl border border-slate-border p-5 shadow-xs">
             <div className="flex items-center justify-between mb-3">
@@ -304,6 +373,19 @@ export const ApplicantApplicationDetailPage: React.FC = () => {
                         ) : (
                           <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">
                             Pending Review
+                          </span>
+                        )}
+                        {doc.issuingAuthorityStatus && (
+                          <span
+                            className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ${
+                              doc.issuingAuthorityStatus === 'Verified'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : doc.issuingAuthorityStatus === 'Mismatch Detected'
+                                ? 'bg-rose-100 text-rose-800'
+                                : 'bg-blue-100 text-blue-800'
+                            }`}
+                          >
+                            Authority: {doc.issuingAuthorityStatus}
                           </span>
                         )}
                       </div>

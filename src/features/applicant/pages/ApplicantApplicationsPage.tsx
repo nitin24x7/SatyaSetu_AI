@@ -85,25 +85,25 @@ export const ApplicantApplicationsPage: React.FC = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-navy-deep">
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
             Institutional Applications
           </h1>
-          <p className="text-xs text-slate-muted">
+          <p className="text-xs text-slate-500 mt-1">
             All submitted, in-verification, and completed dossiers for {currentInstitution.name}.
           </p>
         </div>
 
         <button
           onClick={() => navigate('/applicant/applications/new')}
-          className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white text-xs font-semibold rounded-xl flex items-center gap-2 transition-colors shadow-xs"
+          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-2xl flex items-center gap-2 transition-colors shadow-sm shadow-blue-600/20"
         >
           <PlusCircle size={15} />
           <span>New Application</span>
         </button>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="bg-white rounded-xl border border-slate-border p-4 shadow-xs space-y-3">
+      {/* Filter and Search Bar - iOS Squircle */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
           {/* Search */}
           <div className="relative">
@@ -183,12 +183,12 @@ export const ApplicantApplicationsPage: React.FC = () => {
         )}
       </div>
 
-      {/* Applications Table */}
-      <div className="bg-white rounded-xl border border-slate-border shadow-xs overflow-hidden">
+      {/* Applications Table - iOS Squircle */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-slate-border bg-surface-subtle text-slate-muted font-semibold">
+              <tr className="border-b border-slate-200/80 bg-slate-50 text-slate-500 font-semibold">
                 <th className="py-3 px-4">Application ID</th>
                 <th className="py-3 px-4">Type</th>
                 <th className="py-3 px-4">Cycle</th>
@@ -231,7 +231,17 @@ export const ApplicantApplicationsPage: React.FC = () => {
                       {formatDateShort(app.submittedAt || app.createdAt)}
                     </td>
                     <td className="py-3.5 px-4">
-                      <StatusBadge status={app.status} size="sm" />
+                      <div className="flex items-center gap-1">
+                        <StatusBadge status={app.status} size="sm" />
+                        {app.physicalInspectionRequired && (
+                          <span
+                            className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200 shrink-0"
+                            title="Expert Visit Committee (EVC) Physical Inspection Flagged"
+                          >
+                            EVC
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-3.5 px-4">
                       <RiskBadge risk={app.riskLevel} size="sm" />

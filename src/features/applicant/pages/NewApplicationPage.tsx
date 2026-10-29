@@ -22,6 +22,8 @@ import {
   HelpCircle,
   ShieldAlert,
   Eye,
+  Landmark,
+  BadgeCheck,
 } from 'lucide-react';
 import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
 import { formatFileSize } from '../../../lib/formatters';
@@ -71,6 +73,14 @@ export const NewApplicationPage: React.FC = () => {
   const [purpose, setPurpose] = useState('');
   const [referenceNumber, setReferenceNumber] = useState('');
   const [remarks, setRemarks] = useState('');
+  // AICTE EoA & TER Payment State
+  const [previousEoaRef, setPreviousEoaRef] = useState('AICTE/SWRO/1-931829101/2025/EOA');
+  const [approvedIntake, setApprovedIntake] = useState<number>(940);
+  const [proposedIntake, setProposedIntake] = useState<number>(940);
+  const [terTransactionRef, setTerTransactionRef] = useState('TER-2026-BK-918204');
+  const [terAmountPaid, setTerAmountPaid] = useState<number>(200000);
+  const [terPaymentStatus, setTerPaymentStatus] = useState<'CONFIRMED' | 'PENDING'>('CONFIRMED');
+  const [isAictePreFilled, setIsAictePreFilled] = useState(false);
 
   // Form State - Step 3: Uploaded Documents
   const [uploadedDocuments, setUploadedDocuments] = useState<DocumentItem[]>([]);
@@ -196,6 +206,21 @@ export const NewApplicationPage: React.FC = () => {
     return true;
   };
 
+  // Pre-fill available records from AICTE Central System
+  const handlePreFillAicteRecords = () => {
+    setApplicationType('Extension of Approval (EoA)');
+    setPreviousEoaRef(`AICTE/SWRO/1-${Math.floor(100000000 + Math.random() * 900000000)}/2025/EOA`);
+    setApprovedIntake(940);
+    setProposedIntake(940);
+    setTerTransactionRef(`TER-2026-BK-${Math.floor(100000 + Math.random() * 900000)}`);
+    setTerAmountPaid(200000);
+    setTerPaymentStatus('CONFIRMED');
+    setPurpose(`Application for Extension of Approval (EoA) for existing technical programmes in accordance with AICTE Approval Process Handbook 2026-27.`);
+    setReferenceNumber(`INST/AICTE/EOA/${academicYear}`);
+    setIsAictePreFilled(true);
+    success('AICTE Records Retrieved', 'Previous EoA, approved intake, and TER payment challan pre-populated from central database.');
+  };
+
   // Save as Draft
   const handleSaveDraft = () => {
     const draftId = saveDraftApplication(
@@ -208,6 +233,19 @@ export const NewApplicationPage: React.FC = () => {
         purpose: purpose || 'Draft application in progress',
         referenceNumber,
         remarks,
+        previousEoaRecord: previousEoaRef ? {
+          previousAcademicYear: '2025-2026',
+          previousEoaRef,
+          approvedProgramsCount: 14,
+          approvedIntake,
+          deficiencyCountPriorYear: 0,
+          status: 'APPROVED',
+        } : undefined,
+        proposedIntake,
+        terPaymentStatus,
+        terTransactionRef,
+        terAmountPaid,
+        terPaymentDate: new Date().toISOString(),
       },
       uploadedDocuments
     );
@@ -230,6 +268,19 @@ export const NewApplicationPage: React.FC = () => {
           purpose,
           referenceNumber,
           remarks,
+          previousEoaRecord: previousEoaRef ? {
+            previousAcademicYear: '2025-2026',
+            previousEoaRef,
+            approvedProgramsCount: 14,
+            approvedIntake,
+            deficiencyCountPriorYear: 0,
+            status: 'APPROVED',
+          } : undefined,
+          proposedIntake,
+          terPaymentStatus,
+          terTransactionRef,
+          terAmountPaid,
+          terPaymentDate: new Date().toISOString(),
         },
         uploadedDocuments
       );
@@ -268,8 +319,8 @@ export const NewApplicationPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Multi-Step Progress Stepper */}
-      <div className="bg-white rounded-xl border border-slate-border p-4 shadow-xs">
+      {/* Multi-Step Progress Stepper - iOS Squircle */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
         <div className="grid grid-cols-4 gap-2">
           {[
             { step: 1, title: 'Institution Info', icon: Building2 },
@@ -309,8 +360,8 @@ export const NewApplicationPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Step Content */}
-      <div className="bg-white rounded-xl border border-slate-border p-6 shadow-xs">
+      {/* Step Content - iOS Squircle */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
         {/* STEP 1: Institution Information */}
         {currentStep === 1 && (
           <div className="space-y-5 animate-in fade-in duration-150">
@@ -508,11 +559,39 @@ export const NewApplicationPage: React.FC = () => {
           <div className="space-y-5 animate-in fade-in duration-150">
             <div>
               <h2 className="text-base font-bold text-navy-deep">
-                Step 2: Regulatory Application Specifics
+                Step 2: Regulatory Application Specifics & AICTE Records
               </h2>
               <p className="text-xs text-slate-muted mt-0.5">
-                Specify approval category, target academic cycle, and formal administrative intent.
+                Specify approval category, target academic cycle, retrieve existing AICTE portal data, and confirm TER fee payment.
               </p>
+            </div>
+
+            {/* AICTE Central System Records Auto-Fill Banner */}
+            <div className="p-3.5 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2.5">
+                <Landmark size={20} className="text-brand-blue shrink-0" />
+                <div>
+                  <div className="font-bold text-navy-deep flex items-center gap-2">
+                    <span>Pre-Populate from Authorized AICTE Systems</span>
+                    {isAictePreFilled && (
+                      <span className="bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded font-bold font-mono">
+                        SYNCED
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-600">
+                    Retrieve previous EoA approval letter, approved programme/intake roster, and verified TER fee payment status.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handlePreFillAicteRecords}
+                className="px-3.5 py-1.5 bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold rounded-lg text-xs shrink-0 flex items-center gap-1.5 shadow-xs transition-colors"
+              >
+                <Landmark size={13} />
+                <span>Retrieve AICTE Records</span>
+              </button>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
@@ -588,6 +667,97 @@ export const NewApplicationPage: React.FC = () => {
                   className="w-full text-xs p-2.5 rounded-lg border border-slate-border"
                   placeholder="Any supplementary regulatory history or context for the assessor..."
                 />
+              </div>
+
+              {/* AICTE Approved Intake & TER Payment Status Card */}
+              <div className="sm:col-span-2 p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                  <div className="flex items-center gap-1.5 font-bold text-xs text-navy-deep">
+                    <BadgeCheck size={16} className="text-brand-blue" />
+                    <span>AICTE Sanctioned Intake & Technical Education Regulatory (TER) Fee</span>
+                  </div>
+                  <span className="text-[10px] text-slate-500 font-mono">
+                    APH 2026/27 Chapter II
+                  </span>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      Previous Year EoA Letter Reference
+                    </label>
+                    <input
+                      type="text"
+                      value={previousEoaRef}
+                      onChange={(e) => setPreviousEoaRef(e.target.value)}
+                      placeholder="e.g. AICTE/SWRO/1-931829101/2025/EOA"
+                      className="w-full text-xs p-2 rounded border border-slate-border font-mono bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      TER Payment Receipt / Challan Ref
+                    </label>
+                    <input
+                      type="text"
+                      value={terTransactionRef}
+                      onChange={(e) => setTerTransactionRef(e.target.value)}
+                      placeholder="e.g. TER-2026-BK-918204"
+                      className="w-full text-xs p-2 rounded border border-slate-border font-mono bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      Previously Sanctioned Intake (Seats)
+                    </label>
+                    <input
+                      type="number"
+                      value={approvedIntake}
+                      onChange={(e) => setApprovedIntake(Number(e.target.value))}
+                      className="w-full text-xs p-2 rounded border border-slate-border bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      Proposed Intake for {academicYear} (Seats)
+                    </label>
+                    <input
+                      type="number"
+                      value={proposedIntake}
+                      onChange={(e) => setProposedIntake(Number(e.target.value))}
+                      className="w-full text-xs p-2 rounded border border-slate-border bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      TER Fee Amount (INR)
+                    </label>
+                    <input
+                      type="number"
+                      value={terAmountPaid}
+                      onChange={(e) => setTerAmountPaid(Number(e.target.value))}
+                      className="w-full text-xs p-2 rounded border border-slate-border bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      TER Payment Verification Status
+                    </label>
+                    <select
+                      value={terPaymentStatus}
+                      onChange={(e) => setTerPaymentStatus(e.target.value as any)}
+                      className="w-full text-xs p-2 rounded border border-slate-border bg-white"
+                    >
+                      <option value="CONFIRMED">CONFIRMED (Bharatkosh / Gateway Verified)</option>
+                      <option value="PENDING">PENDING (Challan Under Reconciliation)</option>
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
 

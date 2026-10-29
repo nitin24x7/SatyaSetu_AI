@@ -15,10 +15,9 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Shield,
-  HelpCircle,
   RotateCcw,
   LucideIcon,
+  Sparkles,
 } from 'lucide-react';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { useToast } from '../ui/Toast';
@@ -81,41 +80,50 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
       {/* Mobile Backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-navy-deep/60 backdrop-blur-xs lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-xs lg:hidden"
           onClick={onMobileClose}
         />
       )}
 
-      {/* Sidebar container */}
+      {/* Sidebar container - Clean White iOS Style with Squircles */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-40 flex flex-col bg-navy-deep text-slate-100 transition-all duration-300 border-r border-navy-light/40 ${
+        className={`fixed top-0 bottom-0 left-0 z-40 flex flex-col bg-white text-slate-800 transition-all duration-300 border-r border-slate-200/80 shadow-[1px_0_12px_rgba(0,0,0,0.02)] ${
           collapsed ? 'w-20' : 'w-64'
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        {/* Brand Header */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-navy-light/40 shrink-0">
+        {/* Brand Header - Centered Logo (1.5x Height, Elongated Width Preserved) */}
+        <div
+          className={`${
+            collapsed ? 'min-h-[76px]' : 'min-h-[136px]'
+          } py-2 px-3 relative flex items-center justify-center border-b border-slate-100/90 shrink-0 transition-all duration-300`}
+        >
           <div
             onClick={() => navigate('/')}
-            className="flex items-center gap-3 cursor-pointer overflow-hidden"
+            className="w-full flex items-center justify-center cursor-pointer group"
+            title="SatyaSetu AI"
           >
-            <div className="w-9 h-9 rounded-lg bg-brand-blue flex items-center justify-center shrink-0 shadow-sm">
-              <Shield className="text-white" size={20} />
-            </div>
-            {!collapsed && (
-              <div className="flex flex-col">
-                <span className="font-bold text-base tracking-wider text-white flex items-center gap-1.5">
-                  SatyaSetu <span className="text-brand-blue font-black text-xs px-1 py-0.5 bg-brand-blue/20 rounded">AI</span>
-                </span>
-                <span className="text-[10px] text-slate-400 font-medium tracking-tight">
-                  Regulatory Verification
-                </span>
-              </div>
-            )}
+            <img
+              src="/logo.png"
+              alt="SatyaSetu AI"
+              className={
+                collapsed
+                  ? 'h-11 w-11 object-contain mx-auto'
+                  : 'h-18 sm:h-20 w-auto object-contain mx-auto transition-all group-hover:opacity-95'
+              }
+              style={
+                collapsed
+                  ? undefined
+                  : {
+                      transform: 'scaleX(1.48) scaleY(1.5)',
+                      transformOrigin: 'center',
+                    }
+              }
+            />
           </div>
 
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="hidden lg:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-navy-light/60 transition-colors"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 hidden lg:flex p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -123,29 +131,29 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
         </div>
 
         {/* Role Portal Badge */}
-        <div className="px-3 py-2.5 bg-navy/60 border-b border-navy-light/30">
+        <div className="px-3.5 py-2.5">
           <div
-            className={`flex items-center rounded-lg px-2.5 py-1.5 text-xs font-medium ${
+            className={`flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-semibold transition-all ${
               role === 'admin'
-                ? 'bg-amber-950/40 text-amber-300 border border-amber-800/50'
-                : 'bg-blue-950/40 text-blue-300 border border-blue-800/50'
+                ? 'bg-blue-50/90 text-blue-900 border border-blue-200/80'
+                : 'bg-slate-50 text-slate-800 border border-slate-200/70'
             }`}
           >
             <span
-              className={`w-2 h-2 rounded-full shrink-0 mr-2 ${
-                role === 'admin' ? 'bg-amber-400' : 'bg-brand-blue'
+              className={`w-2 h-2 rounded-full shrink-0 ${
+                role === 'admin' ? 'bg-blue-600 animate-pulse' : 'bg-blue-500'
               }`}
             />
             {!collapsed && (
               <span className="truncate">
-                {role === 'admin' ? 'Admin Verification Console' : 'Institutional Applicant Portal'}
+                {role === 'admin' ? 'Admin Verification Console' : 'Institutional Portal'}
               </span>
             )}
           </div>
         </div>
 
-        {/* Navigation items */}
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1.5">
+        {/* Navigation items - Smooth Squircles iOS Aesthetic */}
+        <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-1">
           {links.map((link) => {
             const Icon = link.icon;
             const isActive =
@@ -158,24 +166,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
                 key={link.to}
                 to={link.to}
                 onClick={onMobileClose}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group relative ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium transition-all group relative ${
                   isActive
-                    ? 'bg-brand-blue text-white shadow-sm'
-                    : 'text-slate-300 hover:text-white hover:bg-navy-light/50'
+                    ? 'bg-blue-600 text-white font-semibold shadow-sm shadow-blue-600/25'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
                 }`}
                 title={collapsed ? link.label : undefined}
               >
                 <Icon
                   size={18}
-                  className={`shrink-0 ${
-                    isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'
+                  className={`shrink-0 transition-colors ${
+                    isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-600'
                   }`}
                 />
                 {!collapsed && <span className="truncate">{link.label}</span>}
                 {link.badge !== undefined && link.badge > 0 && (
                   <span
-                    className={`ml-auto text-xs px-2 py-0.5 rounded-full font-bold ${
-                      isActive ? 'bg-white text-brand-blue' : 'bg-brand-blue text-white'
+                    className={`ml-auto text-xs px-2 py-0.5 rounded-full font-bold transition-colors ${
+                      isActive ? 'bg-white/90 text-blue-700' : 'bg-blue-100 text-blue-800'
                     }`}
                   >
                     {link.badge}
@@ -186,18 +194,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
           })}
         </nav>
 
-        {/* Footer Area */}
-        <div className="p-3 border-t border-navy-light/40 space-y-2 shrink-0 bg-navy/40">
+        {/* Footer Area - Rounded Squircle Profile & Quick Switches */}
+        <div className="p-3 border-t border-slate-100 space-y-2 shrink-0 bg-slate-50/50">
           {/* Active profile snippet */}
           {!collapsed && (
-            <div className="p-2.5 rounded-lg bg-navy-light/30 border border-navy-light/40">
-              <div className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold mb-1">
+            <div className="p-2.5 rounded-2xl bg-white border border-slate-200/70 shadow-xs">
+              <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-0.5">
                 Active Demo Identity
               </div>
-              <div className="text-xs font-medium text-white truncate">
+              <div className="text-xs font-semibold text-slate-800 truncate">
                 {role === 'admin' ? currentReviewer.name : currentInstitution.name}
               </div>
-              <div className="text-[11px] text-slate-400 truncate">
+              <div className="text-[11px] text-blue-700 font-medium truncate">
                 {role === 'admin' ? currentReviewer.role : currentInstitution.representativeName}
               </div>
             </div>
@@ -212,10 +220,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
                 navigate('/admin/dashboard');
               }
             }}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-300 hover:text-white hover:bg-navy-light/50 rounded-lg transition-colors"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-white rounded-xl border border-transparent hover:border-slate-200/60 shadow-xs transition-all"
             title="Switch portal view"
           >
-            <RotateCcw size={15} className="text-amber-400 shrink-0" />
+            <RotateCcw size={14} className="text-blue-600 shrink-0" />
             {!collapsed && (
               <span>Switch to {role === 'admin' ? 'Applicant Portal' : 'Admin Console'}</span>
             )}
@@ -224,20 +232,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, mobileOpen, onMobileClos
           {/* Reset Demo Data */}
           <button
             onClick={() => setShowResetDialog(true)}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-400 hover:text-rose-300 hover:bg-rose-950/20 rounded-lg transition-colors"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-500 hover:text-rose-600 hover:bg-rose-50/60 rounded-xl transition-all"
             title="Restore default mock dataset"
           >
-            <RotateCcw size={15} className="shrink-0 text-slate-400" />
+            <RotateCcw size={14} className="shrink-0 text-slate-400" />
             {!collapsed && <span>Reset Demo Dataset</span>}
           </button>
 
           {/* Exit Demo button */}
           <button
             onClick={() => navigate('/')}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-400 hover:text-white hover:bg-navy-light/50 rounded-lg transition-colors"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all"
             title="Exit demo"
           >
-            <LogOut size={15} className="shrink-0" />
+            <LogOut size={14} className="shrink-0" />
             {!collapsed && <span>Exit to Role Selection</span>}
           </button>
         </div>

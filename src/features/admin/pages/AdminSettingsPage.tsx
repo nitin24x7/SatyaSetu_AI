@@ -60,21 +60,21 @@ export const AdminSettingsPage: React.FC = () => {
 
         <button
           onClick={handleSaveSettings}
-          className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors shadow-xs"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-2xl flex items-center gap-1.5 transition-colors shadow-sm shadow-blue-600/20"
         >
           <Save size={15} />
           <span>Save Changes</span>
         </button>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+      {/* Tabs - Smooth iOS Squircles */}
+      <div className="flex items-center gap-2 border-b border-slate-200/80 pb-3">
         <button
           onClick={() => setActiveTab('rules')}
-          className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 ${
+          className={`px-3.5 py-2 text-xs font-bold rounded-2xl transition-all flex items-center gap-1.5 shadow-2xs ${
             activeTab === 'rules'
-              ? 'bg-navy-deep text-white'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/25'
+              : 'text-slate-600 hover:bg-slate-100 bg-white border border-slate-200/80'
           }`}
         >
           <Shield size={14} />
@@ -83,10 +83,10 @@ export const AdminSettingsPage: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('docs')}
-          className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 ${
+          className={`px-3.5 py-2 text-xs font-bold rounded-2xl transition-all flex items-center gap-1.5 shadow-2xs ${
             activeTab === 'docs'
-              ? 'bg-navy-deep text-white'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/25'
+              : 'text-slate-600 hover:bg-slate-100 bg-white border border-slate-200/80'
           }`}
         >
           <FileText size={14} />
@@ -95,10 +95,10 @@ export const AdminSettingsPage: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('reviewers')}
-          className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 ${
+          className={`px-3.5 py-2 text-xs font-bold rounded-2xl transition-all flex items-center gap-1.5 shadow-2xs ${
             activeTab === 'reviewers'
-              ? 'bg-navy-deep text-white'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/25'
+              : 'text-slate-600 hover:bg-slate-100 bg-white border border-slate-200/80'
           }`}
         >
           <Users size={14} />
@@ -108,7 +108,7 @@ export const AdminSettingsPage: React.FC = () => {
 
       {/* TAB 1: Compliance Rules */}
       {activeTab === 'rules' && (
-        <div className="bg-white rounded-xl border border-slate-border p-6 shadow-xs space-y-4">
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-7 shadow-[0_2px_12px_rgba(0,0,0,0.02)] space-y-4">
           <div>
             <h3 className="font-bold text-sm text-navy-deep">
               Automated Verification Rule Engine
@@ -134,7 +134,7 @@ export const AdminSettingsPage: React.FC = () => {
                       className={`text-[10px] px-2 py-0.5 rounded font-semibold ${
                         rule.severity === 'Critical'
                           ? 'bg-red-50 text-red-700'
-                          : 'bg-amber-50 text-amber-700'
+                          : 'bg-blue-50 text-blue-700 border border-blue-200/60'
                       }`}
                     >
                       {rule.severity}

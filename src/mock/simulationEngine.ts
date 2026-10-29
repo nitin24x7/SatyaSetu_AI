@@ -110,6 +110,44 @@ export function runDeterministicVerification(
     createdAt: new Date().toISOString(),
   });
 
+  // 5. Cadre Norms & SFR Ratio Check
+  const facultyDoc = documents.find((d) => d.category === 'Faculty Information');
+  if (facultyDoc) {
+    findings.push({
+      id: `FND-SIM-${Date.now()}-6`,
+      applicationId,
+      documentId: facultyDoc.id,
+      documentCategory: facultyDoc.category,
+      checkType: 'Faculty Ratio Compliance',
+      title: 'Student-to-Faculty Ratio (SFR) Cadre Verified',
+      description: 'Calculated teaching roster cadre satisfies AICTE Approval Process Handbook (APH) norms.',
+      severity: 'Info',
+      status: 'Pass',
+      evidence: 'Cadre ratio 1:14.8 strictly meets AICTE ceiling of 1:20 (Total faculty 284 vs sanctioned intake 4200).',
+      recommendedAction: 'Cadre compliance certified.',
+      createdAt: new Date().toISOString(),
+    });
+  }
+
+  // 6. Infrastructure & Space Calculus Check
+  const infraDoc = documents.find((d) => d.category === 'Infrastructure Information');
+  if (infraDoc) {
+    findings.push({
+      id: `FND-SIM-${Date.now()}-7`,
+      applicationId,
+      documentId: infraDoc.id,
+      documentCategory: infraDoc.category,
+      checkType: 'Regulatory Norms',
+      title: 'Instructional Carpet Area & Building Norms Verified',
+      description: 'Audited campus blueprints satisfy minimum space requirements under APH Chapter II.',
+      severity: 'Info',
+      status: 'Pass',
+      evidence: 'Total instructional area 58,500 sq.m exceeds mandated threshold of 18,900 sq.m (+209.5% surplus).',
+      recommendedAction: 'Spatial adequacy verified.',
+      createdAt: new Date().toISOString(),
+    });
+  }
+
   return { findings, riskLevel };
 }
 

@@ -58,7 +58,7 @@ export const AdminAuditLogsPage: React.FC = () => {
       </div>
 
       {/* Filter toolbar */}
-      <div className="bg-white rounded-xl border border-slate-border p-4 shadow-xs flex flex-col sm:flex-row items-center gap-3">
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col sm:flex-row items-center gap-3">
         <div className="relative flex-1 w-full">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
@@ -66,14 +66,14 @@ export const AdminAuditLogsPage: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by Case ID, college, actor, or action..."
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-border focus:ring-1 focus:ring-brand-blue"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-2xl border border-slate-200/80 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
           />
         </div>
 
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="text-xs p-2 rounded-lg border border-slate-border bg-white w-full sm:w-auto"
+          className="text-xs p-2 rounded-2xl border border-slate-200/80 bg-white text-slate-700 font-medium w-full sm:w-auto"
         >
           <option value="ALL">All Roles</option>
           <option value="Administrator">Administrators Only</option>
@@ -83,7 +83,7 @@ export const AdminAuditLogsPage: React.FC = () => {
       </div>
 
       {/* Audit Log Table */}
-      <div className="bg-white rounded-xl border border-slate-border shadow-xs overflow-hidden">
+      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
